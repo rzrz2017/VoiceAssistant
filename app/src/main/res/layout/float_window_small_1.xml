@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/small_window_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="left" >
+
+    <com.szhklt.www.voiceassistant.view.FloatingActionsMenu
+        android:id="@+id/right_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        fab:fab_addButtonColorNormal="@color/default_color_1"
+        fab:fab_addButtonColorPressed="@color/default_color_1"
+        fab:fab_addButtonPlusIconColor="@color/gold"
+        fab:fab_addButtonSize="normal"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="right" >
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/hidebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/icon_blepwd_visble_write"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="隐藏按钮" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/floatalarmlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_sp_notify"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="闹钟列表" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/floatupdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_sp_updata"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="检查更新" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/floatswitch_wake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_sp_forbid"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="关闭唤醒" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/floatreboot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_sp_clear"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="清理设置" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/bletooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_blepush_brown"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="打开蓝牙" />
+
+        <com.szhklt.www.voiceassistant.view.FloatingActionButton
+            android:id="@+id/auxin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_auxin"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="打开Auxin" />
+    </com.szhklt.www.voiceassistant.view.FloatingActionsMenu>
+
+</RelativeLayout>

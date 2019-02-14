@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+	<RelativeLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/shaperbg"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true" >
+	
+	    <TextView
+	        android:id="@+id/textView2"
+	        android:layout_width="300dip"
+	        android:layout_centerHorizontal="true"
+	        android:layout_height="80dip"
+	        android:gravity="center"
+	        android:text="系统将为您清理垃圾"
+	        android:textColor="#00CD00"
+	        android:textSize="25sp" />
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginTop="180dip">
+		    <Button
+		        android:id="@+id/sure"
+		        android:layout_width="wrap_content"
+		        android:background="@drawable/shape_dialog_bt_green_red"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:textColor="#fff"
+		        android:text="好的哦" />
+		    <Button
+		        android:id="@+id/no"
+		        android:layout_weight="1"
+		        android:background="@drawable/shape_dialog_bt_green_red"
+		        android:layout_marginLeft="50dip"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="#fff"
+		        android:text="算了吧" />
+	    </LinearLayout>
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginTop="100dip">
+		    <TextView
+		        android:id="@+id/textView3"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"		        
+		        android:textColor="#00CD00"
+		        android:textSize="35sp" />
+		    <TextView
+		        android:id="@+id/textView1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"		        
+		        android:textColor="#00CD00"
+		        android:layout_marginLeft="10dip"
+		        android:text="S"
+		        android:textSize="25sp" />
+		</LinearLayout>
+	</RelativeLayout>
+
+</RelativeLayout>

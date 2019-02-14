@@ -10,10 +10,17 @@ import com.iflytek.cae.CAEError;
 import com.iflytek.cae.CAEListener;
 import com.iflytek.cae.util.res.ResourceUtil;
 import com.iflytek.cae.util.res.ResourceUtil.RESOURCE_TYPE;
+import com.szhklt.www.voiceassistant.KwSdk;
 import com.szhklt.www.voiceassistant.MainApplication;
 import com.szhklt.www.voiceassistant.PromptToneSoundPool;
+import com.szhklt.www.voiceassistant.activity.SleepActivity;
+import com.szhklt.www.voiceassistant.service.MainService;
 import com.szhklt.www.voiceassistant.util.LogUtil;
+import com.szhklt.www.voiceassistant.util.NetworkUtil;
 import com.szhklt.www.voiceassistant.util.ScreenManager;
+import com.szhklt.www.voiceassistant.view.DialogWIFI;
+
+import cn.kuwo.autosdk.api.PlayerStatus;
 
 public class MyCAE implements CAEListener{
 	private static final String TAG = "MyCAE";
@@ -55,15 +62,58 @@ public class MyCAE implements CAEListener{
 		// TODO Auto-generated method stub
 		LogUtil.e(TAG,"onWakeup---麦克风阵列被唤醒"+LogUtil.getLineInfo());
 		isWakeUped = true;
+		MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------------"+LogUtil.getLineInfo());
+		MySynthesizer.getInstance(MainApplication.getContext()).stopTts();//立即停止tts播放
+		MainService.volume_value = 0;//一唤醒音量应该是0
+		savePlayerStatusBeforeWakeup();//保存播放器唤醒前的状态
 		screenManager.screenOn();
 		toneSP.setVolumeValue();//设置音量
+		if(!NetworkUtil.isNetworkConnected(MainApplication.getContext())){
+			checkNetWork();//也会播放提示音//每次唤醒前检查wifi是否连通
+			return;
+		}
 		toneSP.playSound(true);//播放提示音//注意播放完提示音后会有一些操作
+		KwSdk.getInstance().pause();//暂停酷我
 
 
+		MainApplication.getContext().sendBroadcast(new Intent(SleepActivity.FINISH));//关闭休眠界面
 		send("wakeup");
 		send("[MediaPlayActivity]" + "getstatus");
 		context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","pause"));
 		send("[MediaPlayActivity]" + "pause");//暂停多媒体
+	}
+
+	/**
+	 * 弹出网络链接窗(内部也会播放提示音)
+	 */
+	private void checkNetWork(){
+		toneSP.playSound(false);//播放提示音
+		if(!DialogWIFI.dailogWIFIisTOP){
+			//弹出网络链接窗
+			Intent intent = new Intent(MainApplication.getContext(),DialogWIFI.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			MainApplication.getContext().startActivity(intent);
+		}
+	}
+
+	/**
+	 * 保存唤醒前播放器状态
+	 */
+	public static void savePlayerStatusBeforeWakeup(){
+		if(PlayerStatus.PLAYING != KwSdk.getInstance().getCurPlayerStatus()){
+			KwSdk.setPreKwStatus(false);
+		}else{
+			KwSdk.setPreKwStatus(true);
+		}
+		LogUtil.e("prestatus","当前状态:"+KwSdk.getPreKwStatus());
+//		if(MediaPlayerWrapper.getStatus() == true){//kw在播放
+//			LogUtil.e("premedia","当前状态:"+"多媒体在播放");
+//			MediaPlayerWrapper.setPreStatus(true);
+//		}else{//酷我没有播放
+//			LogUtil.e("premedia","当前状态:"+"多媒体停止播放");
+//			MediaPlayerWrapper.setPreStatus(false);
+//			RzMediaPlayService.setPrePlayStatus(false);
+//		}
 	}
 
 	@Override
@@ -114,7 +164,7 @@ public class MyCAE implements CAEListener{
 	/**
 	 * 开始录音
 	 */
-	int startRecording(){
+	public int startRecording(){
 		return mRecorder.startRecording(mPcmListener);
 	}
 	

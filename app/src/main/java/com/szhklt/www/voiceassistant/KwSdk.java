@@ -15,14 +15,24 @@ import cn.kuwo.autosdk.api.PlayMode;
 import cn.kuwo.autosdk.api.PlayState;
 import cn.kuwo.autosdk.api.PlayerStatus;
 import cn.kuwo.base.bean.Music;
+import com.szhklt.www.voiceassistant.floatWindow.FloatActionButtomView;
 import com.szhklt.www.voiceassistant.util.LineInControler;
 import com.szhklt.www.voiceassistant.util.LogUtil;
 
 public class KwSdk {
-	private static KwSdk instance;
+	private static KwSdk instance = new KwSdk();
 
 //	public static PlayerStatus PREKWSTATUS = PlayerStatus.PAUSE;
-	public static Boolean PREKWSTATUS = false;
+	private static Boolean PREKWSTATUS = false;
+	
+	public static boolean getPreKwStatus(){
+		return PREKWSTATUS;
+	}
+	
+	public static void setPreKwStatus(Boolean preKwStatus){
+		PREKWSTATUS = preKwStatus;
+	}
+	
 	private String TAG="KwSdk";
 
 	public KWAPI mKwapi;
@@ -32,25 +42,22 @@ public class KwSdk {
 	public String song;
 	public String album;
 	public String theme;
+	
 	//当年播放状态1:播放0:暂停
 	public int curKwMusicStatus = 0;
-//	public Music curMusic;
-	private IKwSdk iKwSdk;
+	public Music curMusic;
+	public IKwSdk iKwSdk;
 	public void setIKwSdk(IKwSdk iKwSdk) {
 		this.iKwSdk = iKwSdk;
 	}
 
 	private KwSdk(){
-		LogUtil.e(TAG, "KwSdk构造方法！");
 		context = MainApplication.getContext();
 		mKwapi = KWAPI.createKWAPI(context, "yuliang-hklt-ds");
 		initKwApi(context);
 	}
 
 	public static KwSdk getInstance(){
-		if(instance == null){
-			instance = new KwSdk();
-		}
 		return instance;
 	}
 
@@ -66,7 +73,8 @@ public class KwSdk {
 			@Override
 			public void onEnter() {
 				LogUtil.i(TAG, "应用启动收到了"+LogUtil.getLineInfo());		
-				
+				FloatActionButtomView.turnOffBluePush();
+				FloatActionButtomView.turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
 				//启动酷我时linein切回linein == 0；
 				LineInControler.getInstance().stopLineIn();//媒体播放时切回Linein == 0
 				
@@ -96,42 +104,6 @@ public class KwSdk {
 				iKwSdk.onExit();
 			}
 		});
-
-		//播放操作监听
-//		mKwapi.registerPlayerStatusListener(new OnPlayerStatusListener() {
-//			@Override
-//			public void onPlayerStatus(PlayerStatus arg0, Music music) {
-//				LogUtil.e(TAG, "onPlayerStatus()"+"监听到酷我有动作"+arg0);
-//				// TODO Auto-generated method stub
-//				if(arg0 == PlayerStatus.INIT || arg0 == PlayerStatus.PLAYING){
-//					curKwMusicStatus = 1;
-//					curMusic = music;
-//					LogUtil.e(TAG, "酷我初始化或者播放!");
-//					//					MainService.isLauncherAcyivity = false;
-//					Intent intent = new Intent();
-//					intent.putExtra("count", "[MediaPlayActivity]" + "pause");
-//					intent.setAction("com.szhklt.service.MainService");
-//					context.sendBroadcast(intent);
-//					//停止蓝牙推送
-//					context.sendBroadcast(new Intent("android.bluetooth.action.FINISH"));
-//				}else if(arg0 == PlayerStatus.PAUSE){
-//					curKwMusicStatus = 0;
-//					LogUtil.e(TAG,"暂停酷我音乐");
-//
-//				}else if(arg0 == PlayerStatus.STOP){
-//					LogUtil.e(TAG,"退出酷我音乐");
-//
-//				}
-//			}
-//		});
-	}
-	
-	/**
-	 * 监听酷我音乐启动
-	 * @param enterListener
-	 */
-	private void registerEnterListener(OnEnterListener enterListener){
-		mKwapi.registerEnterListener(enterListener);
 	}
 
 	/**
@@ -178,6 +150,17 @@ public void setCurPlayerStatus(PlayState playState){
 	public void playClientMusics(String name,String singer,String album){
 		mKwapi.playClientMusics(name, singer, album);
 	}
+	
+	/**
+	 * 恢复酷我播放器状态
+	 */
+	public void recoveryState(){
+		if(PREKWSTATUS == true){
+			play();
+		}else{
+			pause();
+		}
+	}
 
 	//暂停
 	public void pause(){
@@ -185,14 +168,7 @@ public void setCurPlayerStatus(PlayState playState){
 		if(mKwapi == null){
 			return;
 		}
-		//	    if(!mKwapi.isKuwoRunning()){
-		//	        return;        
-		//	    }  
 		this.mKwapi.setPlayState(PlayState.STATE_PAUSE);
-		//	    if(mKwapi.getPlayerStatus() == PlayerStatus.PLAYING){
-		//	        LogUtil.e("rc","setPlayState(PlayState.STATE_PAUSE");
-		//	        this.mKwapi.setPlayState(PlayState.STATE_PAUSE);
-		//	    }          
 	}  
 
 	//播放 
@@ -200,15 +176,8 @@ public void setCurPlayerStatus(PlayState playState){
 		LogUtil.e("kw","play()");
 		if(mKwapi == null){
 			return;
-		}
-		//	    if(!mKwapi.isKuwoRunning()){
-		//	        return;        
-		//	    }       
+		}   
 		this.mKwapi.setPlayState(PlayState.STATE_PLAY);
-		//	    if(mKwapi.getPlayerStatus() == PlayerStatus.PAUSE){
-		//	        LogUtil.e("rc","setPlayState(PlayState.STATE_PLAY)");
-		//	        this.mKwapi.setPlayState(PlayState.STATE_PLAY);
-		//	    }          
 	} 
 
 	//播放下一首
@@ -216,10 +185,7 @@ public void setCurPlayerStatus(PlayState playState){
 		LogUtil.e("kw","next()");
 		if(mKwapi == null){
 			return;
-		}
-		//	    if(!mKwapi.isKuwoRunning()){
-		//	        return;        
-		//	    }          
+		}       
 		mKwapi.setPlayState(PlayState.STATE_NEXT);          
 	}
 
@@ -228,10 +194,7 @@ public void setCurPlayerStatus(PlayState playState){
 		LogUtil.e("kw","pre()");
 		if(mKwapi == null){
 			return;
-		}
-		//	    if(!mKwapi.isKuwoRunning()){
-		//	        return;        
-		//	    }          
+		}  
 		mKwapi.setPlayState(PlayState.STATE_PRE); 
 	}
 
@@ -248,10 +211,6 @@ public void setCurPlayerStatus(PlayState playState){
 		if(mKwapi == null){
 			return;
 		}
-		//		if(mKwapi.isKuwoRunning()){
-		//			return;
-		//		}
-
 		mKwapi.startAPP(autoPlay);
 	}
 
@@ -327,22 +286,6 @@ public void setCurPlayerStatus(PlayState playState){
 		mKwapi.registerExitListener(listener);
 	}
 
-	/**
-	 * 取消监听酷我退出
-	 */
-	private void unRegisterExitListener(){
-		if(mKwapi == null){
-			return;
-		}
-		mKwapi.registerExitListener(new OnExitListener() {
-
-			@Override
-			public void onExit() {
-				// TODO Auto-generated method stub
-				//do nothing
-			}
-		});
-	}
 	public int  getCurrentPos(){
 		return mKwapi.getCurrentPos();
 	}
@@ -417,4 +360,5 @@ public void setCurPlayerStatus(PlayState playState){
 		void onPlayEnd(PlayEndType arg0);
 		void onExit();
 	}
+
 }

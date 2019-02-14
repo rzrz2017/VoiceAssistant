@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_play">
+
+    <RelativeLayout
+        android:id="@+id/seekbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/listviewlayout"
+         >
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:layout_marginLeft="65dp"
+            android:layout_marginRight="50dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:progressDrawable="@drawable/seekbar_progress_tb_style"
+            android:thumb="@drawable/seekbar_tb_yuan" />
+
+        <TextView
+            android:id="@+id/curtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignLeft="@+id/seekBar"
+            android:textSize="22sp"
+            android:textColor="#ffe8d463"
+            android:layout_marginLeft="15dp"
+            android:text="0:00" />
+
+        <TextView
+            android:id="@+id/totaltime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignRight="@+id/seekBar"
+            android:textSize="22sp"
+            android:textColor="#ffe8d463"
+            android:text="0:00" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/listviewlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <ListView
+            android:id="@+id/play_list_rz"
+            android:layout_width="500dp"
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider"
+            android:fadingEdge="none"
+            android:listSelector="#00000000"
+            android:overScrollMode="never"
+            android:scrollbars="none" >
+        </ListView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/player_but_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekbar_layout"
+        android:layout_alignRight="@+id/seekbar_layout"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.szhklt.www.voiceassistant.view.CircleProgress
+            android:id="@+id/progress"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            app:color1="#ffe8d463"
+            app:color2="#ffe8d463"
+            app:color3="#ffe8d463" />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/media_toggle"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_pause"
+            android:tag="play" />
+
+        <ImageView
+            android:id="@+id/prev"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="67dp"
+            android:src="@drawable/ic_prev" />
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_next" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/civ_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/player_but_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/title_layout"
+        android:layout_toLeftOf="@id/listviewlayout"
+        android:gravity="center" >
+
+        <com.szhklt.hkselfview.CircleImageView
+            android:id="@+id/media_civ"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_toLeftOf="@id/listviewlayout"
+        android:gravity="center_vertical" >
+
+        <com.szhklt.hkselfview.SlipTextView
+            android:id="@+id/text_media_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_horizontal"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="#ffe8d463"
+            android:textSize="28dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

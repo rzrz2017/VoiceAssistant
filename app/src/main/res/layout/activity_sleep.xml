@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sleepall"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EE000000"
+    android:orientation="vertical" >
+
+    
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="560dip"
+        android:layout_height="320dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bj_sleep" >
+
+          
+        <TextClock
+            android:id="@+id/deskClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#EEE5DE"
+            android:textSize="200dip" />
+        
+        
+        <TextView
+            android:id="@+id/sleep_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"
+            android:textColor="#EEE5DE"
+            android:textSize="30dip" />
+
+        <TextView
+            android:id="@+id/sleep_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/sleep_data"
+            android:layout_marginLeft="115dip"
+            android:layout_marginTop="25dip"
+            android:textColor="#EEE5DE"
+            android:textSize="25dip" />
+    </RelativeLayout>
+    
+
+	<!-- 
+    <com.szhklt.hkselfview.AnalogClockView
+        android:id="@+id/relativeLayout1"
+        android:layout_width="340dp"
+        android:layout_height="340dp"
+        android:layout_centerInParent="true" >
+
+        <TextView
+            android:id="@+id/sleep_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="49dp"
+            android:textColor="#EEE5DE"
+            android:textSize="30dip" />
+
+        <TextView
+            android:id="@+id/sleep_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#EEE5DE"
+            android:textSize="25dip" />
+
+    </com.szhklt.hkselfview.AnalogClockView>
+    -->
+
+    <TextView
+        android:id="@+id/sleep_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:layout_marginTop="50dip"
+        android:textColor="#EEE5DE"
+        android:textSize="38dip" />
+
+    <TextView
+        android:id="@+id/sleep_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/sleep_location"
+        android:layout_marginLeft="30dip"
+        android:layout_toRightOf="@+id/sleep_location"
+        android:textColor="#EE9A00"
+        android:textSize="38dip" />
+
+    <TextView
+        android:id="@+id/sleep_weather_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/sleep_weather_image"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="74dp"
+        android:textColor="#EEDC82"
+        android:textSize="30dip" />
+
+    <ImageView
+        android:id="@+id/sleep_weather_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/relativeLayout1"
+        android:layout_toLeftOf="@+id/sleep_weather_text"
+         />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/sleep_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/sleep_weather_image"
+        android:layout_below="@+id/sleep_weather_text"
+        android:textColor="#EEE5DE"
+        android:textSize="20dip" />
+
+</RelativeLayout>

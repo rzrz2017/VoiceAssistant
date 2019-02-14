@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/big_window_layout"  
+    android:layout_width="235dp"  
+    android:layout_height="282dp"  
+    android:layout_gravity="right|bottom"
+    android:orientation="horizontal"  
+    >
+
+    <ImageView
+        android:id="@+id/animationIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/listen" />
+    
+    <!-- 音频条形图 -->
+    <com.szhklt.hkselfview.ViewVolume
+        android:id="@+id/volumeview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
+    
+</RelativeLayout>

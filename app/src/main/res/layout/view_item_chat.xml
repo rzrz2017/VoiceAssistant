@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+	<LinearLayout 
+	    android:id="@+id/left_layout"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:layout_gravity="start"
+	    android:gravity="center"
+	    
+	    > 
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_marginLeft="20dip"
+	        android:background="@drawable/zuo">
+	        <TextView 
+	        android:id="@+id/left_msg"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:textSize="25dip"
+	        android:textColor="#EEE9BF"
+	        android:text="说句好听的"
+	        android:maxEms="15" 
+	        />
+	    </LinearLayout>
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:id="@+id/right_layout"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:layout_gravity="end"
+	    android:gravity="center"
+	    >
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_marginRight="20dip"
+	        android:background="@drawable/you">
+	        <TextView 
+	        android:id="@+id/right_msg"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:textColor="#fff"
+	        android:textSize="25dip"
+	        android:text="从前的日色很慢，车马很慢，一生只够爱一个人"
+	        android:maxEms="15" 
+	        />
+	    </LinearLayout>
+
+	</LinearLayout>
+</LinearLayout>

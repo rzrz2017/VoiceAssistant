@@ -33,7 +33,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/hk_notitle_noblake">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,10 +44,72 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.ChatActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/hk_notitle_noblake" >
+            <intent-filter>
+                <action android:name="android.intent.action.Duolun" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.AddAlarmActivty2"
+            android:screenOrientation="landscape"
+            android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.AlarmClockActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.AlarmListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <!-- 跳转editText -->
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.EditTextActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.RZMediaPlayActivity2"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.www.voiceassistant.activity.SleepActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
         <service
             android:name=".service.MainService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+        </service>
+
+
+        <!-- 闹钟 -->
+        <receiver android:name="com.szhklt.www.voiceassistant.broadcastReceiver.AlarmReceiver" >
+            <intent-filter>
+                <action android:name="android.alarm.demo.action" />
+                <action android:name="android.alarm.guan.action" />
+                <action android:name="android.alarm.alarmclock.MainService" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

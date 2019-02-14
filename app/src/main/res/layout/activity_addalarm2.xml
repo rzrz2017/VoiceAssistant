@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_play"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/title_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="30dip"
+            android:src="@drawable/bussiness_personal_closed_new" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="编辑闹钟"
+            android:textColor="#FFD700"
+            android:textSize="34sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/frist_line"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/rz_layout_stroke" >
+
+        <TextView
+            android:id="@+id/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:text="时间"
+            android:textColor="#FFD700"
+            android:textSize="21sp" />
+
+        <EditText
+            android:id="@+id/edit_hour"
+            android:padding="5dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="57dp"
+            android:layout_toRightOf="@+id/title1"
+            android:background="@drawable/rz_layout_stroke"
+            android:textColor="#ffffff"
+            android:ems="10"
+            android:textSize="21sp"
+            android:maxLength="2"
+            android:inputType="number" />
+
+        <EditText
+            android:layout_marginLeft="20dp"
+            android:id="@+id/edit_minute"
+            android:padding="5dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edit_hour"
+            android:layout_alignBottom="@+id/edit_hour"
+            android:layout_toRightOf="@+id/edit_hour"
+            android:background="@drawable/rz_layout_stroke"
+            android:ems="10"
+            android:textSize="21sp"
+            android:maxLength="2"
+            android:inputType="number" >
+
+        </EditText>
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="700dp"
+            android:text="编辑提示"
+            android:textColor="#FFD700"
+            android:textSize="21sp" />
+
+        <EditText
+            android:hint="提示内容"
+            android:id="@+id/edit_prompt"
+            android:padding="5dp"
+            android:layout_marginRight="30dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:textColor="#ffffff"
+            android:layout_alignBaseline="@+id/edit_minute"
+            android:layout_alignBottom="@+id/edit_minute"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/TextView01"
+            android:background="@drawable/rz_layout_stroke"
+            android:ems="10"
+            android:maxLength="15"
+            android:textSize="21sp"
+            android:inputType="number" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/second_line"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rz_layout_stroke"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:gravity="center_vertical"
+            android:text="重复"
+            android:textColor="#FFD700"
+            android:textSize="21sp" />
+
+        <com.szhklt.hkselfview.MyRadioGroup
+            android:id="@+id/myradiagroip"
+            android:layout_width="800dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/monday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期一"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/tuesday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期二"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/wednesday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期三"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/thursday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期四"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/friday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期五"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/staturday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期六"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/sunday"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/week_selecter"
+                android:button="@null"
+                android:gravity="center"
+                android:text="星期天"
+                android:textColor="#FFD700"
+                android:textSize="18sp" />
+        </com.szhklt.hkselfview.MyRadioGroup>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" >
+
+        <com.szhklt.hkselfview.RoundButton
+            android:id="@+id/btn_save"
+            style="@style/RoundButton.Two"
+            android:layout_width="100dp"
+            android:text="保存"
+            android:textColor="#FFD700"
+            app:btnCornerRadius="10dp"
+            app:btnPressedRatio="0.9"
+            app:btnStrokeColor="#FFD700" />
+    </LinearLayout>
+
+</LinearLayout>

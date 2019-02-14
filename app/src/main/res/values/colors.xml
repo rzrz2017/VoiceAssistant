@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="main_color1">#FFB5C5</color>
+    <color name="main_yellow">#87CEFF</color>
+    <color name="main_color">#FFFFE0</color>
+    <color name="news_titile_text_color">	#EEE685</color>
+    <!-- 画面背景色 -->
+    <drawable name="layout_backgroud">#000000</drawable>
+    
+    <!-- 分割线背景色 -->
+    <drawable name="line_background">#161823</drawable>
+	<!-- 主要的背景色 -->
+    <drawable name="mainbg">#292929</drawable>
+    
+    <color name="white">#ffe8d463</color>
+    <color name="white1">#fff</color>
+    <color name="whitenews">#fff</color>
+    <color name="blue">#B23AEE</color>
+     <color name="brack">#000000</color>
+    <!-- 控件按下时显示的颜色 -->
+    <color name="list_backgroud_color">#2fb3cb</color>
+    <color name="title_color">#0f8ec5</color>
+    <color name="content_color">#737373</color>
+	<color name="white_24p">#3DFFFFFF</color>
+	<color name="red">#F44336</color>
+    <color name="red_30p">#4CF44336</color>
+    
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="dialog_text">#181818</color>
+    <color name="dialog_btn">#1E90FF</color>
+    <color name="dialog_divider">#d1d1d1</color>
+    <color name="course_list_item_pressed">#FFB90F</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="shadow">#cc222222</color>
+    <color name="Red_800">#ffb93221</color>
+    
+    <color name="colorPrimary1">#3F51B5</color>
+    <color name="colorPrimary">#FF69B4</color>
+    
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="regionStartColor">#649F79EE</color>
+    <color name="regionEndColor">#f0FF69B4</color>
+    <color name="regionCenterColor">#64ffffff</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="pointColor">#BF8EE5EE</color>
+    <color name="toumi">#00ffffff</color>
+        <!-- 家居控制字体 -->
+    <color name="smarthome_titile">#8B5F65</color>
+    <color name="smarthome_view_word">#EEE9BF</color>
+    <color name="smarthome_black_textColor">#424242</color>
+    <color name="smarthome_clickshowadd">#EE9A49</color>
+    <color name="smarthome_yuanview">#8EE5EE</color>
+    <!-- updata dialog -->
+    <color name="transparent_gray">#CFCFCF</color> 
+    <drawable name="content_list_divider">#CFCFCF</drawable>
+    <color name="white2">#fff</color>
+    
+    
+    <color name="default_color">#ffe8d463</color>
+
+    <color name="default_color2">#55e8d463</color>
+
+  <color name="dark">#444444</color>
+  
+  
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="background">#e5e5e5</color>
+    <color name="half_black">#808080</color>
+    <color name="white_1">#fafafa</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
+    <color name="default_color_1">#444444</color>
+    <color name="default_color_pressed">#324444</color>
+    <color name="blue_semi_transparent">#805677fc</color>
+    <color name="gold">#ffe8d463</color>
+    <color name="blue_semi_transparent_pressed">#80738ffe</color>
 </resources>

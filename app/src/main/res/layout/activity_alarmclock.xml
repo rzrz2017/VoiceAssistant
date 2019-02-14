@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/yorkbj"
+    android:id="@+id/all"
+    android:orientation="vertical" >
+
+  <com.szhklt.hkselfview.ClockView 
+       android:id="@+id/clockView"
+        android:layout_width="450dp"
+        android:layout_height="450dp"
+        android:layout_marginTop="65dip"
+        android:layout_centerHorizontal="true"/>
+  <!--  
+    <ImageButton
+        android:id="@+id/backclock"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bussiness_personal_closed_new" />
+-->
+    <TextView
+        android:id="@+id/main_textclock"
+        android:layout_width="400dip"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:singleLine="true"
+        android:gravity="center_horizontal"
+        android:textColor="#ffe8d463"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/main_textclock"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:text="时间到了哦 !  主人" 
+        android:textColor="#fff"
+        android:textSize="23sp" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:textColor="#fff"
+        android:layout_marginTop="50dp" />
+
+</RelativeLayout>

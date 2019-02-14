@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="MyGridLayout">
+        <attr name="numColumns" format="integer" />
+        <attr name="itemMargin" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="custume_ripple_imageview">
+        <attr name="show_spacing_time" format="integer"></attr>
+        <attr name="imageViewWidth" format="dimension"></attr>
+        <attr name="imageViewHeigth" format="dimension"></attr>
+    </declare-styleable>
+    <declare-styleable name="FloatingActionButton">
+        <attr name="fab_colorPressed" format="color" />
+        <attr name="fab_colorDisabled" format="color" />
+        <attr name="fab_colorNormal" format="color" />
+        <attr name="fab_icon" format="reference" />
+        <attr name="fab_size" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
+        <attr name="fab_title" format="string" />
+        <attr name="fab_stroke_visible" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="AddFloatingActionButton">
+        <attr name="fab_plusIconColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="FloatingActionsMenu">
+        <attr name="fab_addButtonColorPressed" format="color" />
+        <attr name="fab_addButtonColorNormal" format="color" />
+        <attr name="fab_addButtonSize" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="mini" value="1" />
+        </attr>
+        <attr name="fab_addButtonPlusIconColor" format="color" />
+        <attr name="fab_addButtonStrokeVisible" format="boolean" />
+        <attr name="fab_labelStyle" format="reference" />
+        <attr name="fab_labelsPosition" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <attr name="fab_expandDirection" format="enum">
+            <enum name="up" value="0" />
+            <enum name="down" value="1" />
+            <enum name="left" value="2" />
+            <enum name="right" value="3" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="RoundButton">
+        <attr name="btnSolidColor" format="color" />
+        <attr name="btnStrokeColor" format="color" />
+        <attr name="btnStrokeWidth" format="dimension" />
+        <attr name="btnStrokeDashWidth" format="dimension" />
+        <attr name="btnStrokeDashGap" format="dimension" />
+        <attr name="btnCornerRadius" format="dimension">
+            <enum name="stadium" value="-1" />
+        </attr>
+        <attr name="btnPressedRatio" format="float" />
+    </declare-styleable>
+    <declare-styleable name="AnalogClockView">
+        <attr name="dial" format="integer" />
+        <attr name="hand_hour" format="integer" />
+        <attr name="hand_minute" format="integer" />
+        <attr name="hand_second" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="SwitchView">
+        <attr name="hasShadow" format="boolean" />
+        <attr name="primaryColor" format="color" />
+        <attr name="primaryColorDark" format="color" />
+        <attr name="offColor" format="color" />
+        <attr name="offColorDark" format="color" />
+        <attr name="shadowColor" format="color" />
+        <attr name="ratioAspect" format="float" />
+        <attr name="isOpened" format="boolean" />
+    </declare-styleable>
+    
+    <declare-styleable name="CircleProgress">
+        <attr name="color1" format="reference|color"></attr>
+        <attr name="color2" format="reference|color"></attr>
+        <attr name="color3" format="reference|color"></attr>
+    </declare-styleable>
+
+</resources>

@@ -38,4 +38,6 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation files('libs/Sunflower.jar')
     implementation files('libs/VoiceRecognition-1.6.2.jar')
+    implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
