@@ -94,7 +94,7 @@ public class MainService extends Service {
             mCae = new MyCAE();
         }
         if(mAIUI == null){
-            mAIUI = new MyAIUI();
+            mAIUI = MyAIUI.getInstance();
         }
         mCae.setmAIUI(mAIUI);
 
@@ -161,7 +161,7 @@ public class MainService extends Service {
             mCae = new MyCAE();
         }
         if(mAIUI == null){
-            mAIUI = new MyAIUI();
+            mAIUI = MyAIUI.getInstance();
             mCae.setmAIUI(mAIUI);
         }
 

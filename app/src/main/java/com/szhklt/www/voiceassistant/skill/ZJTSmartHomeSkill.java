@@ -4,6 +4,9 @@ package com.szhklt.www.voiceassistant.skill;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import com.smartline.docking.JDUtils;
+import com.smartline.docking.JDsmartMsgCallback;
 import com.szhklt.www.voiceassistant.MainApplication;
 import com.szhklt.www.voiceassistant.component.MySynthesizer;
 import com.szhklt.www.voiceassistant.util.LogUtil;

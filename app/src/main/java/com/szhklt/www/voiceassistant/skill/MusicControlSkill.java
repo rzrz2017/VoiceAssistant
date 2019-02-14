@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import com.szhklt.www.voiceassistant.KwSdk;
 import com.szhklt.www.voiceassistant.MainApplication;
+import com.szhklt.www.voiceassistant.activity.SleepActivity;
 import com.szhklt.www.voiceassistant.beam.intent;
 import com.szhklt.www.voiceassistant.component.MyAIUI;
 import com.szhklt.www.voiceassistant.db.MusicCollectionDBHelper;
@@ -208,7 +209,7 @@ public class MusicControlSkill extends Skill{
 				},"好的",question);
 			}else if ("gosleep".equals(KFLAG)) {//休眠
 				mKwSdk.exit();//关闭酷我音乐
-				Intent intent = new Intent(MainApplication.getContext(),SleepActivity.class);
+				Intent intent = new Intent(MainApplication.getContext(), SleepActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				MainApplication.getContext().startActivity(intent);
 			}else if("reboot".equals(KFLAG)){//重启

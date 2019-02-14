@@ -4,6 +4,7 @@ import java.util.TimerTask;
 import android.content.Context;
 import android.content.Intent;
 import com.szhklt.www.voiceassistant.MainApplication;
+import com.szhklt.www.voiceassistant.activity.SleepActivity;
 import com.szhklt.www.voiceassistant.service.MainService;
 import com.szhklt.www.voiceassistant.util.LogUtil;
 
@@ -33,21 +34,11 @@ public class SleepTimeout {
 			@Override
 			public void run() {
 				LogUtil.e(TAG,"休眠时间到了");
-				if(MainService.isDLNAplaying==false){
-					if (MainService.isMusicplaying==false) {
-						if(MainService.isWebActivity==false){
-							Intent intent = new Intent(context,SleepActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							context.startActivity(intent);
-							sendMainServiceBoardcast("gotosleep");
-							sendMainServiceBoardcast("[manyspeech]" + "over");
-						}
-					}else {
-						Intent intent = new Intent(context,DeskpalyActivty.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						context.startActivity(intent);
-					}
-				}
+				Intent intent = new Intent(context, SleepActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
+				sendMainServiceBoardcast("gotosleep");
+				sendMainServiceBoardcast("[manyspeech]" + "over");
 			}
 		}, 5*60*1000);//5*60*1000
 		timerUtil.start();

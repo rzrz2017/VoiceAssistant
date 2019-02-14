@@ -66,16 +66,16 @@ public class KeyeventControlSkill extends Skill{
 //				Intent bleIntent = new Intent(context, BlueToothActivity.class); 
 //				bleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 //				context.startActivity(bleIntent); 
-				FloatActionButtomView.turnOnBluePush();
+//				FloatActionButtomView.turnOnBluePush();
 			}else if("aux".equals(source)){
 				LogUtil.e(TAG,"打开aux");
-				FloatActionButtomView.turnOnAuxin();
+//				FloatActionButtomView.turnOnAuxin();
 			}
 		}else if("off".equals(action)){
 			if("ble".equals(source)){
 				LogUtil.e(TAG,"关闭蓝牙");
 //				context.sendBroadcast(new Intent("android.bluetooth.action.FINISH"));
-				FloatActionButtomView.turnOffBluePush();
+//				FloatActionButtomView.turnOffBluePush();
 			}else if("aux".equals(source)){
 				LogUtil.e(TAG,"关闭aux");
 				FloatActionButtomView.turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());

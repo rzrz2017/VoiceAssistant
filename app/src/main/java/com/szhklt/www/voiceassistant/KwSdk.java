@@ -73,8 +73,8 @@ public class KwSdk {
 			@Override
 			public void onEnter() {
 				LogUtil.i(TAG, "应用启动收到了"+LogUtil.getLineInfo());		
-				FloatActionButtomView.turnOffBluePush();
-				FloatActionButtomView.turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
+//				FloatActionButtomView.turnOffBluePush();
+//				FloatActionButtomView.turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
 				//启动酷我时linein切回linein == 0；
 				LineInControler.getInstance().stopLineIn();//媒体播放时切回Linein == 0
 				

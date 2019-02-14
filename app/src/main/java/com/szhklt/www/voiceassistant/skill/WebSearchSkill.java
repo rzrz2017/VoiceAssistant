@@ -3,11 +3,6 @@ package com.szhklt.www.voiceassistant.skill;
 
 import android.content.Context;
 import android.content.Intent;
-
-import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.activity.WebSeachActivity;
-import com.szhklt.beans.intent;
-import com.szhklt.utils.LogUtil;
 import com.szhklt.www.voiceassistant.MainApplication;
 import com.szhklt.www.voiceassistant.beam.intent;
 import com.szhklt.www.voiceassistant.util.LogUtil;
@@ -36,10 +31,10 @@ public class WebSearchSkill extends Skill{
 	public void execute() {
 		super.execute();
 		LogUtil.e("websearch", "tts后的事情:"+LogUtil.getLineInfo());
-		Intent intent = new Intent(context,WebSeachActivity.class);
-		intent.putExtra("web", webUrl);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+//		Intent intent = new Intent(context,WebSeachActivity.class);
+//		intent.putExtra("web", webUrl);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		context.startActivity(intent);
 		mTts.doSomethingAfterTts(null,answer,question);
 	}
 	private void sendMainServiceBoardcast(String text) {
