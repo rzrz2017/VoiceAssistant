@@ -16,7 +16,7 @@
         android:src="@drawable/listen" />
     
     <!-- 音频条形图 -->
-    <com.szhklt.www.voiceassistant.view.ViewVolume
+    <com.szhklt.www.VoiceAssistant.view.ViewVolume
         android:id="@+id/volumeview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
