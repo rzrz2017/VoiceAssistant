@@ -39,7 +39,6 @@
             android:theme="@style/hk_notitle_noblake">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -106,7 +105,6 @@
             android:exported="true">
         </service>
 
-
         <!-- 闹钟 -->
         <receiver android:name="com.szhklt.www.VoiceAssistant.broadcastReceiver.AlarmReceiver" >
             <intent-filter>
@@ -116,5 +114,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="com.szhklt.www.VoiceAssistant.broadcastReceiver.BootCompletedReceiver" >
+            <intent-filter>
+                <!-- 开机广播 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- power按键 -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

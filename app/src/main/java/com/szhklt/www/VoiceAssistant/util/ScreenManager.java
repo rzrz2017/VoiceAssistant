@@ -49,7 +49,9 @@ public class ScreenManager {
 
     public void destory(){
         if(mWakeLock != null){
-            mWakeLock.release();
+            if(mWakeLock.isHeld()){
+                mWakeLock.release();
+            }
             mWakeLock = null;
         }
     }

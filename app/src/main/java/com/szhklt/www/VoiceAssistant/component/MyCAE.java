@@ -91,7 +91,6 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 		toneSP.playSound(true);//播放提示音//注意播放完提示音后会有一些操作
 		KwSdk.getInstance().pause();//暂停酷我
 
-
 		MainApplication.getContext().sendBroadcast(new Intent(SleepActivity.FINISH));//关闭休眠界面
 		send("wakeup");
 		send("[MediaPlayActivity]" + "getstatus");
@@ -196,10 +195,7 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 	 * 注销CAE
 	 */
 	public void destoryCAEandRecorder(){
-	    if(screenManager != null){
-	        screenManager.destory();//释放唤醒锁
-        }
-
+		screenManager.destory();//释放唤醒锁
 		if (mRecorder != null) {
 			mRecorder.stopRecording();
 			mRecorder = null;
