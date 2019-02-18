@@ -1,7 +1,8 @@
-package com.szhklt.VoiceAssistant.view;
+package com.szhklt.VoiceAssistant.activity;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import com.szhklt.VoiceAssistant.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.szhklt.VoiceAssistant.R;
 
 public class DialogReboot extends Activity implements OnClickListener {
 	private Timer mTimer = new Timer(); // 计时器
@@ -69,7 +68,7 @@ public class DialogReboot extends Activity implements OnClickListener {
 		}
 	}
 	 @Override
-		protected void onDestroy() {
+	 protected void onDestroy() {
 		    super.onDestroy();		  
 	 }
 }

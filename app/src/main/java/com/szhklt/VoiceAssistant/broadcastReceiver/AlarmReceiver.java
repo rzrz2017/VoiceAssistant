@@ -10,9 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.szhklt.VoiceAssistant.AlarmClockOperation;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.AlarmClockActivity;
+import com.szhklt.VoiceAssistant.activity.DialogReboot;
 import com.szhklt.VoiceAssistant.db.AlarmClockDBHelper;
 import com.szhklt.VoiceAssistant.util.LogUtil;
-import com.szhklt.VoiceAssistant.view.DialogReboot;
 
 /**
  *此类处理闹钟和定时清理等广播，然后将任务分发 
