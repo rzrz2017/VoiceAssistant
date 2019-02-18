@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:gravity="left" >
 
-    <com.szhklt.www.VoiceAssistant.view.FloatingActionsMenu
+    <com.szhklt.VoiceAssistant.view.FloatingActionsMenu
         android:id="@+id/right_labels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="right" >
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/hidebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="隐藏按钮" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/floatalarmlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="闹钟列表" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/floatupdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="检查更新" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/floatswitch_wake"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="关闭唤醒" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/floatreboot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="清理设置" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/bletooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="打开蓝牙" />
 
-        <com.szhklt.www.VoiceAssistant.view.FloatingActionButton
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/auxin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,6 +88,6 @@
             fab:fab_colorNormal="@color/default_color_1"
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="打开Auxin" />
-    </com.szhklt.www.VoiceAssistant.view.FloatingActionsMenu>
+    </com.szhklt.VoiceAssistant.view.FloatingActionsMenu>
 
 </RelativeLayout>

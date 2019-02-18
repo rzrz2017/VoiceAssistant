@@ -81,7 +81,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <com.szhklt.www.VoiceAssistant.view.CircleProgress
+        <com.szhklt.VoiceAssistant.view.CircleProgress
             android:id="@+id/progress"
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -129,7 +129,7 @@
         android:layout_toLeftOf="@id/listviewlayout"
         android:gravity="center" >
 
-        <com.szhklt.hkselfview.CircleImageView
+        <com.szhklt.VoiceAssistant.view.CircleImageView
             android:id="@+id/media_civ"
             android:layout_width="250dp"
             android:layout_height="250dp" />
@@ -142,7 +142,7 @@
         android:layout_toLeftOf="@id/listviewlayout"
         android:gravity="center_vertical" >
 
-        <com.szhklt.hkselfview.SlipTextView
+        <com.szhklt.VoiceAssistant.view.SlipTextView
             android:id="@+id/text_media_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

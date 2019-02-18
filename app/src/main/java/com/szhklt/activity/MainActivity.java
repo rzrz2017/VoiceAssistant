@@ -1,4 +1,4 @@
-package com.szhklt.VoiceAssistant.activity;
+package com.szhklt.activity;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -137,7 +137,7 @@
             android:textColor="#FFD700"
             android:textSize="21sp" />
 
-        <com.szhklt.hkselfview.MyRadioGroup
+        <com.szhklt.VoiceAssistant.view.MyRadioGroup
             android:id="@+id/myradiagroip"
             android:layout_width="800dp"
             android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
                 android:text="星期天"
                 android:textColor="#FFD700"
                 android:textSize="18sp" />
-        </com.szhklt.hkselfview.MyRadioGroup>
+        </com.szhklt.VoiceAssistant.view.MyRadioGroup>
 
     </RelativeLayout>
 
@@ -245,7 +245,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" >
 
-        <com.szhklt.hkselfview.RoundButton
+        <com.szhklt.VoiceAssistant.view.RoundButton
             android:id="@+id/btn_save"
             style="@style/RoundButton.Two"
             android:layout_width="100dp"
