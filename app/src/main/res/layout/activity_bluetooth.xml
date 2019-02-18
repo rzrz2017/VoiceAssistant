@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_play"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/title_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="30dip"
+            android:src="@drawable/bussiness_personal_closed_new" />
+
+        <TextView
+            android:id="@+id/bletitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:text="蓝牙推送"
+            android:textColor="#FFD700"
+            android:textSize="34sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rz_layout_stroke" >
+
+            <ImageView
+                android:id="@+id/bluebutton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+
+            <RelativeLayout
+                android:id="@+id/ble_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/bluebutton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="65dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
+
+                <EditText
+                    android:id="@+id/devicename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:ems="5"
+                    android:gravity="center"
+                    android:maxLength="5"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#FFD700"
+                    android:textSize="23sp" >
+                </EditText>
+
+                <TextView
+                    android:id="@+id/devicenametag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/devicename"
+                    android:text="名字:"
+                    android:textColor="#FFD700"
+                    android:textSize="23sp" />
+
+                <ImageView
+                    android:id="@+id/edit_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35dp"
+                    android:layout_toRightOf="@+id/devicename"
+                    android:src="@drawable/icon_edit_write" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ble_password_layout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_above="@+id/bluebutton"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="32dp"
+                 >
+
+                <EditText
+                    android:id="@+id/devicepassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:ems="5"
+                    android:gravity="center"
+                    android:maxLength="4"
+                    android:maxLines="1"
+                    android:inputType="numberPassword"
+                    android:singleLine="true"
+                    android:textColor="#FFD700"
+                    android:textSize="23sp" >
+                </EditText>
+
+                <TextView
+                    android:id="@+id/devicepwdtag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/devicepassword"
+                    android:text="密码:"
+                    android:selectAllOnFocus="true"
+                    android:textColor="#FFD700"
+                    android:textSize="23sp" />
+
+                <ImageView
+                    android:id="@+id/pwd_edit_icon"
+                    android:tag="off"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="35dp"
+                    android:layout_toRightOf="@+id/devicepassword"
+                    android:src="@drawable/icon_blepwd_invisible_write" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rz_layout_stroke"
+            android:padding="30dp" >
+
+            <ImageView
+                android:id="@+id/bleprev"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/rz_prev_icon_blue_dark" />
+
+            <ImageView
+                android:id="@+id/blenext"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/rz_next_icon_blue_dark" />
+
+            <ImageView
+                android:id="@+id/blepause"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/rz_pause_icon_blue_dark" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

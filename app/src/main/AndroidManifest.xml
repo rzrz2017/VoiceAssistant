@@ -60,6 +60,18 @@
         </activity>
 
         <activity
+            android:name="com.szhklt.VoiceAssistant.activity.BlueToothActivity2"
+            android:launchMode="singleTask"
+            android:theme="@style/hk_notitle_noblake">
+        </activity>
+
+        <activity
+            android:name="com.szhklt.VoiceAssistant.activity.ADCandJetActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <activity
             android:name="com.szhklt.VoiceAssistant.activity.AlarmClockActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -70,6 +82,25 @@
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.VoiceAssistant.activity.RebootSetActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.szhklt.activity.APK_UPDATA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <!-- 跳转editText -->
@@ -97,6 +128,24 @@
             android:name="com.szhklt.VoiceAssistant.activity.DialogWIFI"
             android:launchMode="singleTask"
             android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
+        <activity
+            android:name="com.szhklt.VoiceAssistant.activity.DialogReboot"
+            android:launchMode="singleTask"
+            android:theme="@style/hk_notitle_noblake" >
+        </activity>
+
+        <!-- 蓝牙界面 -->
+        <activity
+            android:name="com.szhklt.VoiceAssistant.activity.BlueToothActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.szhklt.activity.BlueTooth" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <service

@@ -12,10 +12,13 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.activity.ADCandJetActivity;
 import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
+import com.szhklt.VoiceAssistant.activity.BlueToothActivity;
+import com.szhklt.VoiceAssistant.activity.BlueToothActivity2;
 import com.szhklt.VoiceAssistant.activity.RebootSetActivity;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity;
@@ -173,11 +176,11 @@ public class FloatActionButtomView extends LinearLayout{
 				context.startActivity(intent1);
 				break;
 			case R.id.bletooth:
-//				disposeBluePush();
-				//测试蓝牙
-//				Intent bleIntent = new Intent(context, BlueToothActivity.class); 
-//				bleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-//				context.startActivity(bleIntent); 
+				disposeBluePush();
+//				测试蓝牙
+//				Intent bleIntent = new Intent(context, BlueToothActivity.class);
+//				bleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//				context.startActivity(bleIntent);
 				break;
 			case R.id.auxin://切换为auxin
 				LogUtil.e("auxin",auxinStatus+LogUtil.getLineInfo());
@@ -196,64 +199,64 @@ public class FloatActionButtomView extends LinearLayout{
 	/**
 	 * Auxin按钮被点击时处理
 	 */
-//	public static void disposeAuxin(){
-//		if(auxinStatus == true){
-//			LogUtil.e("auxinStatus","auxinStatus变成false了");
-//			turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
-//		}else{
-//			LogUtil.e("auxinStatus","auxinStatus变成true了");
-//			turnOnAuxin();
-//		}
-//	}
+	public static void disposeAuxin(){
+		if(auxinStatus == true){
+			LogUtil.e("auxinStatus","auxinStatus变成false了");
+			turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
+		}else{
+			LogUtil.e("auxinStatus","auxinStatus变成true了");
+			turnOnAuxin();
+		}
+	}
 	
 	/**
 	 * BluePush按钮点击时处理
 	 */
-//	public static void disposeBluePush(){
-//		if(getSwicthState("blestate")){
-//			turnOnBluePush();
-//		}else{
-//			turnOffBluePush();
-//		}
-//	}
+	public static void disposeBluePush(){
+		if(getSwicthState("blestate")){
+			turnOnBluePush();
+		}else{
+			turnOffBluePush();
+		}
+	}
 	
 	/**
 	 * 打开蓝牙
 	 */
-//	public static void turnOnBluePush(){
-//		LogUtil.e("turnOnBluePush", "turnOnBluePush()");
-//		//关闭auxin
-//		turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
-//		//关闭酷我音乐
-//		KwSdk.getInstance().pause();
-//		//关闭多媒体播放器
-//		MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
-//
-////		bletooth.setColorNormalResId(R.color.default_color_1);
-//		if(bletooth != null){
-//			bletooth.setTitle("关闭蓝牙");
-//		}
-//		LineInControler.getInstance().switchBle();
-//		saveSwicthState(false, "blestate");
-//
-//		Intent bleIntent = new Intent(MainApplication.getContext(),BlueToothActivity2.class);
-//		bleIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-//		MainApplication.getContext().startActivity(bleIntent);
-//	}
+	public static void turnOnBluePush(){
+		LogUtil.e("turnOnBluePush", "turnOnBluePush()");
+		//关闭auxin
+		turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
+		//关闭酷我音乐
+		KwSdk.getInstance().pause();
+		//关闭多媒体播放器
+		MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
+
+//		bletooth.setColorNormalResId(R.color.default_color_1);
+		if(bletooth != null){
+			bletooth.setTitle("关闭蓝牙");
+		}
+		LineInControler.getInstance().switchBle();
+		saveSwicthState(false, "blestate");
+
+		Intent bleIntent = new Intent(MainApplication.getContext(), BlueToothActivity2.class);
+		bleIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+		MainApplication.getContext().startActivity(bleIntent);
+	}
 	
 	/**
 	 * 打开蓝牙
 	 */
-//	public static void turnOffBluePush(){
-////		bletooth.setColorNormalResId(R.color.gold);
-//		if(bletooth != null){
-//			bletooth.setTitle("打开蓝牙");
-//		}
-//		LineInControler.getInstance().stopLineIn();
-//		saveSwicthState(true, "blestate");
-//
-//		MainApplication.getContext().sendBroadcast(new Intent(BlueToothActivity2.CLOSE_ACTIVITY));
-//	}
+	public static void turnOffBluePush(){
+//		bletooth.setColorNormalResId(R.color.gold);
+		if(bletooth != null){
+			bletooth.setTitle("打开蓝牙");
+		}
+		LineInControler.getInstance().stopLineIn();
+		saveSwicthState(true, "blestate");
+
+		MainApplication.getContext().sendBroadcast(new Intent(BlueToothActivity2.CLOSE_ACTIVITY));
+	}
 	
 	/**
 	 * 关闭auxin
@@ -270,25 +273,25 @@ public class FloatActionButtomView extends LinearLayout{
 	/**
 	 * 打开auxin
 	 */
-//	public static void turnOnAuxin(){
-//		LogUtil.e("auxinStatus","打开auxin");
-//		//关闭蓝牙
-//		turnOffBluePush();
-//		if(auxinStatus == false){
-//			LogUtil.e("auxinStatus","auxinStatus变成true了");
-//			//关闭蓝牙推送
-////			MainApplication.getContext().sendBroadcast(new Intent("android.bluetooth.action.FINISH").putExtra("fab",true));
-//			BlueToothActivity2.openAux = true;
-//			MainApplication.getContext().sendBroadcast(new Intent(BlueToothActivity2.CLOSE_ACTIVITY));
-//			//关闭酷我音乐
-//			KwSdk.getInstance().pause();
-//			//关闭多媒体播放器
-//			MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
-//			auxinStatus = true;
-//			LogUtil.e("auxinStatus","switchLineIn()"+LogUtil.getLineInfo());
-//			LineInControler.getInstance().switchLineIn();
-//		}
-//	}
+	public static void turnOnAuxin(){
+		LogUtil.e("auxinStatus","打开auxin");
+		//关闭蓝牙
+		turnOffBluePush();
+		if(auxinStatus == false){
+			LogUtil.e("auxinStatus","auxinStatus变成true了");
+			//关闭蓝牙推送
+//			MainApplication.getContext().sendBroadcast(new Intent("android.bluetooth.action.FINISH").putExtra("fab",true));
+			BlueToothActivity2.openAux = true;
+			MainApplication.getContext().sendBroadcast(new Intent(BlueToothActivity2.CLOSE_ACTIVITY));
+			//关闭酷我音乐
+			KwSdk.getInstance().pause();
+			//关闭多媒体播放器
+			MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
+			auxinStatus = true;
+			LogUtil.e("auxinStatus","switchLineIn()"+LogUtil.getLineInfo());
+			LineInControler.getInstance().switchLineIn();
+		}
+	}
 	
 	/**
 	 * 刷新auxin按键UI
