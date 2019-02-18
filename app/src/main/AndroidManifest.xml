@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.szhklt.www.VoiceAssistant">
+    package="com.szhklt.VoiceAssistant">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -26,14 +26,14 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
-        android:name="com.szhklt.www.VoiceAssistant.MainApplication"
+        android:name="com.szhklt.VoiceAssistant.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.szhklt.www.VoiceAssistant.activity.MainActivity"
+        <activity android:name="com.szhklt.VoiceAssistant.activity.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/hk_notitle_noblake">
@@ -44,7 +44,7 @@
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.ChatActivity"
+            android:name="com.szhklt.VoiceAssistant.activity.ChatActivity"
             android:launchMode="singleTask"
             android:theme="@style/hk_notitle_noblake" >
             <intent-filter>
@@ -54,19 +54,19 @@
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.AddAlarmActivty2"
+            android:name="com.szhklt.VoiceAssistant.activity.AddAlarmActivty2"
             android:screenOrientation="landscape"
             android:theme="@style/hk_notitle_noblake" >
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.AlarmClockActivity"
+            android:name="com.szhklt.VoiceAssistant.activity.AlarmClockActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.AlarmListActivity"
+            android:name="com.szhklt.VoiceAssistant.activity.AlarmListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -74,19 +74,19 @@
 
         <!-- 跳转editText -->
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.EditTextActivity"
+            android:name="com.szhklt.VoiceAssistant.activity.EditTextActivity"
             android:screenOrientation="landscape"
             android:theme="@style/hk_notitle_noblake" >
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.RZMediaPlayActivity2"
+            android:name="com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.SleepActivity"
+            android:name="com.szhklt.VoiceAssistant.activity.SleepActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
@@ -94,19 +94,19 @@
         </activity>
 
         <activity
-            android:name="com.szhklt.www.VoiceAssistant.activity.DialogWIFI"
+            android:name="com.szhklt.VoiceAssistant.activity.DialogWIFI"
             android:launchMode="singleTask"
             android:theme="@style/hk_notitle_noblake" >
         </activity>
 
         <service
-            android:name="com.szhklt.www.VoiceAssistant.service.MainService"
+            android:name="com.szhklt.VoiceAssistant.service.MainService"
             android:enabled="true"
             android:exported="true">
         </service>
 
         <!-- 闹钟 -->
-        <receiver android:name="com.szhklt.www.VoiceAssistant.broadcastReceiver.AlarmReceiver" >
+        <receiver android:name="com.szhklt.VoiceAssistant.broadcastReceiver.AlarmReceiver" >
             <intent-filter>
                 <action android:name="android.alarm.demo.action" />
                 <action android:name="android.alarm.guan.action" />
@@ -114,7 +114,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.szhklt.www.VoiceAssistant.broadcastReceiver.BootCompletedReceiver" >
+        <receiver android:name="com.szhklt.VoiceAssistant.broadcastReceiver.BootCompletedReceiver" >
             <intent-filter>
                 <!-- 开机广播 -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
