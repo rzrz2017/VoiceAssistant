@@ -1,4 +1,4 @@
-package com.szhklt.VoiceAssistant.floatWindow;
+package com.szhklt.VoiceAssistant.view;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

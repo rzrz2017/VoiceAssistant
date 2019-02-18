@@ -50,7 +50,6 @@ public class AddAlarmActivty2 extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_addalarm2);
 		
 		calendar = Calendar.getInstance();
-
 		hour = calendar.get(Calendar.HOUR_OF_DAY);
 		minute = calendar.get(Calendar.MINUTE);
 

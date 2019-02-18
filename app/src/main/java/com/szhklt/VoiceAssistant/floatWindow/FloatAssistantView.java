@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.szhklt.VoiceAssistant.R;
+import com.szhklt.VoiceAssistant.view.FloatPromptView;
 
 
 public class FloatAssistantView extends LinearLayout{

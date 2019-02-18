@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/yorkbj"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/adcjettype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#FFD700"
+        android:textSize="25sp"
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/versioninfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#FFD700"
+        android:textSize="25sp"
+        android:text="应用版本号" />
+    
+    <Button
+        android:id="@+id/check"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/button_yellow"
+        android:textSize="20sp"
+        android:text="检查" />
+    
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/start"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_yellow"
+            android:text="更新"
+            android:textColor="#000"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/start"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button_yellow"
+            android:text="取消"
+            android:textColor="#000"
+            android:textSize="25sp" />
+        
+    </RelativeLayout>
+
+    <RelativeLayout 
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center|left"
+        >
+        
+        <TextView
+            android:id="@+id/description0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="description"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/description2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/description1"
+            android:layout_below="@+id/description1"
+            android:textSize="20sp"
+            android:text="TextView" />
+        
+        <TextView
+            android:id="@+id/description3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/description2"
+            android:layout_below="@+id/description2"
+            android:textSize="20sp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/description1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/description0"
+            android:layout_below="@+id/description0"
+            android:text="TextView"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/progressfield"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="50dp" >
+        
+        <TextView
+            android:id="@+id/apkpath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="71dp"
+            android:text="安装包路径"
+            android:textColor="#FFD700"
+            android:textSize="15sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="650dp"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/progressBar1"
+            android:layout_alignLeft="@+id/progressBar1"
+            android:text="下载进度"
+            android:textColor="#FFD700"
+            android:textSize="15sp" />
+        
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <RadioButton
+	        android:id="@+id/radioButton1"
+	        android:layout_marginTop="15dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#ADD8E6"
+	        android:textSize="20sp"
+	        android:text="打开自动检测更新" 
+	        android:checked="true"
+	        />
+        <RadioButton
+        android:id="@+id/radioButton2"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ADD8E6"
+        android:textSize="20sp"
+        android:text="关闭自动检测更新" 
+        />
+    </RadioGroup>
+</LinearLayout>

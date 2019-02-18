@@ -14,6 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
+import com.szhklt.VoiceAssistant.activity.ADCandJetActivity;
+import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
+import com.szhklt.VoiceAssistant.activity.RebootSetActivity;
+import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
+import com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity;
+import com.szhklt.VoiceAssistant.service.checkAPKUpdataService;
 import com.szhklt.VoiceAssistant.util.LineInControler;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.FloatingActionButton;
@@ -122,23 +128,23 @@ public class FloatActionButtomView extends LinearLayout{
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
 			case R.id.floatupdate:
-//				context.startService(new Intent(MainApplication.getContext(),checkAPKUpdataService.class));//启动apk更新检查服务
-//				LogUtil.e("updata","MainApplication.UpdataMark :"+MainApplication.UpdataMark+LogUtil.getLineInfo());
-//				if(MainApplication.UpdataMark == true){
-//					Intent intent=new Intent(context,UpdateActivity.class);
-//					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-//					context.startActivity(intent);
-//				}else{
-//					Toast.makeText(context, "主人,当前版本为"+DownLoadUtils.getAPPVersionCode(context)+",无需更新呢!", Toast.LENGTH_SHORT).show();
-//					Intent intent=new Intent(context,ADCandJetActivity.class);
-//					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-//					context.startActivity(intent);
-//				}
+				context.startService(new Intent(MainApplication.getContext(), checkAPKUpdataService.class));//启动apk更新检查服务
+				LogUtil.e("updata","MainApplication.UpdataMark :"+MainApplication.UpdataMark+LogUtil.getLineInfo());
+				if(MainApplication.UpdataMark == true){
+					Intent intent=new Intent(context, UpdateActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+					context.startActivity(intent);
+				}else{
+					Toast.makeText(context, "主人,当前版本为"+ DownLoadUtils.getAPPVersionCode(context)+",无需更新呢!", Toast.LENGTH_SHORT).show();
+					Intent intent=new Intent(context, ADCandJetActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+					context.startActivity(intent);
+				}
 				break;
 			case R.id.floatalarmlist:
-//				Intent intent=new Intent(context,AlarmListActivity.class);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-//				context.startActivity(intent);
+				Intent intent=new Intent(context, AlarmListActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+				context.startActivity(intent);
 				break;
 			case R.id.floatswitch_wake:
 				if("关闭唤醒"==wakeup.getTitle()){
@@ -162,9 +168,9 @@ public class FloatActionButtomView extends LinearLayout{
 				}
 				break;
 			case R.id.floatreboot:
-//				Intent intent1=new Intent(context,RebootSetActivity.class);
-//				intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-//				context.startActivity(intent1);
+				Intent intent1=new Intent(context, RebootSetActivity.class);
+				intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+				context.startActivity(intent1);
 				break;
 			case R.id.bletooth:
 //				disposeBluePush();

@@ -14,6 +14,9 @@ import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+import com.szhklt.VoiceAssistant.view.FloatPromptView;
+import com.szhklt.VoiceAssistant.view.FloatQuestionView;
+import com.szhklt.VoiceAssistant.view.FloatYellowView;
 import com.szhklt.VoiceAssistant.view.FloatingActionsMenu.FabLayoutRanger;
 
 /**
@@ -47,13 +50,13 @@ public class FloatWindowManager {
 	/** 
 	 * 提示悬浮窗View的实例 
 	 */  
-	private FloatPromptView promptWindow;  
+	private FloatPromptView promptWindow;
 
 	/** 
 	 * 聊天悬浮窗View的实例 
 	 */  
-	private FloatQuestionView questionWindow; 
-	private FloatYellowView yellowWindow; ; 
+	private FloatQuestionView questionWindow;
+	private FloatYellowView yellowWindow; ;
 
 	/** 
 	 * 大海豚View的参数 
