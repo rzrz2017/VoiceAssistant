@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import com.szhklt.VoiceAssistant.MainApplication;
+import com.szhklt.VoiceAssistant.floatWindow.FloatActionButtomView;
 
 /**
  * linein切换封装一下，各个方法写成了静态方法，方便全局调用。
@@ -42,12 +43,12 @@ public class LineInControler {
 				// TODO Auto-generated method stub
 				if(msg.what == FLUSH_AUXIN_TRUE){
 					LogUtil.e("auxinStatus","auxinStatus变成false了"+LogUtil.getLineInfo());
-//					FloatActionButtomView.auxinStatus = false;
-//					FloatActionButtomView.flushAuxinFab(true);
+					FloatActionButtomView.auxinStatus = false;
+					FloatActionButtomView.flushAuxinFab(true);
 				}else if(msg.what == FLUSH_AUXIN_FALSE){
 					LogUtil.e("auxinStatus","auxinStatus变成true了"+LogUtil.getLineInfo());
-//					FloatActionButtomView.auxinStatus = true;
-//					FloatActionButtomView.flushAuxinFab(false);
+					FloatActionButtomView.auxinStatus = true;
+					FloatActionButtomView.flushAuxinFab(false);
 				}
 				return false;
 			}
@@ -59,7 +60,7 @@ public class LineInControler {
 		track = new AudioTrack(AudioManager.STREAM_MUSIC,
 				8000,
 				AudioFormat.CHANNEL_CONFIGURATION_STEREO, 
-				AudioFormat.ENCODING_PCM_16BIT, 
+				AudioFormat.ENCODING_PCM_16BIT,
 				bsz,
 				AudioTrack.MODE_STREAM);
 	}

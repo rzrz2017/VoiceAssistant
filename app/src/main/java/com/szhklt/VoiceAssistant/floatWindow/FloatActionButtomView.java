@@ -184,7 +184,7 @@ public class FloatActionButtomView extends LinearLayout{
 				break;
 			case R.id.auxin://切换为auxin
 				LogUtil.e("auxin",auxinStatus+LogUtil.getLineInfo());
-//				disposeAuxin();
+				disposeAuxin();
 				break;
 			case R.id.hidebutton:
 				thisMenu.collapse();
