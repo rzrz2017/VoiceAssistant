@@ -5,6 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
@@ -44,7 +46,7 @@ public class KwMusicSkill extends Skill{
 		// TODO Auto-generated method stub
 		super.extractVaildInformation();
 		LogUtil.e(TAG,"extractVaildInformation()");
-		
+
 		service = mintent.getService();
 
 		if ("musicX".equals(service) == false){
@@ -52,7 +54,7 @@ public class KwMusicSkill extends Skill{
 		}
 
 		intent = mintent.getSemantic().get(0).getIntent();
-		
+
 		rc = mintent.getRc();
 
 		final ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
@@ -69,7 +71,7 @@ public class KwMusicSkill extends Skill{
 				Log.e("kw","singer:"+singer);
 				continue;
 			}
-			
+
 			if(singer == null){
 				if("band".equals(slot.getName())){
 					singer = slot.getValue();
@@ -97,7 +99,7 @@ public class KwMusicSkill extends Skill{
 		extractVaildInformation();
 		//关闭其它音乐
 		send("[KWplaying]");
-		
+
 		//由于服务是 musicX 的原因，上下首也要在
 		if(rc == 3){
 			//rc 等于 3的情况下，也有可能出现上下首控制
@@ -112,7 +114,7 @@ public class KwMusicSkill extends Skill{
 							context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","prev"));
 							mKwSdk.pre();
 							send("[MediaPlayActivity]" + "pre");
-							mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+							mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 								@Override
 								public void doSomethingsAfterTts() {
 									// TODO Auto-generated method stub
@@ -128,32 +130,33 @@ public class KwMusicSkill extends Skill{
 				return;
 			}
 		}
-		
+
 		//随机播放
 		if (intent.equals("RANDOM_SEARCH")) {
 			String[] kwanswer = MainApplication.getContext().getResources().getStringArray(R.array.kwanswer);
 			String answer=kwanswer[(int)(Math.random()*(kwanswer.length))];
-			mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(song, singer, album, theme){
+			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 				@Override
-				public void playMusicAfterTts(){
+				public void doSomethingsAfterTts() {
 					mKwSdk.randomPlayMusic();
 					//在酷我音乐播放时，关闭海豚,并停止录音。
 					mFWM.removeAll();
 					MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
 				}
+
 			},answer,question);
 			return;
 		}
-		
+
 		//主题播放
 		if(theme != null){
 			String answer="好的!为您播放"+theme+"主题的歌";
-			 if(theme.indexOf("儿歌")!=-1){
+			if(theme.indexOf("儿歌")!=-1){
 				answer="好的!为您播放"+theme;
 			}
-			mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(song, singer, album, theme){
+			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 				@Override
-				public void playMusicAfterTts(){
+				public void doSomethingsAfterTts() {
 					mKwSdk.playClientMusicsByTheme(theme);
 					//在酷我音乐播放时，关闭海豚
 					mFWM.removeAll();
@@ -169,7 +172,7 @@ public class KwMusicSkill extends Skill{
 		LogUtil.e(TAG, "album："+album);
 		//播放搜索到的歌曲
 		mKwSdk.searchOnlineMusic(singer,song,album,new OnSearchListener() {
-			
+
 			@Override
 			public void searchFinshed(SearchStatus status, boolean first,final List<Music> musics, boolean overTime) {
 				if(status != SearchStatus.SUCCESS){
@@ -185,9 +188,9 @@ public class KwMusicSkill extends Skill{
 									LogUtil.e("kw","随机数为:"+random);
 									final Music temp = musics.get(random);
 
-									mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(null,null,null,null){
+									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 										@Override
-										public void playMusicAfterTts(){
+										public void doSomethingsAfterTts() {
 											mKwSdk.playClientMusics(temp.name, temp.artist, temp.album);
 											//在酷我音乐播放时，关闭海豚
 											mFWM.removeAll();
@@ -202,19 +205,21 @@ public class KwMusicSkill extends Skill{
 												LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
 											}
 										}
+
 									},"该歌手没有此歌曲，请欣赏"+mKwSdk.singer+"演唱的"+temp.name,question);
 
 								}else{//失败
-									mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(null,null,null,null){
+									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 										@Override
-										public void playMusicAfterTts(){
+										public void doSomethingsAfterTts() {
 											mKwSdk.randomPlayMusic();
 											//在酷我音乐播放时，关闭海豚
 											mFWM.removeAll();
 										}
+
 									},"抱歉,没找到该歌手,正在推荐歌曲",question);
 								}
-								return;	
+								return;
 							}
 						});
 						return;
@@ -231,9 +236,9 @@ public class KwMusicSkill extends Skill{
 									LogUtil.e("kw","随机数为:"+random);
 									final Music temp = musics.get(random);
 
-									mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(null,null,null,null){
+									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 										@Override
-										public void playMusicAfterTts(){
+										public void doSomethingsAfterTts() {
 											mKwSdk.playClientMusics(temp.name, temp.artist, temp.album);
 											//在酷我音乐播放时，关闭海豚
 											mFWM.removeAll();
@@ -248,19 +253,20 @@ public class KwMusicSkill extends Skill{
 												LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
 											}
 										}
+
 									},"该专辑里没有这首歌,请欣赏"+mKwSdk.album+"里的"+temp.name,question);
 
 								}else{//失败
-									mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(null,null,null,null){
+									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 										@Override
-										public void playMusicAfterTts() {
+										public void doSomethingsAfterTts() {
 											mKwSdk.randomPlayMusic();
 											//在酷我音乐播放时，关闭海豚
 											mFWM.removeAll();
 										}
 									}, "抱歉,没找到该专辑,正在为你推荐歌曲", question);
 								}
-								return;	
+								return;
 							}
 						});
 						return;
@@ -273,9 +279,9 @@ public class KwMusicSkill extends Skill{
 //					for(int i=0;i < musics.size();i++){
 //						LogUtil.e(TAG,"name"+musics.get(i).name);
 //					}
-					mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+					mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 						@Override
-						public void playMusicAfterTts() {
+						public void doSomethingsAfterTts() {
 //							mKwSdk.mKwapi.playMusic(musics, 0, true, false);
 							//播放歌曲会显示歌曲列表
 							mKwSdk.playClientMusics(mKwSdk.song,mKwSdk.singer,mKwSdk.album);
@@ -292,12 +298,13 @@ public class KwMusicSkill extends Skill{
 								LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
 							}
 						}
+
 					}, "好的"+",请欣赏，"+musics.get(0).artist+"的"+musics.get(0).name, question);
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * 通过歌词搜索歌曲
 	 *（歌词来源：客户处理过后的数据且result.equals("-1")||result.equals("0")）
@@ -309,7 +316,7 @@ public class KwMusicSkill extends Skill{
 		mKwSdk.searchOnlineMusicBylrc(lrc, new OnSearchListener() {
 			@Override
 			public void searchFinshed(SearchStatus status, boolean first,
-					List<Music> musics, boolean overTime) {
+									  List<Music> musics, boolean overTime) {
 				if(status==SearchStatus.SUCCESS&&musics.size()>0){
 					Music music = musics.get(0);
 					String name = music.name;
@@ -324,7 +331,7 @@ public class KwMusicSkill extends Skill{
 //					mTts.doSomethingAfterTts(null,"抱歉,我没有听懂,或许换个说法我就听明白了", question);
 				}
 			}
-			
+
 			/**
 			 * 如果有括号，去掉括号及括号里的字符串
 			 * @param company
@@ -340,7 +347,7 @@ public class KwMusicSkill extends Skill{
 			}
 		});
 	}
-	
+
 	/**
 	 * 发送广播
 	 */

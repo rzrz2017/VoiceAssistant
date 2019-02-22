@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
 import com.szhklt.VoiceAssistant.beam.intent;
@@ -156,7 +157,7 @@ public class AlarmSkill extends Skill{
 			params = alarmClockDispose(alarmintent);
 			LogUtil.e("alarm", "params[0]"+params[0]+LogUtil.getLineInfo());
 			LogUtil.e("alarm", "params[1]"+params[1]+LogUtil.getLineInfo());
-			mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 				@Override
 				public void doSomethingsAfterTts() {
 					// TODO Auto-generated method stub

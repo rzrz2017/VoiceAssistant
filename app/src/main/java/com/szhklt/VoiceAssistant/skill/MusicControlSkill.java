@@ -7,6 +7,7 @@ import java.util.Random;
 import android.content.Context;
 import android.content.Intent;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.SleepActivity;
@@ -93,7 +94,6 @@ public class MusicControlSkill extends Skill{
 	public void execute() {
 		// TODO Auto-generated method stub
 		extractVaildInformation();
-		LogUtil.e("now","====================kflag:"+KFLAG);
 		LogUtil.e("wakeuptime","唤醒到MusicControlSkill技能时间:"+System.currentTimeMillis());
 		if ("gosleep".equals(KFLAG)) {//休眠
 			MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
@@ -124,7 +124,7 @@ public class MusicControlSkill extends Skill{
 				context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","prev"));
 				mKwSdk.pre();
 				send("[MediaPlayActivity]" + "pre");
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
@@ -135,35 +135,28 @@ public class MusicControlSkill extends Skill{
 				context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","pause"));
 				mKwSdk.pause();
 				send("[MediaPlayActivity]" + "pause");
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
-					public void pauseStatusAfterTts() {
-						// TODO Auto-generated method stub
+					public void doSomethingsAfterTts() {
 						mKwSdk.pause();
 						send("[MediaPlayActivity]" + "pause");
 					}
 				}, "好的", question);
 			}else if("stop".equals(KFLAG)){//退出播放
-//				if(mediaController != null){
-//					mediaController.finish();
-//				}
 				context.sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
 				LogUtil.e("fuuck","蓝牙被关闭"+LogUtil.getLineInfo());
 				send("[MediaPlayActivity]" + "pause");
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						mKwSdk.exit();
 					}
 				}, "好的", question);
 			}else if ("start".equals(KFLAG)) {//继续播放
-//				if(mediaController != null){
-//					mediaController.play();
-//				}
 				context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","play"));
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
-					public void playStatusAfterTts() {
+					public void doSomethingsAfterTts() {
 						mKwSdk.play();
 						send("[MediaPlayActivity]" + "play");
 					}
@@ -171,7 +164,7 @@ public class MusicControlSkill extends Skill{
 				//只有酷我才有
 			}else if("loop".equals(KFLAG)){//循环播放			
 				mKwSdk.setPlayMode(PlayMode.MODE_ALL_CIRCLE);
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
@@ -180,7 +173,7 @@ public class MusicControlSkill extends Skill{
 				},"好的",question);
 			}else if("single".equals(KFLAG)){//单曲循环		
 				mKwSdk.setPlayMode(PlayMode.MODE_SINGLE_CIRCLE);
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
@@ -189,19 +182,18 @@ public class MusicControlSkill extends Skill{
 				},"好的",question);
 			}else if("shuffle".equals(KFLAG)){//随机播放		
 				mKwSdk.setPlayMode(PlayMode.MODE_ALL_RANDOM);
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
 						mKwSdk.play();
 					}
 				},"好的",question);
-				/***************************************************/
 			}else if ("back".equals(KFLAG)) {//退出播放
 				LogUtil.e("now","退出播放"+LogUtil.getLineInfo());
 				send("[MediaPlayActivity]" + "pause");
 				mKwSdk.pause();
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
@@ -224,7 +216,7 @@ public class MusicControlSkill extends Skill{
 			}else if("exit".equals(KFLAG)){//退出聊天
 				context.sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
 				send("[MediaPlayActivity]" + "stop");
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						FloatWindowManager.getInstance().removeAll();
@@ -283,7 +275,7 @@ public class MusicControlSkill extends Skill{
 				Integer id = keys[random.nextInt(keys.length)];
 
 				final Map<String, Object> map1 = map.get(id);
-				mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						mKwSdk.playClientMusics((String)map1.get("name"), (String)map1.get("singer"), (String)map1.get("album"));
@@ -335,7 +327,7 @@ public class MusicControlSkill extends Skill{
 		context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","next"));
 		mKwSdk.next();
 		send("[MediaPlayActivity]" + "next");
-		mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 			@Override
 			public void doSomethingsAfterTts() {
 				mKwSdk.play();
@@ -352,14 +344,5 @@ public class MusicControlSkill extends Skill{
 		intent.setAction("com.szhklt.service.MainService");
 		MainApplication.getContext().sendBroadcast(intent);
 	}
-	
-	/**
-	 * 通过广播控制蓝牙
-	 * @param bleaction
-	 */
-//	private void BleControlByBroadCast(String bleaction){
-//		Intent intent = new Intent();
-//		intent.setAction(BlueTeethService.BLE_ACTION);
-//		intent.putExtra("bleaction",bleaction);
-//	}
+
 }

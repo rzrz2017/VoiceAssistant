@@ -3,6 +3,8 @@ package com.szhklt.VoiceAssistant.timeTask;
 import java.util.TimerTask;
 import android.content.Context;
 import android.content.Intent;
+
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
@@ -40,7 +42,8 @@ public class SpeekTimeout {
 				//resetAIUI
 				MainApplication.getContext().sendBroadcast(new Intent(MyAIUI.RESET_AIUI));
 				
-				mTts.doSomethingAfterTts( mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
+
 					@Override
 					public void doSomethingsAfterTts() {
 //						mTts.destoryTts();//注销tts

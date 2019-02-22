@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.Settings;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.beam.intent.Slot;
@@ -43,7 +44,7 @@ public class LightControlSkill extends Skill{
 		// TODO Auto-generated method stub
 		extractVaildInformation();
 		LogUtil.e("light","亮度控制标志lightFlag:"+lightFlag);
-		mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 			@Override
 			public void doSomethingsAfterTts() {
 				// TODO Auto-generated method stub

@@ -10,6 +10,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
@@ -118,12 +119,7 @@ public class MySynthesizer implements SynthesizerListener{
 		}
 
 		if(md != null){
-			md.playMusicAfterTts();
-			md.return2manAfterTts();
-			md.playStatusAfterTts();
-			md.pauseStatusAfterTts();
 			md.doSomethingsAfterTts();
-			md = null;
 		}
 	}
 
@@ -280,40 +276,12 @@ public class MySynthesizer implements SynthesizerListener{
 
 
 	//用于闹钟
-	public void doSomethingAfterAlarm(DoSomethingAfterTts doSomething,String answer,String question) {
+	public void doSomethingAfterAlarm(DoSomethingAfterTts doSomething, String answer, String question) {
 		mTts.stopSpeaking();
 		mTts.startSpeaking(answer, this);
 		setCallBack(doSomething);
 	}
 
-
-	public class DoSomethingAfterTts{
-		public String song;
-		public String singer;
-		public String album;
-		public String theme;
-		public DoSomethingAfterTts(String song,String singer,String album,String theme){
-			this.song = song;
-			this.singer = singer;
-			this.album = album;
-			this.theme = theme;
-		}
-		public DoSomethingAfterTts(){
-		}
-
-		public void playMusicAfterTts(){
-		}
-		public void return2manAfterTts(){
-		}
-		public void playStatusAfterTts(){
-		}
-		public void pauseStatusAfterTts(){
-		}
-		public void playMediaAfterTts(){
-		}
-		public void timeOut(){}
-		public void doSomethingsAfterTts(){}
-	}
 
 
 	/**

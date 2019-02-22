@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Service;
 import android.media.AudioManager;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.util.LogUtil;
@@ -52,7 +53,7 @@ public class VolumeControlSkill extends Skill{
 	@Override
 	public void execute() {
 		extractVaildInformation();
-		mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 			@Override
 			public void doSomethingsAfterTts() {
 				// TODO Auto-generated method stub

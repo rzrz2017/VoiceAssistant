@@ -2,6 +2,7 @@ package com.szhklt.VoiceAssistant.skill;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.SmartMsgPostMan;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.util.LogUtil;
@@ -41,7 +42,7 @@ public class OpenQASkill extends Skill{
             }
         }else{
             LogUtil.e("openQA", "不需要转发的开放问答:"+answerText+LogUtil.getLineInfo());
-            mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+            mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
                 @Override
                 public void doSomethingsAfterTts() {
                     // TODO Auto-generated method stub

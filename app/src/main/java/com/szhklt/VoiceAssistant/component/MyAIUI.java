@@ -21,6 +21,7 @@ import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
 import com.iflytek.aiui.AIUIMessage;
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.SmartMsgPostMan;
@@ -539,7 +540,7 @@ public class MyAIUI implements AIUIListener{
 		if(ChatActivity.ISCHATMODE == false){
 			MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
 			String question = mintent.getText();
-			mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 				@Override
 				public void doSomethingsAfterTts() {
 					// TODO Auto-generated method stub

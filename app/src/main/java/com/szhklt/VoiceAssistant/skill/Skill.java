@@ -1,6 +1,8 @@
 package com.szhklt.VoiceAssistant.skill;
 
 import android.content.Intent;
+
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
@@ -23,7 +25,7 @@ public class Skill {
 		LogUtil.e("chat","skill父类构造方法"+LogUtil.getLineInfo());
 		mintent = intent;
 	}
-	
+
 	protected void extractVaildInformation(){
 		question = mintent.getText();
 		LogUtil.e("now",question+LogUtil.getLineInfo());
@@ -34,18 +36,18 @@ public class Skill {
 			answerText = mintent.getText();
 		}
 	};
-	
+
 	public void execute() {
 		extractVaildInformation();
-		   mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
-			   @Override
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
+			@Override
 			public void doSomethingsAfterTts() {
 				// TODO Auto-generated method stub
-				recoveryPlayerState();   
+				recoveryPlayerState();
 			}
-		   },answerText,  question);
+		},answerText,  question);
 	};
-	
+
 	/**
 	 * 恢复播放器状态
 	 */

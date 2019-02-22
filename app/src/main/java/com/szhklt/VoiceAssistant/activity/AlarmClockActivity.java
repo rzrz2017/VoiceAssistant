@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.view.ClockView;
@@ -40,7 +41,7 @@ public class AlarmClockActivity extends Activity{
 			tv_time.setText(time);
 			if(content==null){
 				main_text.setText("时间到了");
-				mTts.doSomethingAfterAlarm(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterAlarm(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub
@@ -59,7 +60,7 @@ public class AlarmClockActivity extends Activity{
 					tip1 = "该";
 					tip2 = "了";
 				}
-				mTts.doSomethingAfterAlarm(mTts.new DoSomethingAfterTts(){
+				mTts.doSomethingAfterAlarm(new DoSomethingAfterTts(){
 					@Override
 					public void doSomethingsAfterTts() {
 						// TODO Auto-generated method stub

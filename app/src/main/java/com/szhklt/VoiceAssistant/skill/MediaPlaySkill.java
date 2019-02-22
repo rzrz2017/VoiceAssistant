@@ -1,6 +1,8 @@
 package com.szhklt.VoiceAssistant.skill;
 
 import android.content.Intent;
+
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.beam.intent;
@@ -23,7 +25,7 @@ public class MediaPlaySkill extends Skill {
 	public void execute() {
 		extractVaildInformation();
 		mkwSdk.exit();
-		mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 			@Override
 			public void doSomethingsAfterTts() {
 //				RZMediaPlayActivity2.actionStart(context,null,null,mintent);

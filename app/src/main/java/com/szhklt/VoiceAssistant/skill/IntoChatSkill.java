@@ -2,6 +2,7 @@ package com.szhklt.VoiceAssistant.skill;
 
 import android.content.Intent;
 
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.ChatActivity;
@@ -50,7 +51,7 @@ public class IntoChatSkill extends Skill{
 			MainApplication.getContext().startActivity(intent);
 		}else if("exit_aiui".equals(chatIntent)){
 			MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-			mTts.doSomethingAfterTts(mTts.new DoSomethingAfterTts(){
+			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 				@Override
 				public void doSomethingsAfterTts() {
 					// TODO Auto-generated method stub
