@@ -25,6 +25,7 @@ public class KeyeventControlSkill extends Skill{
 	private Context context = MainApplication.getContext();
 	public static String skillIntent;
 	public KeyeventControlSkill(intent intent){
+		super(intent);
 		mintent = intent;
 	}
 	

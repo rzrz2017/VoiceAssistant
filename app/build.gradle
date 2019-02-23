@@ -45,6 +45,7 @@ dependencies {
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation files('libs/jdcontrol.jar')
-    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'org.dom4j:dom4j:2.1.1'
+    implementation files('libs/commons-codec-1.11.jar')
 }

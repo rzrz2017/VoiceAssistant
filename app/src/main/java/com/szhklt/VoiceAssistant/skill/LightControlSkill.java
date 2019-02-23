@@ -18,6 +18,7 @@ public class LightControlSkill extends Skill{
 	private ContentResolver mResolver = MainApplication.getContext().getContentResolver();
 
 	public LightControlSkill(intent intent) {
+		super(intent);
 		mintent = intent;//构造注入
 	}
 

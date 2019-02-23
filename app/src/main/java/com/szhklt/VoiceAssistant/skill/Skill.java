@@ -8,22 +8,23 @@ import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
+import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
 
 public class Skill {
-	protected MySynthesizer mTts = MySynthesizer.getInstance(MainApplication.getContext());
+	protected MySynthesizer mTts;
+	protected FloatWindowManager mFWM;//悬浮窗UI管理
 	protected intent mintent;
 	protected String question;
 	protected intent.Answer answer;
 	protected String answerText;
-	public Skill(){
-		LogUtil.e("chat","skill父类的空构造方法"+LogUtil.getLineInfo());
-	}
 	public Skill(intent intent) {
 		// TODO Auto-generated method stub
 		LogUtil.e("chat","skill父类构造方法"+LogUtil.getLineInfo());
 		mintent = intent;
+		mFWM = FloatWindowManager.getInstance();
+		mTts = MySynthesizer.getInstance(MainApplication.getContext());
 	}
 
 	protected void extractVaildInformation(){
@@ -45,7 +46,7 @@ public class Skill {
 				// TODO Auto-generated method stub
 				recoveryPlayerState();
 			}
-		},answerText,  question);
+		},answerText, question);
 	};
 
 	/**

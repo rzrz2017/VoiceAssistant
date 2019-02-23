@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.Toast;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.szhklt.VoiceAssistant.beam.VersionInfo;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 

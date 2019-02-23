@@ -2,6 +2,8 @@ package com.szhklt.VoiceAssistant.skill;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -12,6 +14,7 @@ import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.db.MusicCollectionDBHelper;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
@@ -32,33 +35,25 @@ public class KwMusicSkill extends Skill{
 
 	private KwSdk mKwSdk = KwSdk.getInstance();
 	public static final List<String> list=new ArrayList<>();//存储通过歌词搜索到的歌曲信息
-	private FloatWindowManager mFWM=FloatWindowManager.getInstance();//悬浮窗UI管理
-	private Context context= MainApplication.getContext();
 	private String intent;
 
 	public KwMusicSkill(intent intent) {
+		super(intent);
 		mintent = intent;
 	}
-	public KwMusicSkill(){
-	}
+
 	@Override
 	protected void extractVaildInformation() {
 		// TODO Auto-generated method stub
 		super.extractVaildInformation();
 		LogUtil.e(TAG,"extractVaildInformation()");
-
 		service = mintent.getService();
-
 		if ("musicX".equals(service) == false){
 			return;
 		}
-
 		intent = mintent.getSemantic().get(0).getIntent();
-
 		rc = mintent.getRc();
-
 		final ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
-
 		for(Slot slot:slots){
 			if("tags".equals(slot.getName())){
 				theme = slot.getValue();
@@ -99,53 +94,14 @@ public class KwMusicSkill extends Skill{
 		extractVaildInformation();
 		//关闭其它音乐
 		send("[KWplaying]");
-
 		//由于服务是 musicX 的原因，上下首也要在
 		if(rc == 3){
-			//rc 等于 3的情况下，也有可能出现上下首控制
-			if("INSTRUCTION".equals(intent)){
-				ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
-				for(Slot s:slots){
-					if("insType".equals(s.getName())){
-						//回到上一曲是（past），很奇怪，讯飞就是这样*-*
-						if("past".equals(s.getValue())){
-							LogUtil.e("dispose","RC == 3s时，出现的下一首情况"+LogUtil.getLineInfo());
-//							mediaControler.next();
-							context.sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","prev"));
-							mKwSdk.pre();
-							send("[MediaPlayActivity]" + "pre");
-							mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-								@Override
-								public void doSomethingsAfterTts() {
-									// TODO Auto-generated method stub
-								}
-							},"好的",question);
-						}else if("sleep".equals(s.getValue())){
-//							MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-//							MySynthesizer.recoveyMusicStatusBeforeWakeUp();
-							mFWM.removeAll();
-						}
-					}
-				}
-				return;
-			}
+			disposeRC3();
 		}
 
 		//随机播放
 		if (intent.equals("RANDOM_SEARCH")) {
-			String[] kwanswer = MainApplication.getContext().getResources().getStringArray(R.array.kwanswer);
-			String answer=kwanswer[(int)(Math.random()*(kwanswer.length))];
-			mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-				@Override
-				public void doSomethingsAfterTts() {
-					mKwSdk.randomPlayMusic();
-					//在酷我音乐播放时，关闭海豚,并停止录音。
-					mFWM.removeAll();
-					MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-				}
-
-			},answer,question);
-			return;
+			RecommendedSong(false);
 		}
 
 		//主题播放
@@ -158,7 +114,6 @@ public class KwMusicSkill extends Skill{
 				@Override
 				public void doSomethingsAfterTts() {
 					mKwSdk.playClientMusicsByTheme(theme);
-					//在酷我音乐播放时，关闭海豚
 					mFWM.removeAll();
 					MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
 				}
@@ -166,7 +121,6 @@ public class KwMusicSkill extends Skill{
 			return;
 		}
 
-		/*********************************************************************************************/
 		LogUtil.e(TAG, "singer："+singer);
 		LogUtil.e(TAG, "song："+song);
 		LogUtil.e(TAG, "album："+album);
@@ -175,134 +129,112 @@ public class KwMusicSkill extends Skill{
 
 			@Override
 			public void searchFinshed(SearchStatus status, boolean first,final List<Music> musics, boolean overTime) {
-				if(status != SearchStatus.SUCCESS){
-					LogUtil.e("kw","搜索出错!推荐同歌手其他音乐或者不作处理"+LogUtil.getLineInfo());
-					//有歌手
-					if(mKwSdk.singer != null){
-						//搜索同一个歌手的其它歌曲
-						mKwSdk.searchOnlineMusic(mKwSdk.singer, null, null, new OnSearchListener() {
-							@Override
-							public void searchFinshed(SearchStatus status, boolean first,final List<Music> musics, boolean overTime) {
-								if(status == SearchStatus.SUCCESS){//成功
-									int random = (int)(Math.random()*musics.size());
-									LogUtil.e("kw","随机数为:"+random);
-									final Music temp = musics.get(random);
+				//搜索成功
+				if(status == SearchStatus.SUCCESS){
 
-									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-										@Override
-										public void doSomethingsAfterTts() {
-											mKwSdk.playClientMusics(temp.name, temp.artist, temp.album);
-											//在酷我音乐播放时，关闭海豚
-											mFWM.removeAll();
-											MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-											try {
-												Music music = mKwSdk.getNowPlayingMusic();
-												int id = MusicCollectionDBHelper.getInstance().queryIdBySong(music.artist,music.name,music.album);
-												if(id!=-1){//id!=-1说明已存在于歌曲列表中，这时增加播放次数
-													MusicCollectionDBHelper.getInstance().insert(music.artist,music.name,music.album);
-												}
-											} catch (Exception e) {
-												LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
-											}
-										}
-
-									},"该歌手没有此歌曲，请欣赏"+mKwSdk.singer+"演唱的"+temp.name,question);
-
-								}else{//失败
-									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-										@Override
-										public void doSomethingsAfterTts() {
-											mKwSdk.randomPlayMusic();
-											//在酷我音乐播放时，关闭海豚
-											mFWM.removeAll();
-										}
-
-									},"抱歉,没找到该歌手,正在推荐歌曲",question);
-								}
-								return;
-							}
-						});
-						return;
+					int random = new Random().nextInt(musics.size());
+					LogUtil.e(TAG,"random:"+random);
+					String anwser = "请欣赏";
+					if(singer != null && song != null && album != null){
+						anwser = "请欣赏,"+singer+album+"专辑里的"+song;
+					}else if(singer != null && song != null){
+						anwser = "请欣赏,"+singer+"的"+song;
+					}else if(singer != null && album != null){
+						song = musics.get(random).name;
+						anwser = "请欣赏,"+singer+"的"+musics.get(random).name;
+					}else if(album != null && song != null){
+						anwser = "请欣赏,"+album+"里的"+song;
+					}else if(song != null){
+						anwser = "请欣赏,"+musics.get(0).artist+"的"+song;
+					}else if(album != null){
+						anwser = "请欣赏,"+musics.get(0).artist+album+"专辑里的"+musics.get(0).name;
+					}else if(singer != null){
+						anwser = "请欣赏,"+musics.get(0).artist+"的"+musics.get(0).name;
 					}
 
-					//有专辑
-					if(mKwSdk.album != null){
-						//播放同一张专辑的其它歌曲
-						mKwSdk.searchOnlineMusic(null, null, mKwSdk.album, new OnSearchListener() {
-							@Override
-							public void searchFinshed(SearchStatus status, boolean first,final List<Music> musics, boolean overTime) {
-								if(status == SearchStatus.SUCCESS){//成功
-									int random = (int)(Math.random()*musics.size());
-									LogUtil.e("kw","随机数为:"+random);
-									final Music temp = musics.get(random);
-
-									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-										@Override
-										public void doSomethingsAfterTts() {
-											mKwSdk.playClientMusics(temp.name, temp.artist, temp.album);
-											//在酷我音乐播放时，关闭海豚
-											mFWM.removeAll();
-											MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-											try {
-												Music music = mKwSdk.getNowPlayingMusic();
-												int id = MusicCollectionDBHelper.getInstance().queryIdBySong(music.artist,music.name,music.album);
-												if(id!=-1){//id!=-1说明已存在于歌曲列表中，这时增加播放次数
-													MusicCollectionDBHelper.getInstance().insert(music.artist,music.name,music.album);
-												}
-											} catch (Exception e) {
-												LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
-											}
-										}
-
-									},"该专辑里没有这首歌,请欣赏"+mKwSdk.album+"里的"+temp.name,question);
-
-								}else{//失败
-									mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
-										@Override
-										public void doSomethingsAfterTts() {
-											mKwSdk.randomPlayMusic();
-											//在酷我音乐播放时，关闭海豚
-											mFWM.removeAll();
-										}
-									}, "抱歉,没找到该专辑,正在为你推荐歌曲", question);
-								}
-								return;
-							}
-						});
-						return;
-					}
-
-					mTts.doSomethingAfterTts(null, "抱歉,没有找到这首歌", question);
-					return;
-				}else{
-//					LogUtil.e(TAG,"**************搜索到底歌曲列表****************");
-//					for(int i=0;i < musics.size();i++){
-//						LogUtil.e(TAG,"name"+musics.get(i).name);
-//					}
-					mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
+					mTts.doSomethingAfterTts(new DoSomethingAfterTts() {
 						@Override
 						public void doSomethingsAfterTts() {
-//							mKwSdk.mKwapi.playMusic(musics, 0, true, false);
-							//播放歌曲会显示歌曲列表
-							mKwSdk.playClientMusics(mKwSdk.song,mKwSdk.singer,mKwSdk.album);
-							//在酷我音乐播放时，关闭海豚
+							mKwSdk.playClientMusics(song,singer,album);
 							mFWM.removeAll();
-							MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-							try {
-								Music music = mKwSdk.getNowPlayingMusic();
-								int id = MusicCollectionDBHelper.getInstance().queryIdBySong(music.artist,music.name,music.album);
-								if(id!=-1){//id!=-1说明已存在于歌曲列表中，这时增加播放次数
-									MusicCollectionDBHelper.getInstance().insert(music.artist,music.name,music.album);
-								}
-							} catch (Exception e) {
-								LogUtil.e("music", "收藏歌曲错误"+LogUtil.getLineInfo());
-							}
+							MyAIUI.WRITEAUDIOEABLE = false;
+							LogUtil.e("now","----------------"+LogUtil.getLineInfo());
 						}
-
-					}, "好的"+",请欣赏，"+musics.get(0).artist+"的"+musics.get(0).name, question);
+					},anwser,question);
+				}else{
+					LogUtil.e(TAG,"搜索失败");
+					afterProcessing();
 				}
 			}
 		});
+	}
+
+
+	/**
+	 * 关键词搜索失败后,从关键词里面看看有没有
+	 * 可用的信息,并引导
+	 */
+	private void afterProcessing(){
+		if(song != null && singer != null){
+			mKwSdk.searchOnlineMusic(null, song, null, new OnSearchListener() {
+				@Override
+				public void searchFinshed(SearchStatus searchStatus, boolean b, List<Music> list, boolean b1) {
+					if(searchStatus == SearchStatus.SUCCESS){
+						mTts.doSomethingAfterTts(new DoSomethingAfterTts() {
+							@Override
+							public void doSomethingsAfterTts() {
+								mKwSdk.playClientMusics(list.get(0).name,list.get(0).artist,list.get(0).album);
+								mFWM.removeAll();
+								MyAIUI.WRITEAUDIOEABLE = false;
+								LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+							}
+						}, "抱歉没找到该歌曲,请欣赏" + list.get(0).artist + "的" + song, question);
+
+					}else{
+						mKwSdk.searchOnlineMusic(singer, null, null, new OnSearchListener() {
+							@Override
+							public void searchFinshed(SearchStatus searchStatus, boolean b, List<Music> list, boolean b1) {
+								if(searchStatus == SearchStatus.SUCCESS){
+									mTts.doSomethingAfterTts(new DoSomethingAfterTts() {
+										@Override
+										public void doSomethingsAfterTts() {
+											mKwSdk.playClientMusics(list.get(0).name,list.get(0).artist,list.get(0).album);
+											mFWM.removeAll();
+											MyAIUI.WRITEAUDIOEABLE = false;
+											LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+										}
+									}, "抱歉没找到该歌曲,请欣赏" + singer + "的" + list.get(0).name, question);
+
+								}else{
+									RecommendedSong(true);
+								}
+							}
+						});
+					}
+				}
+			});
+		}else{
+			//实在什么都没有
+			RecommendedSong(true);
+		}
+	}
+
+	/**
+	 * 推荐歌曲
+	 * @param exc
+	 */
+	private void RecommendedSong(boolean exc){
+		String[] kwanswer = MainApplication.getContext().getResources().getStringArray(R.array.kwanswer);
+		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
+			@Override
+			public void doSomethingsAfterTts() {
+				mKwSdk.randomPlayMusic();
+				mFWM.removeAll();
+				MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+			}
+
+		},exc?"抱歉没有该歌曲,"+kwanswer[4]:""+kwanswer[3],question);
+		return;
 	}
 
 	/**
@@ -326,9 +258,6 @@ public class KwMusicSkill extends Skill{
 					list.add(artist);
 					LogUtil.e("musicstate", "name:"+name+"  artist:"+artist+LogUtil.getLineInfo());
 					mTts.doSomethingAfterTts(null,"您是想听"+artist+"演唱的"+clearBracket(name)+"吗？您可以说:\"是的\"或者\"取消\"!",lrc);
-					//					sendMainServiceBoardcast("[manyspeech]" + "" + "@@" +  "您是想听"+artist+"演唱的"+clearBracket(name)+"吗？");//在tempansweractivity（圆球回答界面）中显示的字符串
-				}else{
-//					mTts.doSomethingAfterTts(null,"抱歉,我没有听懂,或许换个说法我就听明白了", question);
 				}
 			}
 
@@ -346,6 +275,35 @@ public class KwMusicSkill extends Skill{
 				return company;
 			}
 		});
+	}
+
+	private void disposeRC3(){
+		//rc 等于 3的情况下，也有可能出现上下首控制
+		if("INSTRUCTION".equals(intent)){
+			ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
+			for(Slot s:slots){
+				if("insType".equals(s.getName())){
+					//回到上一曲是（past），很奇怪，讯飞就是这样*-*
+					if("past".equals(s.getValue())){
+						LogUtil.e("dispose","RC == 3s时，出现的下一首情况"+LogUtil.getLineInfo());
+						MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","prev"));
+						mKwSdk.pre();
+						send("[MediaPlayActivity]" + "pre");
+						mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
+							@Override
+							public void doSomethingsAfterTts() {
+								// TODO Auto-generated method stub
+							}
+						},"好的",question);
+					}else if("sleep".equals(s.getValue())){
+//							MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+//							MySynthesizer.recoveyMusicStatusBeforeWakeUp();
+						mFWM.removeAll();
+					}
+				}
+			}
+			return;
+		}
 	}
 
 	/**

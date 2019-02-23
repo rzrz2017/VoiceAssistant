@@ -48,14 +48,14 @@ public class RzMusicLab {
 		this.curData = curData;
 	}
 
-	public static RzMusicLab get(Context context){
+	public static RzMusicLab get(){
 		if(sRzMusicLab == null){
-			sRzMusicLab = new RzMusicLab(context);
+			sRzMusicLab = new RzMusicLab();
 		}
 		return sRzMusicLab;
 	}
 
-	private RzMusicLab(Context context){
+	private RzMusicLab(){
 		mRzMusics = new ArrayList<>();
 
 	}

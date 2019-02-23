@@ -17,6 +17,7 @@ public class IntoChatSkill extends Skill{
 	private static final String TAG="ChatSkill";
 	public static String chatIntent;
 	public IntoChatSkill(intent intent){
+		super(intent);
 		mintent=intent;
 	}
 	@Override

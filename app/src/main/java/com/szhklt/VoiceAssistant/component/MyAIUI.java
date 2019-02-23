@@ -33,6 +33,7 @@ import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.service.TrafficStatisticsService;
 import com.szhklt.VoiceAssistant.skill.AlarmSkill;
+import com.szhklt.VoiceAssistant.skill.CocheerSkill;
 import com.szhklt.VoiceAssistant.skill.CookBookSkill;
 import com.szhklt.VoiceAssistant.skill.IntoChatSkill;
 import com.szhklt.VoiceAssistant.skill.KeyeventControlSkill;
@@ -66,7 +67,7 @@ public class MyAIUI implements AIUIListener{
 	public static String SMARTQUESTION;
 	public static String SERVICE;
 	private final String SPEECHCOMPLETE="android.intent.msg.SPEECHCOMPLETE";//发给典声的
-	private Skill skill = new Skill();//技能引用
+	private Skill skill;//技能引用
 
 	private MyAIUI(){
 		createAgent();
@@ -257,9 +258,12 @@ public class MyAIUI implements AIUIListener{
 					MySynthesizer.setIsTtsed(false);
 				}
 
-				mFWM.removeAll();
+				try {
+                    mFWM.removeAll();
+                }catch (Exception e){
+				    e.printStackTrace();
+                }
 				if(MainApplication.longWakeUp == true){
-					mFWM.removeAll();
 				}
 
 				if(ChatActivity.ISCHATMODE == true){
@@ -415,7 +419,9 @@ public class MyAIUI implements AIUIListener{
 			skill = new TranslationSkill(mintent);
 			skill.execute();
 		}else if ("musicX".equals(SERVICE)) {// 酷我
-			skill = new KwMusicSkill(mintent);
+//			skill = new KwMusicSkill(mintent);
+//			skill.execute();
+			skill = new CocheerSkill(mintent);
 			skill.execute();
 		}else if("scheduleX".equals(SERVICE)){//闹钟
 			skill = new AlarmSkill(mintent);

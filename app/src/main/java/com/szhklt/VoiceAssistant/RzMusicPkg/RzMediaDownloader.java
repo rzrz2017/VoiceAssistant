@@ -24,7 +24,7 @@ import com.szhklt.VoiceAssistant.util.LogUtil;
 
 public class RzMediaDownloader<T> extends HandlerThread{
 	private static final String TAG = "RzMediaDownloader";
-	private static final int MESSAGE_LOADMUSIC = 0;
+	private static final int MESSAGE_LOADMUSIC = 0;//播放音乐
 	private static final int MESSAGE_PAUSEMUSIC = 4;
 	private static final int MESSAGE_PLAYMUSIC = 5;
 	private static final int MESSAGE_SETSEEKBAR = 6;
@@ -111,13 +111,13 @@ public class RzMediaDownloader<T> extends HandlerThread{
 				}else if(msg.what == MESSAGE_PAUSEMUSIC){
 					sendMsgToDsPhoneStatus(0);
 					sendtoDS(null,
-							RzMusicLab.get(context).getCurName(),
+							RzMusicLab.get().getCurName(),
 							false);
 					player.pause();
 				}else if(msg.what == MESSAGE_PLAYMUSIC){
 					sendMsgToDsPhoneStatus(1);
 					sendtoDS(null,
-							RzMusicLab.get(context).getCurName(),
+							RzMusicLab.get().getCurName(),
 							true);
 					player.play();
 				}else if(msg.what == MESSAGE_SETSEEKBAR){
@@ -182,16 +182,16 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		if(target instanceof Result){
 			player.reset();//清除缓存
 			Result tmp = (Result) target;
-			RzMusicLab.get(context).setCurData(tmp);
+			RzMusicLab.get().setCurData(tmp);
 			player.setDataSource(context,tmp);
 			mResponseHandler.postDelayed(curPosRunable,1000);
 			sendMsgToDsPhoneStatus(1);
-			sendtoDS(RzMusicLab.get(context).getCurData().getImgUrl(),
-					RzMusicLab.get(context).getCurName(),
+			sendtoDS(RzMusicLab.get().getCurData().getImgUrl(),
+					RzMusicLab.get().getCurName(),
 					true);
-			sendMsgToDsPhone(RzMusicLab.get(context).getCurAuthor(),
-					         RzMusicLab.get(context).getCurName(),
-					         RzMusicLab.get(context).getCurData().getUrl(),
+			sendMsgToDsPhone(RzMusicLab.get().getCurAuthor(),
+					         RzMusicLab.get().getCurName(),
+					         RzMusicLab.get().getCurData().getUrl(),
 					         "kg");
 		}
 	}

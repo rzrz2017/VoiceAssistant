@@ -13,6 +13,7 @@ public class WebSearchSkill extends Skill{
 	private String webUrl=null;
 	private String answer=null;
 	public WebSearchSkill(intent intent){
+		super(intent);
 		mintent = intent;
 	}
 	@Override

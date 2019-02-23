@@ -4,6 +4,7 @@ import com.szhklt.VoiceAssistant.beam.intent;
 
 public class TranslationSkill extends Skill {
 	public TranslationSkill(intent intent){
+		super(intent);
 		mintent = intent;
 	}
 	@Override

@@ -121,6 +121,7 @@ public class MySynthesizer implements SynthesizerListener{
 		if(md != null){
 			md.doSomethingsAfterTts();
 		}
+		md = null;//重要
 	}
 
 	/**

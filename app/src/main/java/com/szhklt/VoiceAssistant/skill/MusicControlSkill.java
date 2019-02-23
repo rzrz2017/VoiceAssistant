@@ -31,6 +31,7 @@ public class MusicControlSkill extends Skill{
 	public Context context;
 //	private MediaControler mediaController;
 	public MusicControlSkill(intent intent) {
+		super(intent);
 		mintent = intent;
 		context = MainApplication.getContext();
 	}
@@ -291,7 +292,7 @@ public class MusicControlSkill extends Skill{
 				return;
 			}
 			if("lrc".equals(KFLAG)){
-				KwMusicSkill kwMusicSkill = new KwMusicSkill();
+				KwMusicSkill kwMusicSkill = new KwMusicSkill(mintent);
 				kwMusicSkill.playOnlineMusicBylrc(lrc);
 			}
 		}

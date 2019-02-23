@@ -19,6 +19,7 @@ public class VolumeControlSkill extends Skill{
 	AudioManager mAudioManager = (AudioManager) MainApplication.getContext().getSystemService(Service.AUDIO_SERVICE);
 
 	public VolumeControlSkill(intent intent) {
+		super(intent);
 		mintent = intent;
 	}
 

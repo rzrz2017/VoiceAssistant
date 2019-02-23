@@ -20,6 +20,7 @@ public class WeatherSkill extends Skill {
 	private WeatherDBHandler mweatherDBHandler;
 	private Context context;
 	public WeatherSkill(intent intent, String json){
+		super(intent);
 		LogUtil.e(TAG,"json:"+json);
 		context = MainApplication.getContext();
 		mintent = intent;

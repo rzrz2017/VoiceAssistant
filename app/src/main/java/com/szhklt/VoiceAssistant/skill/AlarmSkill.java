@@ -51,6 +51,7 @@ public class AlarmSkill extends Skill{
 
 	public AlarmSkill(intent intent) {
 		// TODO Auto-generated constructor stub
+		super(intent);
 		mintent = intent;
 		alarmdbHelper = AlarmClockDBHelper.getInstance();//闹钟数据库
 		adb = alarmdbHelper.getReadableDatabase();

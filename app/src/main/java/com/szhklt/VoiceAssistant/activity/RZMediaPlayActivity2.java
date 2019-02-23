@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,21 +33,25 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import cn.kuwo.autosdk.api.PlayEndType;
+import com.szhklt.VoiceAssistant.KwSdk.IKwSdk;
+import com.szhklt.VoiceAssistant.view.MediaplayLoadImage.OnLoadImageListener;
+import com.szhklt.VoiceAssistant.adapter.SuperAdapter.ViewHolder;
+import com.szhklt.VoiceAssistant.beam.intent;
+import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
+import com.szhklt.VoiceAssistant.RzMusicPkg.RzMediaDownloader.RzMediaDownloadListener;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
 import com.szhklt.VoiceAssistant.RzMusicPkg.RzMediaDownloader;
 import com.szhklt.VoiceAssistant.RzMusicPkg.RzMusicLab;
 import com.szhklt.VoiceAssistant.adapter.SuperAdapter;
 import com.szhklt.VoiceAssistant.beam.Result;
-import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.CircleImageView;
 import com.szhklt.VoiceAssistant.view.CircleProgress;
 import com.szhklt.VoiceAssistant.view.MediaplayLoadImage;
 import com.szhklt.VoiceAssistant.view.SlipTextView;
-import cn.kuwo.autosdk.api.PlayEndType;
+
 
 public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	private static String TAG = "RZMediaPlayActivity2";
@@ -93,31 +99,32 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			public void handleMessage(Message msg) {
 //				// TODO Auto-generated method stub
 				LogUtil.e("dskg","responseHandler handleMessage:"+LogUtil.getLineInfo());
-				if(msg.what == MESSAGE_DETAILED_LOAD){
-					if(myAdapter == null){
-						myAdapter = new SuperAdapter<Result>(null,R.layout.view_item_play_medie){
+				if(msg.what == MESSAGE_DETAILED_LOAD) {
+					if (myAdapter == null) {
+						myAdapter = new SuperAdapter<Result>(null, R.layout.view_item_play_medie) {
 							@Override
-							public void bindView(SuperAdapter.ViewHolder holder, Result obj) {
+							public void bindView(ViewHolder holder, Result obj) {
 								// TODO Auto-generated method stub
 								setHolderByMediaType(holder, obj);
 							}
 						};
 						mediaListView.setAdapter(myAdapter);
 					}
-					RzMusicLab.get(RZMediaPlayActivity2.this).addRzMusic((Result)msg.obj);
-					myAdapter.add((Result)msg.obj);
-					
-					if(RzMusicLab.get(RZMediaPlayActivity2.this).isCurData((Result)msg.obj)){
-						Result obj = (Result)msg.obj;
+					RzMusicLab.get().addRzMusic((Result) msg.obj);
+					myAdapter.add((Result) msg.obj);
+
+					if (RzMusicLab.get().isCurData((Result) msg.obj)) {
+						Result obj = (Result) msg.obj;
 						myAdapter.notifyDataSetChanged();
-						myAdapter.setSelectItem(RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().indexOf(obj));
+						myAdapter.setSelectItem(RzMusicLab.get().getRzMusics().indexOf(obj));
 //						loadImage((Result)msg.obj);
-						
+
 						mediaToggle.setVisibility(View.GONE);
 						circleProgress.setVisibility(View.VISIBLE);
 						circleProgress.startAnim();
 						mRzMediaDownloader.queueRzMedia(obj);
 					}
+
 				}else if(msg.what == MESSAGE_DETAILED_NEXT){
 					next();
 				}else if(msg.what == MESSAGE_DETAILED_PREV){
@@ -129,7 +136,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		mRzMediaDownloader = new RzMediaDownloader<>(this,responseHandler);
 		mRzMediaDownloader.start();
 		mRzMediaDownloader.getLooper();
-		mRzMediaDownloader.setmRzMediaDownloadListener(new RzMediaDownloader.RzMediaDownloadListener<Result>() {
+		mRzMediaDownloader.setmRzMediaDownloadListener(new RzMediaDownloadListener<Result>() {
 
 			@Override
 			public void onRzMediaPrepared(MediaPlayerWrapper mediaPlayer) {
@@ -161,7 +168,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 				durSec = (dur/1000);
 				seekbar.setMax(durSec);			
 				
-				myAdapter.setSelectItem(RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().indexOf(mediaPlayer.getTmp()));
+				myAdapter.setSelectItem(RzMusicLab.get().getRzMusics().indexOf(mediaPlayer.getTmp()));
 			}
 
 			@Override
@@ -209,6 +216,12 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 					 getIntent().getIntExtra("kg_temp",0),
 					 new Random().nextInt());
 		}
+
+		if(getIntent().getSerializableExtra("cocheer") != null){
+			String singer = getIntent().getStringExtra("singer");
+			LogUtil.e("singer",singer+LogUtil.getLineInfo());
+			loadCocheer((List<Result>)getIntent().getSerializableExtra("cocheer"),singer);
+		}
 	}
 	
 	@Override
@@ -235,13 +248,19 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 					 intent.getIntExtra("kg_temp",0),
 					 new Random().nextInt());
 		}
+
+		if(intent.getSerializableExtra("cocheer") != null){
+			String singer = intent.getStringExtra("singer");
+			LogUtil.e("singer",singer+LogUtil.getLineInfo());
+			loadCocheer((List<Result>)intent.getSerializableExtra("cocheer"),singer);
+		}
 	}
 	
 	public void loadDataFromReceiver(String kgData,int kgTemp,int raInt){
 		RZMediaPlayActivity2.raInt = raInt;
 		final JSONArray mJSONArray;
 		try {
-			RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().clear();
+			RzMusicLab.get().getRzMusics().clear();
 			if(myAdapter != null){
 				myAdapter.clear();
 			}
@@ -254,8 +273,8 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 				
 				if(mRzMediaDownloader != null){
 					if(i == kgTemp){
-						RzMusicLab.get(RZMediaPlayActivity2.this).setCurName(name);
-						RzMusicLab.get(RZMediaPlayActivity2.this).setCurAuthor(auther);
+						RzMusicLab.get().setCurName(name);
+						RzMusicLab.get().setCurAuthor(auther);
 					}
 					String[] msg = {name,auther};
 					//请求加载歌曲
@@ -266,6 +285,59 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 加载酷旗
+	 * @param resultList
+	 */
+	public void loadCocheer(List<Result> resultList,String singer){
+		Result obj = null;
+
+		RzMusicLab.get().clear();
+		if(myAdapter != null){
+			myAdapter.clear();
+		}
+
+		for(int i = 0;i < resultList.size();i++){
+            if (myAdapter == null) {
+                myAdapter = new SuperAdapter<Result>(null, R.layout.view_item_play_medie) {
+                    @Override
+                    public void bindView(ViewHolder holder, Result obj) {
+                        // TODO Auto-generated method stub
+                        setHolderByMediaType(holder, obj);
+                    }
+                };
+                mediaListView.setAdapter(myAdapter);
+            }
+            RzMusicLab.get().addRzMusic(resultList.get(i));
+            LogUtil.e(TAG,resultList.get(i).toString());
+            myAdapter.add(resultList.get(i));
+            if(singer != null){
+            	if(resultList.get(i).getAuthor().equals(singer)){
+            		obj = resultList.get(i);
+				}
+			}
+
+		}
+		playMedia(obj == null?resultList.get(0):obj);
+	}
+
+
+	/**
+	 * 播放媒体资源
+	 * @param obj
+	 */
+	private void playMedia(Result obj){
+		LogUtil.e(TAG,"playMedia()"+LogUtil.getLineInfo());
+		myAdapter.notifyDataSetChanged();
+		LogUtil.e(TAG,"SelectItem:"+RzMusicLab.get().getRzMusics().indexOf(obj)	);
+		myAdapter.setSelectItem(RzMusicLab.get().getRzMusics().indexOf(obj));
+//		loadImage((Result)msg.obj);
+		mediaToggle.setVisibility(View.GONE);
+		circleProgress.setVisibility(View.VISIBLE);
+		circleProgress.startAnim();
+		mRzMediaDownloader.queueRzMedia(obj);
 	}
 
 	/**
@@ -312,7 +384,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			mediaToggle.setVisibility(View.GONE);
 			circleProgress.setVisibility(View.VISIBLE);
 			circleProgress.startAnim();
-			mRzMediaDownloader.queueRzMedia(RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().get(position));
+			mRzMediaDownloader.queueRzMedia(RzMusicLab.get().getRzMusics().get(position));
 			myAdapter.setSelectItem(position);
 			myAdapter.notifyDataSetChanged();
 		}
@@ -330,7 +402,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		}
 		service = intent.getService();
 		
-		RzMusicLab mRzMusicLab = RzMusicLab.get(this);
+		RzMusicLab mRzMusicLab = RzMusicLab.get();
 		List<Result> dataList = mRzMusicLab.getRzMusics();
 		dataList.clear();
 		dataList = intent.getData().getResult();
@@ -361,7 +433,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	/**
 	 * 设置视图通过多媒体类型 
 	 */
-	public void setHolderByMediaType(SuperAdapter.ViewHolder holder, Result obj){
+	public void setHolderByMediaType(ViewHolder holder, Result obj){
 		//区分媒体种类
 		if("story".equals(service)){
 			holder.setText(R.id.tv_media_name,obj.getName());
@@ -395,7 +467,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		LogUtil.e(TAG,"onDestroy()");
-		RzMusicLab.get(this).clear();
+		RzMusicLab.get().clear();
 		mRzMediaDownloader.clearQueue();
 		mRzMediaDownloader.relesePlayer();
 		mRzMediaDownloader.quit();
@@ -422,7 +494,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		intent = null;
 	}
 
-	private KwSdk.IKwSdk iKwSdk = new KwSdk.IKwSdk() {
+	private IKwSdk iKwSdk = new IKwSdk() {
 		@Override
 		public void onPlayEnd(PlayEndType arg0) {
 			// TODO Auto-generated method stub
@@ -484,7 +556,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		}
 		myAdapter.setSelectItem(pos+1);
 		myAdapter.notifyDataSetChanged();
-		Result tmp = RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().get(pos+1);
+		Result tmp = RzMusicLab.get().getRzMusics().get(pos+1);
 //		loadImage(tmp);
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
@@ -506,7 +578,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		}
 		myAdapter.setSelectItem(pos-1);
 		myAdapter.notifyDataSetChanged();
-		Result tmp = RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().get(pos-1);
+		Result tmp = RzMusicLab.get().getRzMusics().get(pos-1);
 //		loadImage(tmp);
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
@@ -588,7 +660,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 				imgUrlStr = data.getImgUrl();
 			}
 			LogUtil.e("img","imgUrlStr:"+imgUrlStr+LogUtil.getLineInfo());
-			imageload.onLoadImage(new URL(imgUrlStr),new MediaplayLoadImage.OnLoadImageListener() {
+			imageload.onLoadImage(new URL(imgUrlStr),new OnLoadImageListener() {
 				@Override
 				public void OnLoadImage(Bitmap bitmap, String bitmapPath) {
 					// TODO Auto-generated method stub
@@ -616,60 +688,5 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			}
 		}
 		return false;
-	}
-	
-	/*******************************静态内部类广播*********************************/
-	/**
-	 * @author rz
-	 * 酷狗音乐资源广播接受者
-	 * （主要用来加载launcher界面的音乐）
-	 */
-	public static class KGReceiver extends BroadcastReceiver{
-		public static Boolean isBusy =false;
-		private String dsmusic="";
-		public String currSong;
-		public String count;
-		private int temp;//current song index
-
-		public int musicTotal;//歌曲总计
-		public int musicCounter;//实际歌曲计数器
-		public int loadFailCounter = 0;//加载失败计数
-		public Timer timer = new Timer();
-		public static boolean tag = true;
-		@Override
-		public void onReceive(final Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			Bundle bundle = intent.getExtras();
-			count = bundle.getString("count");
-			if(count.equals("DSintoMUSIC")){//进入多媒体播放界面
-			}else if(count.startsWith("[DSKUGOU]")){
-				LogUtil.e("KGReceiver","tag:"+tag);
-				if(tag == false){
-					return;
-				}
-				tag = false;
-				timer.schedule(new TimerTask() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						tag = true;
-					}
-				}, 3500);
-				
-				RzMusicLab.get(context).getRzMusics().clear();				
-				dsmusic=count.replaceAll("\\[DSKUGOU]", "");
-				String[] musicstr=dsmusic.split("@@");
-				LogUtil.e("KGReceiver","musicstr[0]:"+musicstr[0]);
-				temp=Integer.parseInt(musicstr[1].toString());
-				if(musicstr[0].length()>10){
-					Intent sintent = new Intent(context,RZMediaPlayActivity2.class);
-					sintent.putExtra("kg_data",musicstr[0]);
-					sintent.putExtra("kg_temp",temp);
-					sintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					context.startActivity(sintent);
-				}
-			}
-		}
 	}
 }

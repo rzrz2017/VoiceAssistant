@@ -11,6 +11,7 @@ public class OpenQASkill extends Skill{
     public static String TAG = "OpenQASkill";
 
     public OpenQASkill(intent intent){
+        super(intent);
         mintent = intent;
     }
 

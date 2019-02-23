@@ -171,5 +171,13 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name="com.szhklt.VoiceAssistant.broadcastReceiver.MusicReceiver" >
+            <intent-filter>
+                <action android:name="com.szhklt.service.MainService" />
+                <action android:name="com.szhklt.getmusicinfo" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

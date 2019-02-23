@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.VersionInfo;
+import com.szhklt.VoiceAssistant.beam.VersionInfo;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.CommomDialog;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.MyDialog;

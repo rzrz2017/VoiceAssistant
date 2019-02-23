@@ -5,6 +5,7 @@ import com.szhklt.VoiceAssistant.beam.intent;
 
 public class CookBookSkill extends Skill {
 	public CookBookSkill(intent intent){
+		super(intent);
 		mintent = intent;
 	}
 	@Override

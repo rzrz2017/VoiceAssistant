@@ -12,6 +12,7 @@ public class MediaPlaySkill extends Skill {
 	private KwSdk mkwSdk = KwSdk.getInstance();
 	
 	public MediaPlaySkill(intent intent){
+		super(intent);
 		mintent = intent;
 	}
 
