@@ -176,23 +176,6 @@ public class CocheerSkill extends Skill{
                             mTts.speechSynthesis("抱歉暂时没有"+album+"的版权",question);
                         }
                     });
-
-
-//                    Bundle bundle = buildData(msg);
-//                    if(bundle == null){
-//                        mTts.speechSynthesis("抱歉,没有专辑信息!",question);
-//                        return;
-//                    }
-
-//                    mTts.doSomethingAfterTts(new DoSomethingAfterTts() {
-//                        @Override
-//                        public void doSomethingsAfterTts() {
-//                            actionStart(bundle);
-//                            removeOnUI();
-//                            MyAIUI.WRITEAUDIOEABLE = false;
-//                            LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-//                        }
-//                    },singer == null?"请欣赏,"+song:"请欣赏,"+singer+"的"+song,question);
                 }
 
                 @Override

@@ -23,11 +23,5 @@ public class MainActivity extends Activity {
             FloatWindowManager.getInstance().createFloatButton(this);
         }
         finish();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

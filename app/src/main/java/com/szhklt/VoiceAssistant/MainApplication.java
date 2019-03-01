@@ -1,13 +1,18 @@
 package com.szhklt.VoiceAssistant;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.rich.czlylibary.sdk.MiguCzlySDK;
+import com.rich.player.sdk.InitPlayerServiceCallback;
+import com.rich.player.sdk.PlayMusicClient;
 import com.szhklt.VoiceAssistant.beam.VersionInfo;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.util.LogUtil;
@@ -61,26 +66,6 @@ public class MainApplication extends Application{
 
 	public static String firmwareVersion=null;//固件版本号
 
-//	/**
-//	 * setter
-//	 * @param mBleDataReceiver
-//	 */
-//	public void setmBleDataReceiver(BleDataReceiver mBleDataReceiver) {
-//		this.mBleDataReceiver = mBleDataReceiver;
-//	}
-	
-//	/**
-//	 * 获取串口读取线程
-//	 * @return
-//	 */
-//	public ReadThread getReadThread(){
-//		if(mReadThread != null){
-//			return mReadThread;
-//		}else{
-//			return null;
-//		}
-//	}
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -115,8 +100,54 @@ public class MainApplication extends Application{
 		Toast.makeText(getApplicationContext(), "语音助手启动了", Toast.LENGTH_SHORT).show();
 //		FloatWindowManager.getInstance().createFloatButton(getApplicationContext());//创建悬浮按钮
 		firmwareVersion=getString();
+
+		//初始化咪咕音乐
+		String processName = getProcessName(this);
+		if (processName != null) {
+			if (getPackageName().equals(processName)) {
+				initPlayer();
+				MiguCzlySDK.getInstance().init(this)
+						.setSmartDeviceId("11ae83f3b3feba")
+						.setUid("111111")
+						.setPhoneNum("18813976199")
+						.setKey("246e74c078e79adf");
+				init();
+				PlayMusicClient.getInstance().init(this,false).setInitCallback(new InitPlayerServiceCallback() {
+					@Override
+					public void callback(String code, String msg) {
+
+					}
+				});
+			}
+		}
 	}
-	
+
+	private String getProcessName(Context context) {
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+		if (runningApps == null) {
+			return null;
+		}
+		for (ActivityManager.RunningAppProcessInfo proInfo : runningApps) {
+			if (proInfo.pid == android.os.Process.myPid()) {
+				if (proInfo.processName != null) {
+					return proInfo.processName;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 初始化播放器
+	 */
+	private void initPlayer() {
+
+	}
+
+	private void init() {
+	}
+
 	/**
 	 * 全局获取上下文
 	 * @return

@@ -1,15 +1,23 @@
 package com.szhklt.VoiceAssistant.skill;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.rich.czlylibary.bean.MusicInfo;
+import com.rich.czlylibary.bean.SearchLyricNewResult;
+import com.rich.czlylibary.bean.SingerNew;
+import com.rich.czlylibary.bean.SongNew;
+import com.rich.czlylibary.sdk.ResultCallback;
 import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
+import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.activity.SleepActivity;
 import com.szhklt.VoiceAssistant.beam.intent;
 import cn.kuwo.autosdk.api.PlayMode;
@@ -19,17 +27,20 @@ import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.db.MusicCollectionDBHelper;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+import com.szhklt.VoiceAssistant.util.MiGuSearcher;
 
 public class MusicControlSkill extends Skill{
 	private static final String TAG = "MusicControlSkill";
-	private int rc;
 	public static String KFLAG = null;
 	private String musicCtrIntent;
 	private String lrc;
 	private KwSdk mKwSdk = KwSdk.getInstance();
-	public static List<String> list=KwMusicSkill.list;
 	public Context context;
 //	private MediaControler mediaController;
+	private static List<MusicInfo> musicInfoList = new ArrayList<>();
+	private String musicName;
+	private String singerName;
+
 	public MusicControlSkill(intent intent) {
 		super(intent);
 		mintent = intent;
@@ -41,7 +52,6 @@ public class MusicControlSkill extends Skill{
 		super.extractVaildInformation();
 		List<Slot> slots = new ArrayList<>();
 		slots = mintent.getSemantic().get(0).getSlots();
-		rc = mintent.getRc();
 		musicCtrIntent = mintent.getSemantic().get(0).getIntent();
 		LogUtil.e("musicstate", "musicCtrIntent:"+musicCtrIntent+ LogUtil.getLineInfo());
 		if("music_player_control".equals(musicCtrIntent)){//播放控制意图
@@ -286,36 +296,50 @@ public class MusicControlSkill extends Skill{
 			}
 		}
 
+		//根据歌词搜索
 		if("music_searchbylrc".equals(musicCtrIntent)){
-			if(mKwSdk.isKuwoRunning() == false){
-				mTts.speechSynthesis("酷我没有运行，无法搜索歌词",question);
-				return;
-			}
-			if("lrc".equals(KFLAG)){
-				KwMusicSkill kwMusicSkill = new KwMusicSkill(mintent);
-				kwMusicSkill.playOnlineMusicBylrc(lrc);
-			}
+			LogUtil.e(TAG,"lrc:"+lrc);
+			//咪咕
+			MiGuSearcher.searchSongByLyric(lrc, 1, 15, new ResultCallback<SearchLyricNewResult>() {
+				@Override
+				public void onStart() {
+
+				}
+
+				@Override
+				public void onSuccess(SearchLyricNewResult searchLyricNewResult) {
+					searchSongPlay(searchLyricNewResult.getSearchLyric().getData().getResult());
+				}
+
+				@Override
+				public void onFailed(String s, String s1) {
+
+				}
+
+				@Override
+				public void onFinish() {
+
+				}
+			});
+
+			//酷我
+//			if(mKwSdk.isKuwoRunning() == false){
+//				mTts.speechSynthesis("酷我没有运行，无法搜索歌词",question);
+//				return;
+//			}
+//			if("lrc".equals(KFLAG)){
+//				KwMusicSkill kwMusicSkill = new KwMusicSkill(mintent);
+//				kwMusicSkill.playOnlineMusicBylrc(lrc);
+//			}
 		}
 
 		if("music_searchbylrc_act".equals(musicCtrIntent)){
-			if(mKwSdk.isKuwoRunning() == false){
-				mTts.speechSynthesis("酷我没有运行，无法搜索歌词",question);
-				return;
-			}
 			if("playbylrc_sure".equals(KFLAG)){//确定歌词播放
-				LogUtil.e("musicstate", list.size()+LogUtil.getLineInfo());
-				if(list.size()==2){
-					mKwSdk.playClientMusics(list.get(0), list.get(1), null);
-					list.clear();
-				}else{//当list中数据异常时（长度不为2）的回答
-					mTts.doSomethingAfterTts(null,"我出了点小问题，请重新对我说一句歌词吧",question);
-				}
+				confirmAndPlay();
 			}else if("playbylrc_no".equals(KFLAG)){//取消歌词播放
 				mTts.doSomethingAfterTts(null,"好的",question);
-				list.clear();
 			}else{
 				mTts.doSomethingAfterTts(null,"我没有听懂",question);
-				list.clear();
 			}
 		}
 	}
@@ -344,6 +368,114 @@ public class MusicControlSkill extends Skill{
 		intent.putExtra("count", text);
 		intent.setAction("com.szhklt.service.MainService");
 		MainApplication.getContext().sendBroadcast(intent);
+	}
+
+	/**
+	 * 解析歌曲
+	 * @param songNews
+	 */
+	private void searchSongPlay(SongNew[] songNews) {
+		try {
+			disposeSongData(songNews);
+			mTts.speechSynthesis(buildAns(musicName,singerName),lrc);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 构建歌词查询回复
+	 */
+	private String buildAns(String musicName,String singerName){
+		StringBuilder ans = new StringBuilder();
+		if(singerName != null && musicName!= null){
+			ans.append("您是想听");
+			ans.append(singerName);
+			ans.append("演唱的");
+			ans.append(clearBracket(musicName));
+			ans.append("吗？您可以说:\"是的\"或者\"取消\"!");
+		}
+		return ans.toString();
+	}
+
+	/**
+	 * 如果有括号，去掉括号及括号里的字符串
+	 * @param company
+	 * @return
+	 */
+	public String clearBracket(String company){
+		if(company.contains("(")&&company.contains(")")){
+			String bracket = company.substring(company.indexOf("("),company.indexOf(")")+1);
+			company = company.replace(bracket, "");
+			return company;
+		}
+		return company;
+	}
+
+	/**
+	 * 确认并播放
+	 */
+	private void confirmAndPlay(){
+		LogUtil.e(TAG,"musicInfoList:"+musicInfoList.size());
+		if (musicInfoList.isEmpty()) {
+//                showToast("查询歌曲成功，但是歌曲没有版权ID，不能播放");
+			mTts.speechSynthesis("抱歉,暂时没有版权",question);
+			LogUtil.e(TAG,"查询歌曲成功，但是歌曲没有版权ID，不能播放");
+		} else {
+			//进入播放器播放
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("migu",(Serializable)musicInfoList);
+			bundle.putString("index","0");
+			actionStart(bundle);
+			musicInfoList.clear();
+		}
+	}
+
+	/**
+	 * 处理数据
+	 */
+	private void disposeSongData(SongNew[] songNews){
+		for (int i=0;i < songNews.length;i++) {
+			MusicInfo musicInfo = new MusicInfo();
+			if (songNews[i].getFullSongs() != null && songNews[i].getFullSongs().length > 0) {
+				musicInfo.setMusicId(songNews[i].getFullSongs()[0].getCopyrightId());
+				LogUtil.e(TAG,"MusicId:"+songNews[i].getFullSongs()[0].getCopyrightId());
+			} else {
+				continue;
+			}
+			musicInfo.setMusicName(songNews[i].getName());
+			LogUtil.e(TAG,"MusicName:"+songNews[i].getName());
+			if(i == 0){
+				musicName = songNews[i].getName();
+			}
+			musicInfo.setSingerName(songNews[i].getSingers()[0].getName());
+			LogUtil.e(TAG,"SingerName:"+songNews[i].getSingerName());
+			SingerNew[] ss = songNews[i].getSingers();
+			LogUtil.e(TAG,"SingerName:"+"ss.length:"+ss.length+ss[0].toString());
+			if(i == 0){
+				singerName = ss[0].getName();
+			}
+			if (songNews[i].getMvPic() != null && songNews[i].getMvPic().length != 0) {
+				musicInfo.setPicUrl(songNews[i].getMvPic()[0].getPicPath());
+				LogUtil.e(TAG,"SingerName:"+songNews[i].getMvPic()[0].getPicPath());
+			}
+			musicInfo.setLrcUrl(songNews[i].getLyricUrl());
+			LogUtil.e(TAG,"LrcUrl:"+songNews[i].getLyricUrl());
+			musicInfoList.add(musicInfo);
+			LogUtil.e(TAG,"=================================");
+		}
+		LogUtil.e(TAG,"musicInfoList:"+musicInfoList.size());
+	}
+
+	/**
+	 * 携带数据启动播放器
+	 * @param data
+	 */
+	private void actionStart(Bundle data){
+		Intent sintent = new Intent(MainApplication.getContext(), RZMediaPlayActivity2.class);
+		sintent.putExtras(data);
+		sintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		MainApplication.getContext().startActivity(sintent);
 	}
 
 }

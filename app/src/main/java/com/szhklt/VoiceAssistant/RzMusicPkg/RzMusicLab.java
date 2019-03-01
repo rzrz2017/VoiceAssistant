@@ -92,7 +92,7 @@ public class RzMusicLab {
 
 	public boolean isCurData(Result tmp) {
 		// TODO Auto-generated method stub
-		if(tmp.getName().equals(curName) && tmp.getAuthor().equals(curAuthor)){
+		if(tmp.getName().equals(curName) && tmp.getAuthor().contains(curAuthor)){
 			return true;
 		}else{
 			return false;

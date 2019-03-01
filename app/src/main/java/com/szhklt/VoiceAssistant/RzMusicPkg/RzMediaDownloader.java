@@ -16,11 +16,19 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import com.google.gson.Gson;
+import com.rich.czlylibary.bean.MusicInfo;
+import com.rich.czlylibary.bean.MusicinfoResult;
+import com.rich.czlylibary.sdk.ResultCallback;
+import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.beam.Result;
 import com.szhklt.VoiceAssistant.beam.Song;
+import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.component.MySynthesizer;
+import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+import com.szhklt.VoiceAssistant.util.MiGuSearcher;
 
 public class RzMediaDownloader<T> extends HandlerThread{
 	private static final String TAG = "RzMediaDownloader";
@@ -29,6 +37,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	private static final int MESSAGE_PLAYMUSIC = 5;
 	private static final int MESSAGE_SETSEEKBAR = 6;
 	private static final int MESSAGE_LOADURL = 7;
+	private static final int MESSAGE_LOADMIGUURL = 8;
 	
 	private Context context;
 	private MediaPlayerWrapper player;
@@ -42,7 +51,8 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	private RzMediaDownloadListener<T> mRzMediaDownloadListener;
 	private KGHandler kgHandler;
 	private Gson gson;
-	
+	public static int count = 0;
+
 	public RzMediaDownloadListener<T> getmRzMediaDownloadListener() {
 		return mRzMediaDownloadListener;
 	}
@@ -51,7 +61,6 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			RzMediaDownloadListener<T> mRzMediaDownloadListener) {
 		this.mRzMediaDownloadListener = mRzMediaDownloadListener;
 	}
-	
 
 	public RzMediaDownloader(Context context,Handler handler) {
 		super(TAG);
@@ -67,7 +76,6 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		player.setOnInfoListener(infoListener);
 		player.setOnPreparedListener(preparedListener);
 		player.setOnErrorListener(errorListener);
-		
 	}
 	
 	@Override
@@ -77,11 +85,53 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
-				if(msg.what == MESSAGE_LOADMUSIC){
-					T target = (T)msg.obj;
+				if(msg.what == MESSAGE_LOADMUSIC) {
+					T target = (T) msg.obj;
 					//请求加载音乐
 					mResponseHandler.removeCallbacks(curPosRunable);
-					handleRequest(target);
+					if(msg.arg1 == 1){
+						handleRequest(target,true);
+					}else{
+						handleRequest(target,false);
+					}
+				}else if(msg.what == MESSAGE_LOADMIGUURL){
+					final String song = msg.getData().getString("song");
+					String author = msg.getData().getString("author");
+					String musicId = msg.getData().getString("musicid");
+
+					MiGuSearcher.findMusicInfoByid(musicId, new ResultCallback<MusicinfoResult>() {
+						@Override
+						public void onStart() {
+							count++;
+						}
+
+						@Override
+						public void onSuccess(MusicinfoResult musicinfoResult) {
+							Result temp;
+							temp = toResult(musicinfoResult.getMusicInfo());
+							Message msg = new Message();
+							msg.what = RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD;
+							msg.obj = temp;
+							msg.arg1 = 1;//表示需要提示
+							mResponseHandler.sendMessage(msg);
+//							mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD,temp)
+//									.sendToTarget();
+
+						}
+
+						@Override
+						public void onFailed(String s, String s1) {
+
+						}
+
+						@Override
+						public void onFinish() {
+							if(count == 1){
+								//播放
+							}
+						}
+					});
+
 				}else if(msg.what == MESSAGE_LOADURL){
 					final String song = msg.getData().getString("song");
 					String author = msg.getData().getString("author");
@@ -108,6 +158,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 							mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD,obj).sendToTarget();
 						}
 					});
+
 				}else if(msg.what == MESSAGE_PAUSEMUSIC){
 					sendMsgToDsPhoneStatus(0);
 					sendtoDS(null,
@@ -127,7 +178,15 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			}
 		};
 	}
-	
+
+	private Result toResult(MusicInfo musicInfo) {
+		Result tmp = new Result();
+		tmp.setAuthor(musicInfo.getSingerName());
+		tmp.setName(musicInfo.getMusicName());
+		tmp.setUrl(musicInfo.getListenUrl());
+		return tmp;
+	}
+
 	@Override
 	public boolean quit() {
 		// TODO Auto-generated method stub
@@ -150,11 +209,37 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			mRequestHandler.sendMessage(mesg);
 		}
 	}
-	
-	public void queueRzMedia(T target){
-		mRequestHandler.obtainMessage(MESSAGE_LOADMUSIC,target).sendToTarget();
+
+	/**
+	 * 咪咕加载Url
+	 * @param msg
+	 */
+	public void queueLoadMiGuURL(String []msg){
+		Bundle bundle = new Bundle();
+		Message mesg = new Message();
+		mesg.what = MESSAGE_LOADMIGUURL;
+		bundle.putString("song",msg[0]);
+		bundle.putString("author",msg[1]);
+		bundle.putString("musicid",msg[2]);
+		mesg.setData(bundle);
+		if(mRequestHandler != null){
+			mRequestHandler.sendMessage(mesg);
+		}
 	}
 	
+	public void queueRzMedia(T target,Boolean isprompt){
+		if(isprompt){
+			Message msg = new Message();
+			msg.obj = target;
+			msg.what = MESSAGE_LOADMUSIC;
+			msg.arg1 = 1;
+			mRequestHandler.sendMessage(msg);
+		}else{
+			mRequestHandler.obtainMessage(MESSAGE_LOADMUSIC,target).sendToTarget();
+		}
+
+	}
+
 	public void queuePauseMedia(){
 		mRequestHandler.obtainMessage(MESSAGE_PAUSEMUSIC).sendToTarget();
 	}
@@ -177,13 +262,29 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		}
 	}
 	
-	private void handleRequest(final T target) {
+	private void handleRequest(final T target,Boolean isPrompt) {
 		LogUtil.e(TAG, "handleRequest");
 		if(target instanceof Result){
 			player.reset();//清除缓存
 			Result tmp = (Result) target;
 			RzMusicLab.get().setCurData(tmp);
-			player.setDataSource(context,tmp);
+
+			if(isPrompt){
+				LogUtil.e("arg1","需要提示");
+				MySynthesizer.getInstance(context).doSomethingAfterTts(new DoSomethingAfterTts() {
+					@Override
+					public void doSomethingsAfterTts() {
+						player.setDataSource(context,tmp);
+						FloatWindowManager.getInstance().removeAll();
+						MyAIUI.WRITEAUDIOEABLE = false;
+						LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+					}
+				},"请欣赏,"+tmp.getAuthor()+"的"+tmp.getName(),null);
+			}else{
+				LogUtil.e("arg1","不需要提示");
+				player.setDataSource(context,tmp);
+			}
+
 			mResponseHandler.postDelayed(curPosRunable,1000);
 			sendMsgToDsPhoneStatus(1);
 			sendtoDS(RzMusicLab.get().getCurData().getImgUrl(),
@@ -289,28 +390,6 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	
 	/**********************************************/
 	/**
-	 * 发送当前多媒体音乐的状态
-	 * @param state 暂停是0 播放是1
- 	 */
-    private void sendMsgToDsPhoneStatus(int state){
-    	AudioManager mAudioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        JSONObject o = new JSONObject();
-        try {
-            o.put("state",state);
-            o.put("position",player.getCurrentPosition());
-            o.put("duration",player.getDuration());
-            o.put("volume", mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            LogUtil.e("dsplay","send json:"+o.toString());
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        LogUtil.e(TAG,"json:"+o.toString()+LogUtil.getLineInfo());
-        MainApplication.getContext().sendBroadcast(new Intent("com.hklt.play_song").putExtra("type",2).putExtra("data",o.toString()));
-        o = null;
-    }
-    
-	/**
 	 * 发送给典声，用于更新他们界面的ui（主要是圆形图片）
 	 */
 	private void sendtoDS(String imageurl,String songname,Boolean isMusicplaying){
@@ -323,10 +402,32 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			Intent intent=new Intent();
 			intent.putExtra("count", mJsonObject.toString());
 			intent.setAction("com.szhklt.ds.MUSIC");
-			context.sendBroadcast(intent); 
+			context.sendBroadcast(intent);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 发送当前多媒体音乐的状态
+	 * @param state 暂停是0 播放是1
+	 */
+	private void sendMsgToDsPhoneStatus(int state){
+		AudioManager mAudioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		JSONObject o = new JSONObject();
+		try {
+			o.put("state",state);
+			o.put("position",player.getCurrentPosition());
+			o.put("duration",player.getDuration());
+			o.put("volume", mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+			LogUtil.e("dsplay","send json:"+o.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LogUtil.e(TAG,"json:"+o.toString()+LogUtil.getLineInfo());
+		MainApplication.getContext().sendBroadcast(new Intent("com.hklt.play_song").putExtra("type",2).putExtra("data",o.toString()));
+		o = null;
 	}
 
 	/**

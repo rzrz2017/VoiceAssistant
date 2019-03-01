@@ -40,6 +40,7 @@ import com.szhklt.VoiceAssistant.skill.KeyeventControlSkill;
 import com.szhklt.VoiceAssistant.skill.KwMusicSkill;
 import com.szhklt.VoiceAssistant.skill.LightControlSkill;
 import com.szhklt.VoiceAssistant.skill.MediaPlaySkill;
+import com.szhklt.VoiceAssistant.skill.MiGuSkill;
 import com.szhklt.VoiceAssistant.skill.MusicControlSkill;
 import com.szhklt.VoiceAssistant.skill.OpenQASkill;
 import com.szhklt.VoiceAssistant.skill.Skill;
@@ -421,7 +422,9 @@ public class MyAIUI implements AIUIListener{
 		}else if ("musicX".equals(SERVICE)) {// 酷我
 //			skill = new KwMusicSkill(mintent);
 //			skill.execute();
-			skill = new CocheerSkill(mintent);
+//			skill = new CocheerSkill(mintent);
+//			skill.execute();
+			skill = new MiGuSkill(mintent);
 			skill.execute();
 		}else if("scheduleX".equals(SERVICE)){//闹钟
 			skill = new AlarmSkill(mintent);

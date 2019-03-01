@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
+import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.beam.intent;
 
 public class MediaPlaySkill extends Skill {	
@@ -29,7 +30,7 @@ public class MediaPlaySkill extends Skill {
 		mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 			@Override
 			public void doSomethingsAfterTts() {
-//				RZMediaPlayActivity2.actionStart(context,null,null,mintent);
+				RZMediaPlayActivity2.actionStart(MainApplication.getContext(),null,null,mintent);
 				
 //				RZMediaPlayActivity.SERVICE = mintent.getService();
 				

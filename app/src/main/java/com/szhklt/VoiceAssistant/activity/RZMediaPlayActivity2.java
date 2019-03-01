@@ -34,8 +34,11 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.kuwo.autosdk.api.PlayEndType;
+
+import com.bumptech.glide.Glide;
+import com.rich.czlylibary.bean.MusicInfo;
 import com.szhklt.VoiceAssistant.KwSdk.IKwSdk;
-import com.szhklt.VoiceAssistant.view.MediaplayLoadImage.OnLoadImageListener;
+import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.adapter.SuperAdapter.ViewHolder;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
@@ -49,7 +52,6 @@ import com.szhklt.VoiceAssistant.beam.Result;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.CircleImageView;
 import com.szhklt.VoiceAssistant.view.CircleProgress;
-import com.szhklt.VoiceAssistant.view.MediaplayLoadImage;
 import com.szhklt.VoiceAssistant.view.SlipTextView;
 
 
@@ -78,7 +80,6 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	StringBuffer totalText;
 	StringBuffer curtimerText;
 	public int durSec = 0;
-	private MediaplayLoadImage imageload;
 	private IntentFilter intentFilter;
 	private SuperAdapter<Result> myAdapter;
 	private String service;
@@ -117,14 +118,19 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 						Result obj = (Result) msg.obj;
 						myAdapter.notifyDataSetChanged();
 						myAdapter.setSelectItem(RzMusicLab.get().getRzMusics().indexOf(obj));
-//						loadImage((Result)msg.obj);
+						loadImage((Result)msg.obj);
 
 						mediaToggle.setVisibility(View.GONE);
 						circleProgress.setVisibility(View.VISIBLE);
 						circleProgress.startAnim();
-						mRzMediaDownloader.queueRzMedia(obj);
+						if (msg.arg1 == 1){
+							//带语音播报
+							mRzMediaDownloader.queueRzMedia(obj,true);
+						}else{
+							//不带语音播报
+							mRzMediaDownloader.queueRzMedia(obj,false);
+						}
 					}
-
 				}else if(msg.what == MESSAGE_DETAILED_NEXT){
 					next();
 				}else if(msg.what == MESSAGE_DETAILED_PREV){
@@ -202,8 +208,6 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		intentFilter.addAction("android.rzmediaplayer.action.PLAYER_ACTION");
 		mediaPlayReceiver = new MediaPlayReceiver();
 		registerReceiver(mediaPlayReceiver, intentFilter);
-		
-		imageload = new MediaplayLoadImage();
 		initView();
 		
 		if(getIntent().getSerializableExtra("media_data") != null){
@@ -221,6 +225,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			String singer = getIntent().getStringExtra("singer");
 			LogUtil.e("singer",singer+LogUtil.getLineInfo());
 			loadCocheer((List<Result>)getIntent().getSerializableExtra("cocheer"),singer);
+		}
+
+		if(getIntent().getSerializableExtra("migu") != null){
+			loadMiGu((List<MusicInfo>)getIntent().getSerializableExtra("migu"),
+					getIntent().getStringExtra("index"));
 		}
 	}
 	
@@ -253,6 +262,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			String singer = intent.getStringExtra("singer");
 			LogUtil.e("singer",singer+LogUtil.getLineInfo());
 			loadCocheer((List<Result>)intent.getSerializableExtra("cocheer"),singer);
+		}
+
+		if(intent.getSerializableExtra("migu") != null){
+			loadMiGu((List<MusicInfo>)intent.getSerializableExtra("migu"),
+					intent.getStringExtra("index"));
 		}
 	}
 	
@@ -323,6 +337,60 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		playMedia(obj == null?resultList.get(0):obj);
 	}
 
+	/**
+	 * 加载咪咕
+	 * @param resultList
+	 */
+	public void loadMiGu(List<MusicInfo> resultList,String scg){
+		RzMusicLab.get().clear();
+		if(myAdapter != null){
+			myAdapter.clear();
+		}
+
+		if(scg.equals("random")){
+			//选定歌曲
+			int index = new Random().nextInt(resultList.size());
+			RzMusicLab.get().setCurName(resultList.get(index).getMusicName());
+			RzMusicLab.get().setCurAuthor(resultList.get(index).getSingerName());
+		}
+		if(isNumeric(scg)){
+			int index = Integer.valueOf(scg);
+			RzMusicLab.get().setCurName(resultList.get(index).getMusicName());
+			RzMusicLab.get().setCurAuthor(resultList.get(index).getSingerName());
+		}
+
+		for(int i = 0;i < resultList.size();i++){
+			if(mRzMediaDownloader != null){
+				String[] msg = new String[3];
+				msg[0] = resultList.get(i).getMusicName();
+				LogUtil.e(TAG,msg[0]);
+				msg[1] = resultList.get(i).getSingerName();
+				LogUtil.e(TAG,msg[1]);
+				msg[2] = resultList.get(i).getMusicId();
+				LogUtil.e(TAG,msg[2]);
+				//请求加载歌曲
+				mRzMediaDownloader.queueLoadMiGuURL(msg);
+			}
+		}
+
+//		for(int i = 0;i < resultList.size();i++){
+//			if (myAdapter == null) {
+//				myAdapter = new SuperAdapter<Result>(null, R.layout.view_item_play_medie) {
+//					@Override
+//					public void bindView(ViewHolder holder, Result obj) {
+//						// TODO Auto-generated method stub
+//						setHolderByMediaType(holder, obj);
+//					}
+//				};
+//				mediaListView.setAdapter(myAdapter);
+//			}
+//			RzMusicLab.get().addRzMusic(resultList.get(i));
+//			LogUtil.e(TAG,resultList.get(i).toString());
+//			myAdapter.add(resultList.get(i));
+//		}
+//		playMedia(obj == null?resultList.get(0):obj);
+	}
+
 
 	/**
 	 * 播放媒体资源
@@ -333,11 +401,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		myAdapter.notifyDataSetChanged();
 		LogUtil.e(TAG,"SelectItem:"+RzMusicLab.get().getRzMusics().indexOf(obj)	);
 		myAdapter.setSelectItem(RzMusicLab.get().getRzMusics().indexOf(obj));
-//		loadImage((Result)msg.obj);
+		loadImage(obj);
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
 		circleProgress.startAnim();
-		mRzMediaDownloader.queueRzMedia(obj);
+		mRzMediaDownloader.queueRzMedia(obj,false);
 	}
 
 	/**
@@ -380,11 +448,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 				long id) {
 			// TODO Auto-generated method stub
 			LogUtil.e(TAG,"position:"+position+LogUtil.getLineInfo());
-//			loadImage(RzMusicLab.get(RZMediaPlayActivity2.this).getRzMusics().get(position));
+			loadImage(RzMusicLab.get().getRzMusics().get(position));
 			mediaToggle.setVisibility(View.GONE);
 			circleProgress.setVisibility(View.VISIBLE);
 			circleProgress.startAnim();
-			mRzMediaDownloader.queueRzMedia(RzMusicLab.get().getRzMusics().get(position));
+			mRzMediaDownloader.queueRzMedia(RzMusicLab.get().getRzMusics().get(position),false);
 			myAdapter.setSelectItem(position);
 			myAdapter.notifyDataSetChanged();
 		}
@@ -423,11 +491,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		}
 		
 		myAdapter.setSelectItem(0);
-//		loadImage(dataList.get(0));
+		loadImage(dataList.get(0));
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
 		circleProgress.startAnim();
-		mRzMediaDownloader.queueRzMedia(dataList.get(0));
+		mRzMediaDownloader.queueRzMedia(dataList.get(0),false);
 	}
 	
 	/**
@@ -557,11 +625,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		myAdapter.setSelectItem(pos+1);
 		myAdapter.notifyDataSetChanged();
 		Result tmp = RzMusicLab.get().getRzMusics().get(pos+1);
-//		loadImage(tmp);
+		loadImage(tmp);
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
 		circleProgress.startAnim();
-		mRzMediaDownloader.queueRzMedia(tmp);
+		mRzMediaDownloader.queueRzMedia(tmp,false);
 	}
 	
 	/**
@@ -579,11 +647,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		myAdapter.setSelectItem(pos-1);
 		myAdapter.notifyDataSetChanged();
 		Result tmp = RzMusicLab.get().getRzMusics().get(pos-1);
-//		loadImage(tmp);
+		loadImage(tmp);
 		mediaToggle.setVisibility(View.GONE);
 		circleProgress.setVisibility(View.VISIBLE);
 		circleProgress.startAnim();
-		mRzMediaDownloader.queueRzMedia(tmp);
+		mRzMediaDownloader.queueRzMedia(tmp,false);
 	}
 	
 	private OnSeekBarChangeListener mediaSeekBarChangeListener = new OnSeekBarChangeListener() {
@@ -649,27 +717,20 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	
 	/***********************************************************************/
 	private void loadImage(Result data){
-		circleImageView.setImageResource(R.drawable.ic_playing);;
-		try {
-			String imgUrlStr = null;
-			if("news".equals(service)){
-				imgUrlStr = data.getImgUrl();
-			}else if("radio".equals(service)){
-				imgUrlStr = data.getImg();
-			}else{
-				imgUrlStr = data.getImgUrl();
-			}
-			LogUtil.e("img","imgUrlStr:"+imgUrlStr+LogUtil.getLineInfo());
-			imageload.onLoadImage(new URL(imgUrlStr),new OnLoadImageListener() {
-				@Override
-				public void OnLoadImage(Bitmap bitmap, String bitmapPath) {
-					// TODO Auto-generated method stub
-					LogUtil.e("img","设置图片");
-					circleImageView.setImageBitmap(bitmap);
-				}
-			});
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		String imgUrlStr = null;
+		if("news".equals(service)){
+			imgUrlStr = data.getImgUrl();
+		}else if("radio".equals(service)){
+			imgUrlStr = data.getImg();
+		}else{
+			imgUrlStr = data.getImgUrl();
+		}
+		LogUtil.e("img","imgUrlStr:"+imgUrlStr+LogUtil.getLineInfo());
+		if(imgUrlStr != null){
+			Glide.with(MainApplication.getContext())
+					.asBitmap()
+					.load(imgUrlStr)
+					.into(circleImageView);
 		}
 	}
 	
@@ -688,5 +749,16 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			}
 		}
 		return false;
+	}
+
+	public boolean isNumeric(String str){
+		for (int i = 0; i < str.length(); i++){
+			System.out.println(str.charAt(i));
+			if (!Character.isDigit(str.charAt(i)))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
