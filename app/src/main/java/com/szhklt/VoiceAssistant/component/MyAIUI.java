@@ -493,13 +493,13 @@ public class MyAIUI implements AIUIListener{
 		data.setintent(mintent.getSemantic().get(0).getIntent());
 		sendAudioDataToAIUI(false);
 		Log.e("stop","sendAudioDataToAIUI(false)被执行!"+LogUtil.getLineInfo());
+
 		//上下首切换时可能会有RC == 3的情况
-		if("musicX".equals(mintent.getService())){
-			skill = new KwMusicSkill(mintent);
-			skill.execute();
-			return;
-			//播放音乐
-		}
+//		if("musicX".equals(mintent.getService())){
+//			skill = new KwMusicSkill(mintent);
+//			skill.execute();
+//			return;
+//		}
 
 		if (mintent.getService().indexOf("story") != -1) {
 			if (data.awr.getAnsw() == null) {

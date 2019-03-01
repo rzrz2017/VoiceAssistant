@@ -1,7 +1,5 @@
 package com.szhklt.VoiceAssistant.util;
 
-import android.view.View;
-
 import com.rich.czlylibary.bean.MusicinfoResult;
 import com.rich.czlylibary.bean.RecommendMusic;
 import com.rich.czlylibary.bean.SearchAlbumsNewResult;
@@ -10,7 +8,6 @@ import com.rich.czlylibary.bean.SearchLyricNewResult;
 import com.rich.czlylibary.bean.SearchSingerNewResult;
 import com.rich.czlylibary.bean.SearchSingerSAMNewResult;
 import com.rich.czlylibary.bean.SearchSongNewResult;
-import com.rich.czlylibary.bean.SearchSongNewRsp;
 import com.rich.czlylibary.bean.SearchSuggestNewResult;
 import com.rich.czlylibary.bean.SearchTagSongNewResult;
 import com.rich.czlylibary.sdk.HttpClientManager;

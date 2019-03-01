@@ -30,7 +30,6 @@ import java.util.Random;
 
 public class MiGuSkill extends Skill{
     private static final String TAG = "MiGuSkill";
-
     private String intent;
 
     private String theme = null;
@@ -39,39 +38,7 @@ public class MiGuSkill extends Skill{
     private String album = null;
 
     private List<Result> list = new ArrayList<>();
-
     private ArrayList<com.rich.czlylibary.bean.MusicInfo> mLocalMusics = new ArrayList<>();
-//    private ResultCallback<MusicinfoResult> musicInfoCallBack = new ResultCallback<MusicinfoResult>() {
-//        @Override
-//        public void onStart() {
-//            LogUtil.e(TAG,"onstart");
-//            count++;
-//        }
-//
-//        @Override
-//        public void onSuccess(MusicinfoResult musicinfoResult) {
-//            LogUtil.i(TAG, "findMusicInfoByid:" + "onSuccess");
-////            String jsonMusicInfo = new Gson().toJson(musicinfoResult.getMusicInfo());
-//            addData(musicinfoResult.getMusicInfo());
-//        }
-//
-//
-//        @Override
-//        public void onFailed(String code, String failedInfo) {
-//            LogUtil.e(TAG,"onFailed=" + code + "---" + failedInfo);
-//            LogUtil.e(TAG,"查询歌曲信息失败");
-//        }
-//
-//        @Override
-//        public void onFinish() {
-//            LogUtil.e(TAG,"onFinish");
-//            if(count == 15){
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("migu",(Serializable) list);
-//                actionStart(bundle);
-//            }
-//        }
-//    };
 
     public MiGuSkill(intent intent) {
         super(intent);
@@ -264,76 +231,6 @@ public class MiGuSkill extends Skill{
         }
     }
 
-
-    /**
-     * 查询歌手
-     * @param singerNews
-     * @param index
-     */
-//    private void searchSingerPlay(SingerNew[] singerNews,String index){
-//        try {
-//            List<MusicInfo> musicInfoList = new ArrayList<>();
-//
-//
-//            disposeSingerData(musicInfoList,singerNews);
-//            if (musicInfoList.isEmpty()) {
-////                showToast("查询歌曲成功，但是歌曲没有版权ID，不能播放");
-//                mTts.speechSynthesis("抱歉,暂时没有版权",question);
-//                LogUtil.e(TAG,"查询歌曲成功，但是歌曲没有版权ID，不能播放");
-//            } else {
-//                //进入播放器播放
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("migu",(Serializable)musicInfoList);
-//                bundle.putString("index",index);
-//                actionStart(bundle);
-//            }
-//        }catch (NullPointerException e){
-//            e.printStackTrace();
-//        }
-//    }
-
-    /**
-     * 查询专辑
-     */
-//    private void searchAlbumPlay(AlbumNew[] albumNews,String index){
-//        try {
-//            List<MusicInfo> musicInfoList = new ArrayList<>();
-//            disposeAlbumData(musicInfoList,albumNews);
-//            if (musicInfoList.isEmpty()) {
-////                showToast("查询歌曲成功，但是歌曲没有版权ID，不能播放");
-//                mTts.speechSynthesis("抱歉,暂时没有版权",question);
-//                LogUtil.e(TAG,"查询歌曲成功，但是歌曲没有版权ID，不能播放");
-//            } else {
-//                //进入播放器播放
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("migu",(Serializable)musicInfoList);
-//                bundle.putString("index",index);
-//                actionStart(bundle);
-//            }
-//        }catch (NullPointerException e){
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private void play(final List<com.rich.czlylibary.bean.MusicInfo> list){
-//        try {
-//            List<MiGuMusicInfo> songs = toListMusicInfo(list);
-//
-//            for(int i = 0;i < songs.size();i++){
-//                LogUtil.e(TAG,"lrc:"+songs.get(i).getLrcUrl());
-//                LogUtil.e(TAG,"ListenUrl:"+songs.get(i).getListenUrl());
-////                    PlayerController.play(songs, songs.get(0));
-////            checkMusicListenUrl(songs.get(0).getMusicId(),false);
-////                MiGuSearcher.findMusicInfoByid(songs.get(i).getMusicId(), musicInfoCallBack);
-////            setDataSourceImpl(songs.get(0).getListenUrl());
-//            }
-//
-//        } catch (Exception e) {
-//            LogUtil.e("playByCzly", e.getMessage());
-//            LogUtil.e(TAG,"播放歌曲失败，请看key为\"playByCzly\"的LogCat日志信息");
-//        }
-//    }
-
     private static List<MiGuMusicInfo> toListMusicInfo(List<com.rich.czlylibary.bean.MusicInfo> list) {
         if (list == null || list.isEmpty()) {
             return null;
@@ -412,68 +309,9 @@ public class MiGuSkill extends Skill{
                 musicInfo.setPicUrl(songNew.getMvPic()[0].getPicPath());
                 LogUtil.e(TAG,"PicUrl:"+songNew.getMvPic()[0].getPicPath());
             }
-            musicInfo.setLrcUrl(songNew.getLyricUrl());
             LogUtil.e(TAG,"LrcUrl:"+songNew.getLyricUrl());
             musicInfoList.add(musicInfo);
             LogUtil.e(TAG,"=================================");
         }
     }
-
-//    private void disposeSingerData(List<MusicInfo> musicInfoList,SingerNew[] singerNews){
-//        for (SingerNew singerNew : singerNews) {
-//            MusicInfo musicInfo = new MusicInfo();
-//
-//            if(singerNew.get){
-//
-//            }
-//
-//            if (songNew.getFullSongs() != null && songNew.getFullSongs().length > 0) {
-//                musicInfo.setMusicId(songNew.getFullSongs()[0].getCopyrightId());
-//                LogUtil.e(TAG,"MusicId:"+songNew.getFullSongs()[0].getCopyrightId());
-//            } else {
-//                continue;
-//            }
-//            musicInfo.setMusicName(songNew.getName());
-//            LogUtil.e(TAG,"MusicName:"+songNew.getName());
-//            musicInfo.setSingerName(songNew.getSingers()[0].getName());
-//            LogUtil.e(TAG,"SingerName:"+songNew.getSingerName());
-//            SingerNew[] ss = songNew.getSingers();
-//            LogUtil.e(TAG,"SingerName:"+"ss.length:"+ss.length+ss[0].toString());
-//            if (songNew.getMvPic() != null && songNew.getMvPic().length != 0) {
-//                musicInfo.setPicUrl(songNew.getMvPic()[0].getPicPath());
-//                LogUtil.e(TAG,"SingerName:"+songNew.getMvPic()[0].getPicPath());
-//            }
-//            musicInfo.setLrcUrl(songNew.getLyricUrl());
-//            LogUtil.e(TAG,"LrcUrl:"+songNew.getLyricUrl());
-//            musicInfoList.add(musicInfo);
-//            LogUtil.e(TAG,"=================================");
-//        }
-//    }
-
-//    private void disposeAlbumData(List<MusicInfo> musicInfoList,AlbumNew[] albumNews){
-//        for (AlbumNew albumNew : albumNews) {
-//            MusicInfo musicInfo = new MusicInfo();
-//            if (songNew.getFullSongs() != null && songNew.getFullSongs().length > 0) {
-//                musicInfo.setMusicId(songNew.getFullSongs()[0].getCopyrightId());
-//                LogUtil.e(TAG,"MusicId:"+songNew.getFullSongs()[0].getCopyrightId());
-//            } else {
-//                continue;
-//            }
-//            musicInfo.setMusicName(songNew.getName());
-//            LogUtil.e(TAG,"MusicName:"+songNew.getName());
-//            musicInfo.setSingerName(songNew.getSingers()[0].getName());
-//            LogUtil.e(TAG,"SingerName:"+songNew.getSingerName());
-//            SingerNew[] ss = songNew.getSingers();
-//            LogUtil.e(TAG,"SingerName:"+"ss.length:"+ss.length+ss[0].toString());
-//            if (songNew.getMvPic() != null && songNew.getMvPic().length != 0) {
-//                musicInfo.setPicUrl(songNew.getMvPic()[0].getPicPath());
-//                LogUtil.e(TAG,"SingerName:"+songNew.getMvPic()[0].getPicPath());
-//            }
-//            musicInfo.setLrcUrl(songNew.getLyricUrl());
-//            LogUtil.e(TAG,"LrcUrl:"+songNew.getLyricUrl());
-//            musicInfoList.add(musicInfo);
-//            LogUtil.e(TAG,"=================================");
-//        }
-//    }
-
 }

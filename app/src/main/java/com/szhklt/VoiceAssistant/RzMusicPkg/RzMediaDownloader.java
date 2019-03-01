@@ -194,6 +194,10 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		mHasQuit = true;
 		mRequestHandler.removeCallbacksAndMessages(null);
 		mResponseHandler.removeCallbacksAndMessages(null);
+
+		RzMusicLab.get().setCurAuthor(null);
+		RzMusicLab.get().setCurName(null);
+		RzMusicLab.get().setCurData(null);
 		return super.quit();
 	}
 	
@@ -267,6 +271,8 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		if(target instanceof Result){
 			player.reset();//清除缓存
 			Result tmp = (Result) target;
+			RzMusicLab.get().setCurName(tmp.getName());
+			RzMusicLab.get().setCurAuthor(tmp.getAuthor());
 			RzMusicLab.get().setCurData(tmp);
 
 			if(isPrompt){
@@ -315,6 +321,9 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		@Override
 		public void onCompletion(MediaPlayer mp) {
 			// TODO Auto-generated method stub
+			RzMusicLab.get().setCurAuthor(null);
+			RzMusicLab.get().setCurName(null);
+			RzMusicLab.get().setCurData(null);
 			mResponseHandler.sendEmptyMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_NEXT);
 		}
 	};

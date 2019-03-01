@@ -17,6 +17,7 @@ import com.rich.czlylibary.sdk.ResultCallback;
 import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
+import com.szhklt.VoiceAssistant.RzMusicPkg.RzMusicLab;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.activity.SleepActivity;
 import com.szhklt.VoiceAssistant.beam.intent;
@@ -240,17 +241,33 @@ public class MusicControlSkill extends Skill{
 		
 		//询问当前播放的歌曲//现在放的是什么
 		if("music_search".equals(musicCtrIntent)){
-			if(mKwSdk.isKuwoRunning() == false){
-				mTts.speechSynthesis("酷我没有运行",question);
-				return;
+//			if(mKwSdk.isKuwoRunning() == false){
+//				mTts.speechSynthesis("酷我没有运行",question);
+//				return;
+//			}
+//			LogUtil.e("musicstate", "************查看歌曲信息************"+LogUtil.getLineInfo());
+//			String answer = mKwSdk.getNowPlayingMusic(2);
+//			boolean isKuwoRunning = mKwSdk.isKuwoRunning();
+//			if(isKuwoRunning){
+//				mTts.doSomethingAfterTts(null,"正在为您播放的是："+answer,question);
+//			}else{
+//				mTts.doSomethingAfterTts(null,answer,question);
+//			}
+			String cn = RzMusicLab.get().getCurName();
+			String ca = RzMusicLab.get().getCurAuthor();
+			StringBuilder sb = new StringBuilder();
+			sb.append("当前播放的是");
+			if(cn != null){
+				sb.append(ca);
 			}
-			LogUtil.e("musicstate", "************查看歌曲信息************"+LogUtil.getLineInfo());
-			String answer = mKwSdk.getNowPlayingMusic(2);
-			boolean isKuwoRunning = mKwSdk.isKuwoRunning();
-			if(isKuwoRunning){
-				mTts.doSomethingAfterTts(null,"正在为您播放的是："+answer,question);
+			sb.append("的");
+			if(ca != null){
+				sb.append(cn);
+			}
+			if(cn != null && ca != null){
+				mTts.speechSynthesis(sb.toString(),question);
 			}else{
-				mTts.doSomethingAfterTts(null,answer,question);
+				mTts.speechSynthesis("当前没有播放音乐",question);
 			}
 		}
 
