@@ -37,7 +37,6 @@ public class MusicControlSkill extends Skill{
 	private String lrc;
 	private KwSdk mKwSdk = KwSdk.getInstance();
 	public Context context;
-//	private MediaControler mediaController;
 	private static List<MusicInfo> musicInfoList = new ArrayList<>();
 	private String musicName;
 	private String singerName;

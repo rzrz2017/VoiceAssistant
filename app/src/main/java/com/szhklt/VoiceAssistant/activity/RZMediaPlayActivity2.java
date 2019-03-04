@@ -726,12 +726,10 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			imgUrlStr = data.getImgUrl();
 		}
 		LogUtil.e("img","imgUrlStr:"+imgUrlStr+LogUtil.getLineInfo());
-		if(imgUrlStr != null){
-			Glide.with(MainApplication.getContext())
-					.asBitmap()
-					.load(imgUrlStr)
-					.into(circleImageView);
-		}
+		Glide.with(MainApplication.getContext())
+				.asBitmap()
+				.load(imgUrlStr)
+				.into(circleImageView);
 	}
 	
 	/**

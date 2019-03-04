@@ -1,7 +1,6 @@
 package com.szhklt.VoiceAssistant.skill;
 
 import android.content.Intent;
-
 import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;

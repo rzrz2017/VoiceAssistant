@@ -107,11 +107,13 @@ public class RzMediaDownloader<T> extends HandlerThread{
 
 						@Override
 						public void onSuccess(MusicinfoResult musicinfoResult) {
+							LogUtil.e(TAG,"onSuccess"+LogUtil.getLineInfo());
 							Result temp;
 							temp = toResult(musicinfoResult.getMusicInfo());
 							Message msg = new Message();
 							msg.what = RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD;
 							msg.obj = temp;
+							LogUtil.e(TAG,"temp.toString:"+temp.toString());
 							msg.arg1 = 1;//表示需要提示
 							mResponseHandler.sendMessage(msg);
 //							mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD,temp)
@@ -180,10 +182,13 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	}
 
 	private Result toResult(MusicInfo musicInfo) {
+		LogUtil.e(TAG,"toResult"+LogUtil.getLineInfo());
 		Result tmp = new Result();
 		tmp.setAuthor(musicInfo.getSingerName());
 		tmp.setName(musicInfo.getMusicName());
+		LogUtil.e(TAG,"musicInfo.getListenUrl():"+musicInfo.getListenUrl());
 		tmp.setUrl(musicInfo.getListenUrl());
+		tmp.setImgUrl(musicInfo.getPicUrl());
 		return tmp;
 	}
 
@@ -232,6 +237,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	}
 	
 	public void queueRzMedia(T target,Boolean isprompt){
+		LogUtil.e(TAG,"queueRzMedia"+LogUtil.getLineInfo());
 		if(isprompt){
 			Message msg = new Message();
 			msg.obj = target;
@@ -267,7 +273,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	}
 	
 	private void handleRequest(final T target,Boolean isPrompt) {
-		LogUtil.e(TAG, "handleRequest");
+		LogUtil.e(TAG, "handleRequest   target.toString()"+target.toString());
 		if(target instanceof Result){
 			player.reset();//清除缓存
 			Result tmp = (Result) target;

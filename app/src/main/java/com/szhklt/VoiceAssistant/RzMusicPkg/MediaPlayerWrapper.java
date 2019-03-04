@@ -31,9 +31,9 @@ public class MediaPlayerWrapper {
 
 	private static boolean status;//当前播放状态
 	private static boolean preStatus;
-	
+
 	private Result tmp;
-	
+
 	public Result getTmp() {
 		return tmp;
 	}
@@ -41,7 +41,7 @@ public class MediaPlayerWrapper {
 	public void setTmp(Result tmp) {
 		this.tmp = tmp;
 	}
-	
+
 	public MediaPlayerWrapper(){
 		mediaPlayer = new MediaPlayer();
 	}
@@ -96,7 +96,9 @@ public class MediaPlayerWrapper {
 		}
 		tmp = result;
 		mediaPlayer.reset();
-		Uri uri = Uri.parse(result.getUrl());
+		LogUtil.e(TAG,"result.getUrl():"+result.getUrl());
+		LogUtil.e(TAG,"result.getPlayUrl():"+result.getPlayUrl());
+		Uri uri = Uri.parse(result.getUrl()==null?result.getPlayUrl():result.getUrl());
 		try {
 			mediaPlayer.setDataSource(context, uri);
 			mediaPlayer.prepareAsync();
