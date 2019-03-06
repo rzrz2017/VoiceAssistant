@@ -146,12 +146,12 @@ public class MyAIUI implements AIUIListener{
 					String service = obj.optString("service","");
 					//*************************************************
 					//智捷通家居控制，上线注释掉
-//              if("curtain_smartHome".equals(service)||"light_smartHome".equals(service)){
-//                  LogUtil.e("rzs","---------------------------"+LogUtil.getLineInfo());
-//                  ZJTSmartHomeSkill   ZJTSmartHomeSkill=new ZJTSmartHomeSkill(xftext);
-//                  ZJTSmartHomeSkill.smartHomeControl();
-//                  break;
-//              }
+//				  if("curtain_smartHome".equals(service)||"light_smartHome".equals(service)){
+//					  LogUtil.e("rzs","---------------------------"+LogUtil.getLineInfo());
+//					  ZJTSmartHomeSkill ZJTSmartHomeSkill=new ZJTSmartHomeSkill(xftext);
+//					  ZJTSmartHomeSkill.smartHomeControl();
+//					  break;
+//				  }
 					//*************************************************
 					if(postman.isExist(service) == false){//如果不存在于白名单中就会发给客户
 						postman.sendMsg2Client(xftext);LogUtil.e("postman","sendMsg2Client()"+LogUtil.getLineInfo());

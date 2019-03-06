@@ -98,7 +98,14 @@ public class MediaPlayerWrapper {
 		mediaPlayer.reset();
 		LogUtil.e(TAG,"result.getUrl():"+result.getUrl());
 		LogUtil.e(TAG,"result.getPlayUrl():"+result.getPlayUrl());
-		Uri uri = Uri.parse(result.getUrl()==null?result.getPlayUrl():result.getUrl());
+
+		Uri uri = null;
+		if(result.getUrl() != null){
+			uri = Uri.parse(result.getUrl());
+		}else if(result.getPlayUrl() != null){
+			uri = Uri.parse(result.getPlayUrl());
+		}
+
 		try {
 			mediaPlayer.setDataSource(context, uri);
 			mediaPlayer.prepareAsync();

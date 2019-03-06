@@ -98,6 +98,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 					final String song = msg.getData().getString("song");
 					String author = msg.getData().getString("author");
 					String musicId = msg.getData().getString("musicid");
+					Boolean isPrompt = msg.getData().getBoolean("isprompt");
 
 					MiGuSearcher.findMusicInfoByid(musicId, new ResultCallback<MusicinfoResult>() {
 						@Override
@@ -114,11 +115,12 @@ public class RzMediaDownloader<T> extends HandlerThread{
 							msg.what = RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD;
 							msg.obj = temp;
 							LogUtil.e(TAG,"temp.toString:"+temp.toString());
-							msg.arg1 = 1;//表示需要提示
+							if(isPrompt){
+								msg.arg1 = 1;//表示需要提示
+							}
 							mResponseHandler.sendMessage(msg);
 //							mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD,temp)
 //									.sendToTarget();
-
 						}
 
 						@Override
@@ -189,6 +191,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		LogUtil.e(TAG,"musicInfo.getListenUrl():"+musicInfo.getListenUrl());
 		tmp.setUrl(musicInfo.getListenUrl());
 		tmp.setImgUrl(musicInfo.getPicUrl());
+		LogUtil.e(TAG,"musicInfo.getLrcUrl():"+musicInfo.getLrcUrl());
 		return tmp;
 	}
 
@@ -230,6 +233,13 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		bundle.putString("song",msg[0]);
 		bundle.putString("author",msg[1]);
 		bundle.putString("musicid",msg[2]);
+		if("true".equals(msg[3])){
+			LogUtil.e(TAG,"需要提示");
+			bundle.putBoolean("isprompt",true);
+		}else if("false".equals(msg[3])){
+			LogUtil.e(TAG,"不需要提示");
+			bundle.putBoolean("isprompt",false);
+		}
 		mesg.setData(bundle);
 		if(mRequestHandler != null){
 			mRequestHandler.sendMessage(mesg);

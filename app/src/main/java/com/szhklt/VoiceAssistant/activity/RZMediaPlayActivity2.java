@@ -1,13 +1,9 @@
 package com.szhklt.VoiceAssistant.activity;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +14,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,16 +23,15 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.kuwo.autosdk.api.PlayEndType;
 
 import com.bumptech.glide.Glide;
 import com.rich.czlylibary.bean.MusicInfo;
-import com.szhklt.VoiceAssistant.KwSdk.IKwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.adapter.SuperAdapter.ViewHolder;
 import com.szhklt.VoiceAssistant.beam.intent;
@@ -53,7 +47,6 @@ import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.CircleImageView;
 import com.szhklt.VoiceAssistant.view.CircleProgress;
 import com.szhklt.VoiceAssistant.view.SlipTextView;
-
 
 public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	private static String TAG = "RZMediaPlayActivity2";
@@ -73,7 +66,11 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	private ImageView mediaToggle;
 	private ImageView preImage;
 	private ImageView nextImage;
-	private CircleImageView circleImageView;
+	private LinearLayout searchLinear;
+
+//	private CircleImageView circleImageView;
+	private ImageView circleImageView;
+
 	private SeekBar seekbar;
 	private SlipTextView titleTextView;
 	private TextView totaltime,curtimer;
@@ -93,7 +90,6 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		LogUtil.e(TAG,"onCreate()");
 		setContentView(R.layout.activity_rzmediaplay);
-		KwSdk.getInstance().setIKwSdk(iKwSdk);
 		sendBroadcast(new Intent("android.bluetooth.action.FINISH"));//停止蓝牙推送
 		responseHandler = new Handler(){
 			@Override
@@ -229,7 +225,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 
 		if(getIntent().getSerializableExtra("migu") != null){
 			loadMiGu((List<MusicInfo>)getIntent().getSerializableExtra("migu"),
-					getIntent().getStringExtra("index"));
+					getIntent().getStringExtra("index"),true);
 		}
 	}
 	
@@ -266,10 +262,10 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 
 		if(intent.getSerializableExtra("migu") != null){
 			loadMiGu((List<MusicInfo>)intent.getSerializableExtra("migu"),
-					intent.getStringExtra("index"));
+					intent.getStringExtra("index"),true);
 		}
 	}
-	
+
 	public void loadDataFromReceiver(String kgData,int kgTemp,int raInt){
 		RZMediaPlayActivity2.raInt = raInt;
 		final JSONArray mJSONArray;
@@ -341,7 +337,8 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	 * 加载咪咕
 	 * @param resultList
 	 */
-	public void loadMiGu(List<MusicInfo> resultList,String scg){
+	public void loadMiGu(List<MusicInfo> resultList,String scg,boolean isPrompt){
+		LogUtil.e(TAG,"loadMiGu()"+LogUtil.getLineInfo());
 		RzMusicLab.get().clear();
 		if(myAdapter != null){
 			myAdapter.clear();
@@ -361,13 +358,20 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 
 		for(int i = 0;i < resultList.size();i++){
 			if(mRzMediaDownloader != null){
-				String[] msg = new String[3];
+				String[] msg = new String[4];
 				msg[0] = resultList.get(i).getMusicName();
 				LogUtil.e(TAG,msg[0]);
 				msg[1] = resultList.get(i).getSingerName();
 				LogUtil.e(TAG,msg[1]);
 				msg[2] = resultList.get(i).getMusicId();
 				LogUtil.e(TAG,msg[2]);
+				if(isPrompt){
+					msg[3] = "true";
+					LogUtil.e(TAG,msg[3]);
+				}else{
+					msg[3] = "false";
+				}
+
 				//请求加载歌曲
 				mRzMediaDownloader.queueLoadMiGuURL(msg);
 			}
@@ -431,13 +435,16 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		
 		nextImage = (ImageView)findViewById(R.id.next);
 		nextImage.setOnClickListener(this);
-		
+
+		searchLinear = (LinearLayout)findViewById(R.id.search_layout);
+		searchLinear.setOnClickListener(this);
+
 		titleTextView = (SlipTextView)findViewById(R.id.text_media_name);
 		
 		totaltime = (TextView)findViewById(R.id.totaltime);
 		curtimer = (TextView)findViewById(R.id.curtime);
-		circleImageView = (CircleImageView) findViewById(R.id.media_civ);
-		circleImageView.setBorderColor(Color.argb(255, 0, 0, 0));
+		circleImageView = findViewById(R.id.media_civ);
+//		circleImageView.setBorderColor(Color.argb(255, 0, 0, 0));
 		circleImageView.setImageResource(R.drawable.ic_playing);
 	}
 	
@@ -543,6 +550,25 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		unregisterReceiver(mediaPlayReceiver);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		LogUtil.e(TAG,"onActivityResult()");
+		switch (requestCode){
+			case 1:
+				if(resultCode == RESULT_OK){
+					LogUtil.e(TAG,"resultCode == RESULT_OK");
+					//加载搜索界面的音乐
+					if(data.getSerializableExtra("migu") != null && data.getSerializableExtra("index") != null){
+						loadMiGu((List<MusicInfo>)data.getSerializableExtra("migu"),
+								data.getStringExtra("index"),
+								false);
+					}
+				}
+				break;
+			default:
+		}
+	}
+
 	/**
 	 * 启动自己
 	 * @param context
@@ -562,20 +588,6 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 		intent = null;
 	}
 
-	private IKwSdk iKwSdk = new IKwSdk() {
-		@Override
-		public void onPlayEnd(PlayEndType arg0) {
-			// TODO Auto-generated method stub
-		}
-		@Override
-		public void onExit() {
-			// TODO Auto-generated method stub
-		}
-		@Override
-		public void onEnter() {//互斥
-			// TODO Auto-generated method stub
-		}
-	};
 
 	@Override
 	public void onClick(View v) {
@@ -587,7 +599,14 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			next();
 		}else if(id == R.id.prev){
 			prev();
+		}else if(id == R.id.search_layout){
+			startSearchAct();
 		}
+	}
+
+	private void startSearchAct(){
+		Intent intent = new Intent(this,SearchActivity.class);
+		startActivityForResult(intent,1);
 	}
 	
 	private void toggle(){
@@ -726,10 +745,12 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 			imgUrlStr = data.getImgUrl();
 		}
 		LogUtil.e("img","imgUrlStr:"+imgUrlStr+LogUtil.getLineInfo());
-		Glide.with(MainApplication.getContext())
-				.asBitmap()
-				.load(imgUrlStr)
-				.into(circleImageView);
+		if(imgUrlStr != null){
+			Glide.with(MainApplication.getContext())
+					.asBitmap()
+					.load(imgUrlStr)
+					.into(circleImageView);
+		}
 	}
 	
 	/**

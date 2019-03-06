@@ -90,9 +90,7 @@
         <item>4</item>
         <item>5</item>
     </string-array>
-    <string
-        name="tts_toast_format"
-        formatted="false">缓冲进度为%d%%，播放进度为%d%%
+    <string name="tts_toast_format" formatted="false">缓冲进度为%d%%，播放进度为%d%%
     </string>
 
     <!-- 语言 -->
@@ -149,99 +147,99 @@
         <item>关闭</item>
     </string-array>
     <string-array name="tips">
-        <item >\n播放一首歌曲?\n今天天气怎么样?</item>
-        <item >\n今天星期几?\n一加一等于几？</item>
-        <item >\n讲一个笑话?\n西红柿炒鸡蛋怎么做?</item>
-        <item >\n定一个明早八点的闹钟!\n一小时后提醒我做饭!</item>
-        <item >\n百科搜索区块链!\n说一句英文!</item>
-        <item >\n如果不想说话了,您可以对我说:退出聊天!</item>
+        <item>\n播放一首歌曲?\n今天天气怎么样?</item>
+        <item>\n今天星期几?\n一加一等于几？</item>
+        <item>\n讲一个笑话?\n西红柿炒鸡蛋怎么做?</item>
+        <item>\n定一个明早八点的闹钟!\n一小时后提醒我做饭!</item>
+        <item>\n百科搜索区块链!\n说一句英文!</item>
+        <item>\n如果不想说话了,您可以对我说:退出聊天!</item>
     </string-array>
 
     <string-array name="kwseach">
-        <item >流行</item>
-        <item >民谣</item>
-        <item >电音</item>
-        <item >欧美</item>
-        <item >运动</item>
-        <item >原创</item>
-        <item >影视</item>
-        <item >校园</item>
-        <item >KTV</item>
-        <item >90后</item>
-        <item >车载</item>
-        <item >红歌</item>
-        <item >轻音乐</item>
-        <item >网络</item>
-        <item >草原</item>
-        <item >钢琴</item>
-        <item >韩语</item>
+        <item>流行</item>
+        <item>民谣</item>
+        <item>电音</item>
+        <item>欧美</item>
+        <item>运动</item>
+        <item>原创</item>
+        <item>影视</item>
+        <item>校园</item>
+        <item>KTV</item>
+        <item>90后</item>
+        <item>车载</item>
+        <item>红歌</item>
+        <item>轻音乐</item>
+        <item>网络</item>
+        <item>草原</item>
+        <item>钢琴</item>
+        <item>韩语</item>
     </string-array>
 
     <string-array name="smartHomename">
-        <item >灯</item>
-        <item >窗帘</item>
-        <item >插座</item>
-        <item >加湿器</item>
-        <item >冰箱</item>
-        <item >电饭煲</item>
-        <item >风扇</item>
-        <item >机顶盒</item>
-        <item >收音机</item>
-        <item >电视机</item>
-        <item >微波炉</item>
+        <item>灯</item>
+        <item>窗帘</item>
+        <item>插座</item>
+        <item>加湿器</item>
+        <item>冰箱</item>
+        <item>电饭煲</item>
+        <item>风扇</item>
+        <item>机顶盒</item>
+        <item>收音机</item>
+        <item>电视机</item>
+        <item>微波炉</item>
     </string-array>
     <string-array name="kwanswer">
-        <item >正在进入播放哦</item>
-        <item >歌曲任你听</item>
-        <item >好呢，即将播放音乐</item>
-        <item >正在为你推荐歌曲</item>
-        <item >请欣赏歌曲</item>
+        <item>正在进入播放哦</item>
+        <item>歌曲任你听</item>
+        <item>好呢，即将播放音乐</item>
+        <item>正在为你推荐歌曲</item>
+        <item>请欣赏歌曲</item>
     </string-array>
 
     <string-array name="smartanswers">
-        <item >您好像还没有添加此设备呢</item>
-        <item >你确定已经添加过此设备吗？</item>
-        <item >亲～！我的控制里还没有添加此设备呢</item>
-        <item >哎呀，还是等我连接上该设备再来问我吧</item>
+        <item>您好像还没有添加此设备呢</item>
+        <item>你确定已经添加过此设备吗？</item>
+        <item>亲～！我的控制里还没有添加此设备呢</item>
+        <item>哎呀，还是等我连接上该设备再来问我吧</item>
     </string-array>
 
     <string-array name="answers">
-        <item >哎呀!这个问题太难了,等我学会了再来告诉你</item>
-        <item >哟！我这么聪明都被你问倒了！我们换个问题好不好？</item>
-        <item >又有新东西要学了，你可以问我点其它的？</item>
-        <item >肿摸肥事，这个问题木有听懂，可以再说一遍吗？</item>
-        <item >我绞尽脑汁也回答不上来，你可以换个姿势再来问我</item>
-        <item >宝宝为何为难宝宝，宝宝回答不上来</item>
-        <item >这个问题好啊，居然把宝宝难到了，我会好好学习呢</item>
-        <item >等我学会了这个，记得双击六六六哦</item>
-        <item >好吧，主人,等我学会了再来告诉你</item>
-        <item >又有新知识要学习了,你可以跟我说:我想听王力宏的歌曲</item>
-        <item >这个我还要学习一下,主人可以对我说:我想听故事</item>
-        <item >主人,这个我再学习一下,你试试对我说:我想听广播电台</item>
-        <item >怎么肥事，这个问题木有听懂,你可以问我:机票的英文怎么说</item>
-        <item >这个我还在学习呢,你可以让我讲笑话，逗逗你</item>
-        <item >呀!我没有听懂呢,要不给你唱个歌吧,你可以对我说你想听的歌曲</item>
-        <item >主人,这个我还不知道呢,你试试说,百科一下某某某</item>
-        <item >我可以猜字谜,查股票,成语解释,周公解梦,教你做菜..,还会好多好多的呢</item>
-        <item >呀!没听懂耶,要不来一波聊天模式吧,你可以对我说,我们聊聊天</item>
+        <item>哎呀!这个问题太难了,等我学会了再来告诉你</item>
+        <item>哟！我这么聪明都被你问倒了！我们换个问题好不好？</item>
+        <item>又有新东西要学了，你可以问我点其它的？</item>
+        <item>肿摸肥事，这个问题木有听懂，可以再说一遍吗？</item>
+        <item>我绞尽脑汁也回答不上来，你可以换个姿势再来问我</item>
+        <item>宝宝为何为难宝宝，宝宝回答不上来</item>
+        <item>这个问题好啊，居然把宝宝难到了，我会好好学习呢</item>
+        <item>等我学会了这个，记得双击六六六哦</item>
+        <item>好吧，主人,等我学会了再来告诉你</item>
+        <item>又有新知识要学习了,你可以跟我说:我想听王力宏的歌曲</item>
+        <item>这个我还要学习一下,主人可以对我说:我想听故事</item>
+        <item>主人,这个我再学习一下,你试试对我说:我想听广播电台</item>
+        <item>怎么肥事，这个问题木有听懂,你可以问我:机票的英文怎么说</item>
+        <item>这个我还在学习呢,你可以让我讲笑话，逗逗你</item>
+        <item>呀!我没有听懂呢,要不给你唱个歌吧,你可以对我说你想听的歌曲</item>
+        <item>主人,这个我还不知道呢,你试试说,百科一下某某某</item>
+        <item>我可以猜字谜,查股票,成语解释,周公解梦,教你做菜..,还会好多好多的呢</item>
+        <item>呀!没听懂耶,要不来一波聊天模式吧,你可以对我说,我们聊聊天</item>
 
     </string-array>
     <string-array name="quetip">
-        <item >播放赵雷的歌曲?</item>
-        <item >讲一个笑话 ?</item>
-        <item >机票英文怎么说 ?</item>
-        <item > 糖醋排骨怎么做?</item>
-        <item > 深圳明天天气</item>
-        <item > 背一首《滕王阁序》</item>
-        <item >今天星期几? </item>
-        <item >一加一等于几？</item>
-        <item >我想听广播电台?</item>
-        <item >科大讯飞的股票?</item>
-        <item > 百科一下王力宏?</item>
-        <item >一小时后提醒我喝水!</item>
-        <item >猜字谜?</item>
-        <item >五光十色是什么意思?</item>
-        <item >明天上午八点提醒我起床!</item>
+        <item>播放赵雷的歌曲?</item>
+        <item>讲一个笑话 ?</item>
+        <item>机票英文怎么说 ?</item>
+        <item> 糖醋排骨怎么做?</item>
+        <item> 深圳明天天气</item>
+        <item> 背一首《滕王阁序》</item>
+        <item>今天星期几? </item>
+        <item>一加一等于几？</item>
+        <item>我想听广播电台?</item>
+        <item>科大讯飞的股票?</item>
+        <item> 百科一下王力宏?</item>
+        <item>一小时后提醒我喝水!</item>
+        <item>猜字谜?</item>
+        <item>五光十色是什么意思?</item>
+        <item>明天上午八点提醒我起床!</item>
     </string-array>
 
     <string name="prompt_title">你可以说:</string>

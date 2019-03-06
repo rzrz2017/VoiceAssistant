@@ -119,7 +119,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/civ_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -129,18 +129,53 @@
         android:layout_toLeftOf="@id/listviewlayout"
         android:gravity="center" >
 
+        <!--
         <com.szhklt.VoiceAssistant.view.CircleImageView
             android:id="@+id/media_civ"
             android:layout_width="250dp"
             android:layout_height="250dp" />
-    </RelativeLayout>
+            -->
+        <ImageView
+            android:id="@+id/media_civ"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/listviewlayout"
-        android:gravity="center_vertical" >
+        android:orientation="vertical"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/btn_search"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="搜索歌曲"
+                android:textColor="@color/default_color2"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
 
         <com.szhklt.VoiceAssistant.view.SlipTextView
             android:id="@+id/text_media_name"
@@ -157,6 +192,6 @@
             android:text=""
             android:textColor="#ffe8d463"
             android:textSize="28dp" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

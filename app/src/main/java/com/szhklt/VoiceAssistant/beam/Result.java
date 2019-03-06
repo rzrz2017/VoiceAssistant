@@ -275,6 +275,15 @@ public class Result implements Serializable{
 	}
 	private String fm;
 	private String img;
+
+	private String lrcUrl;
+	public void setLrcUrl(String lrcUrl){
+		this.lrcUrl = lrcUrl;
+	}
+
+	public String getLrcUrl(){
+		return lrcUrl;
+	}
 	
 	@Override
 	public String toString() {
