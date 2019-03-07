@@ -119,7 +119,7 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/civ_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -127,10 +127,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title_layout"
         android:layout_toLeftOf="@id/listviewlayout"
-        android:orientation="horizontal"
-        android:gravity="center" >
-
-
+        >
 
         <!--
         <com.szhklt.VoiceAssistant.view.CircleImageView
@@ -139,13 +136,14 @@
             android:layout_height="250dp" />
             -->
         <ImageView
+            android:layout_centerInParent="true"
             android:id="@+id/media_civ"
-            android:visibility="gone"
             android:layout_width="250dp"
             android:layout_height="250dp" />
 
-
         <me.wcy.lrcview.LrcView
+            android:visibility="gone"
+            android:layout_centerInParent="true"
             android:id="@+id/lrc_view"
             android:layout_width="300dp"
             android:layout_height="250dp"
@@ -161,8 +159,17 @@
             app:lrcTimelineTextColor="#9FA8DA"
             app:lrcTextGravity="left"/>
 
+        <ImageView
+            android:id="@+id/lrc_switch"
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_lrc_switch" />
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/title_layout"
@@ -215,6 +222,13 @@
             android:text=""
             android:textColor="#ffe8d463"
             android:textSize="28dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="音乐版块运营和技术服务由咪咕音乐提供"/>
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -76,6 +76,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 
 //	private CircleImageView circleImageView;
 	private ImageView circleImageView;
+	private ImageView lrcSwitch;
 
 	private SeekBar seekbar;
 	private SlipTextView titleTextView;
@@ -470,6 +471,20 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 
 				}
 				return true;
+			}
+		});
+
+		lrcSwitch = (ImageView) findViewById(R.id.lrc_switch);
+		lrcSwitch.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(lrcview.getVisibility() == View.VISIBLE){
+					lrcview.setVisibility(View.GONE);
+					circleImageView.setVisibility(View.VISIBLE);
+				}else{
+					lrcview.setVisibility(View.VISIBLE);
+					circleImageView.setVisibility(View.GONE);
+				}
 			}
 		});
 	}
