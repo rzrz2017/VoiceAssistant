@@ -11,7 +11,9 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -29,6 +31,9 @@ import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.MiGuSearcher;
+import com.szhklt.VoiceAssistant.util.OKHttpDownLoadUtil;
+
+import java.io.File;
 
 public class RzMediaDownloader<T> extends HandlerThread{
 	private static final String TAG = "RzMediaDownloader";
@@ -38,7 +43,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 	private static final int MESSAGE_SETSEEKBAR = 6;
 	private static final int MESSAGE_LOADURL = 7;
 	private static final int MESSAGE_LOADMIGUURL = 8;
-	
+
 	private Context context;
 	private MediaPlayerWrapper player;
 	
@@ -119,8 +124,6 @@ public class RzMediaDownloader<T> extends HandlerThread{
 								msg.arg1 = 1;//表示需要提示
 							}
 							mResponseHandler.sendMessage(msg);
-//							mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_DETAILED_LOAD,temp)
-//									.sendToTarget();
 						}
 
 						@Override
@@ -192,6 +195,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		tmp.setUrl(musicInfo.getListenUrl());
 		tmp.setImgUrl(musicInfo.getPicUrl());
 		LogUtil.e(TAG,"musicInfo.getLrcUrl():"+musicInfo.getLrcUrl());
+		tmp.setLrcUrl(musicInfo.getLrcUrl());
 		return tmp;
 	}
 
@@ -220,6 +224,13 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		if(mRequestHandler != null){
 			mRequestHandler.sendMessage(mesg);
 		}
+	}
+
+	public Boolean isPlaying(){
+		if(player != null){
+			return player.isPlaying();
+		}
+		return false;
 	}
 
 	/**
@@ -257,7 +268,6 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		}else{
 			mRequestHandler.obtainMessage(MESSAGE_LOADMUSIC,target).sendToTarget();
 		}
-
 	}
 
 	public void queuePauseMedia(){
@@ -304,6 +314,7 @@ public class RzMediaDownloader<T> extends HandlerThread{
 				},"请欣赏,"+tmp.getAuthor()+"的"+tmp.getName(),null);
 			}else{
 				LogUtil.e("arg1","不需要提示");
+				new LrcDownTask(tmp).execute();//下载歌词
 				player.setDataSource(context,tmp);
 			}
 
@@ -405,6 +416,50 @@ public class RzMediaDownloader<T> extends HandlerThread{
 			return true;
 		}
 	};
+
+	private void loadLrc(Result data){
+		LogUtil.e(TAG,"loadLrc()"+LogUtil.getLineInfo());
+		if(data.getLrcUrl() != null){
+			LogUtil.e(TAG,"data.getLrcUrl() != null:data.getLrcUrl():"+data.getLrcUrl()+LogUtil.getLineInfo());
+			OKHttpDownLoadUtil.get().download(data.getLrcUrl(),
+					Environment.getExternalStorageDirectory().getAbsolutePath(),
+					"currentfile.lrc",
+					new OKHttpDownLoadUtil.OnDownloadListener() {
+						@Override
+						public void onDownloadSuccess(File file) {
+							LogUtil.e(TAG,"歌词下载成功"+LogUtil.getLineInfo());
+							if(mRequestHandler != null){
+								mResponseHandler.obtainMessage(RZMediaPlayActivity2.MESSAGE_LOAD_LRC).sendToTarget();
+							}
+
+						}
+
+						@Override
+						public void onDownloading(int progress) {
+
+						}
+
+						@Override
+						public void onDownloadFailed(Exception e) {
+							//下载异常进行相关提示操作
+						}
+					});
+
+		}
+	}
+
+	public class LrcDownTask extends AsyncTask<Void,Void,Void> {
+		Result data;
+		public LrcDownTask(Result data){
+			this.data = data;
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			loadLrc(data);
+			return null;
+		}
+	}
 	
 	//设计一个接口
 	public interface RzMediaDownloadListener<T>{

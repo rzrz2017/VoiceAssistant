@@ -127,7 +127,10 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title_layout"
         android:layout_toLeftOf="@id/listviewlayout"
+        android:orientation="horizontal"
         android:gravity="center" >
+
+
 
         <!--
         <com.szhklt.VoiceAssistant.view.CircleImageView
@@ -137,8 +140,28 @@
             -->
         <ImageView
             android:id="@+id/media_civ"
+            android:visibility="gone"
             android:layout_width="250dp"
             android:layout_height="250dp" />
+
+
+        <me.wcy.lrcview.LrcView
+            android:id="@+id/lrc_view"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            app:lrcAnimationDuration="1000"
+            app:lrcCurrentTextColor="@color/default_color"
+            app:lrcDividerHeight="24dp"
+            app:lrcLabel="找不到歌词"
+            app:lrcNormalTextColor="#BDBDBD"
+            app:lrcPadding="40dp"
+            app:lrcTextSize="16sp"
+            app:lrcTimeTextColor="#BDBDBD"
+            app:lrcTimelineColor="#80BDBDBD"
+            app:lrcTimelineTextColor="#9FA8DA"
+            app:lrcTextGravity="left"/>
+
+
     </LinearLayout>
 
     <LinearLayout
