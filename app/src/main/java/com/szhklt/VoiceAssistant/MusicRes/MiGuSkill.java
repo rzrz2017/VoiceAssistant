@@ -1,4 +1,4 @@
-package com.szhklt.VoiceAssistant.skill;
+package com.szhklt.VoiceAssistant.MusicRes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import com.rich.czlylibary.bean.SearchTagSongNewResult;
 import com.rich.czlylibary.bean.SingerNew;
 import com.rich.czlylibary.bean.SongNew;
 import com.rich.czlylibary.sdk.ResultCallback;
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
@@ -20,6 +20,7 @@ import com.szhklt.VoiceAssistant.beam.MiGuMusicInfo;
 import com.szhklt.VoiceAssistant.beam.Result;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.skill.Skill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.MiGuSearcher;
 
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MiGuSkill extends Skill{
+public class MiGuSkill extends Skill {
     private static final String TAG = "MiGuSkill";
     private String intent;
 
@@ -58,6 +59,7 @@ public class MiGuSkill extends Skill{
                 theme = slot.getValue();
                 LogUtil.e(TAG,"theme:"+theme);
             }
+
             if(theme == null){
                 theme = slot.getValue();
                 LogUtil.e(TAG,"theme:"+theme);
@@ -68,6 +70,7 @@ public class MiGuSkill extends Skill{
                 singer = slot.getValue();
                 LogUtil.e(TAG,"singer:"+singer);
             }
+
             if(singer == null){
                 if("band".equals(slot.getName())){
                     singer = slot.getValue();

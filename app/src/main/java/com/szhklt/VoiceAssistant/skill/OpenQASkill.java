@@ -2,7 +2,7 @@ package com.szhklt.VoiceAssistant.skill;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.SmartMsgPostMan;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.util.LogUtil;

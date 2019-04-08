@@ -14,7 +14,7 @@ import com.iflytek.cae.util.res.ResourceUtil;
 import com.iflytek.cae.util.res.ResourceUtil.RESOURCE_TYPE;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.NetworkStateInterface;
+import com.szhklt.VoiceAssistant.impl.NetworkStateInterface;
 import com.szhklt.VoiceAssistant.PromptToneSoundPool;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;

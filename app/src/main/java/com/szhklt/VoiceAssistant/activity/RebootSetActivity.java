@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.szhklt.VoiceAssistant.OnWheelChangedListener;
+import com.szhklt.VoiceAssistant.impl.OnWheelChangedListener;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.adapter.ArrayWheelAdapter;
 import com.szhklt.VoiceAssistant.util.LogUtil;

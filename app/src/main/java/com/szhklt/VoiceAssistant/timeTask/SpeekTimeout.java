@@ -4,7 +4,7 @@ import java.util.TimerTask;
 import android.content.Context;
 import android.content.Intent;
 
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;

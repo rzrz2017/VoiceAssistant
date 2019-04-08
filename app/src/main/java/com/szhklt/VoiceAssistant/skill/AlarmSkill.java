@@ -18,7 +18,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
 import com.szhklt.VoiceAssistant.beam.intent;

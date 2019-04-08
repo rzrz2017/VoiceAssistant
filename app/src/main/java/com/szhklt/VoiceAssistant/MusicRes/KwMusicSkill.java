@@ -1,33 +1,27 @@
-package com.szhklt.VoiceAssistant.skill;
+package com.szhklt.VoiceAssistant.MusicRes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
-import com.szhklt.VoiceAssistant.component.MySynthesizer;
-import com.szhklt.VoiceAssistant.db.MusicCollectionDBHelper;
-import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
+import com.szhklt.VoiceAssistant.skill.Skill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import cn.kuwo.autosdk.api.OnSearchListener;
 import cn.kuwo.autosdk.api.SearchStatus;
 import cn.kuwo.base.bean.Music;
 import com.szhklt.VoiceAssistant.beam.intent.Slot;
 
-public class KwMusicSkill extends Skill{
+public class KwMusicSkill extends Skill {
 	private static final String TAG = "KwMusicSkill";
-	private String service;
-	private int rc;
-
 	private String theme = null;
 	private String song = null;
 	private String singer = null;
@@ -47,24 +41,20 @@ public class KwMusicSkill extends Skill{
 		// TODO Auto-generated method stub
 		super.extractVaildInformation();
 		LogUtil.e(TAG,"extractVaildInformation()");
-		service = mintent.getService();
 		if ("musicX".equals(service) == false){
 			return;
 		}
 		intent = mintent.getSemantic().get(0).getIntent();
-		rc = mintent.getRc();
 		final ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
 		for(Slot slot:slots){
 			if("tags".equals(slot.getName())){
 				theme = slot.getValue();
 				Log.e("kw","theme:"+theme);
-				continue;
 			}
 
 			if("artist".equals(slot.getName())){
 				singer = slot.getValue();
 				Log.e("kw","singer:"+singer);
-				continue;
 			}
 
 			if(singer == null){
@@ -77,13 +67,11 @@ public class KwMusicSkill extends Skill{
 			if("song".equals(slot.getName())){
 				song = slot.getValue();
 				Log.e("kw","song:"+song);
-				continue;
 			}
 
 			if("source".equals(slot.getName())){
 				album = slot.getValue();
 				Log.e("kw","album:"+album);
-				continue;
 			}
 		}
 	}
@@ -96,6 +84,7 @@ public class KwMusicSkill extends Skill{
 		send("[KWplaying]");
 		//由于服务是 musicX 的原因，上下首也要在
 		if(rc == 3){
+			//rc 等于 3的情况下，也有可能出现上下首控制
 			disposeRC3();
 		}
 
@@ -124,6 +113,7 @@ public class KwMusicSkill extends Skill{
 		LogUtil.e(TAG, "singer："+singer);
 		LogUtil.e(TAG, "song："+song);
 		LogUtil.e(TAG, "album："+album);
+
 		//播放搜索到的歌曲
 		mKwSdk.searchOnlineMusic(singer,song,album,new OnSearchListener() {
 
@@ -277,6 +267,9 @@ public class KwMusicSkill extends Skill{
 		});
 	}
 
+	/**
+	 * rc 等于 3的情况下，也有可能出现上下首控制
+	 */
 	private void disposeRC3(){
 		//rc 等于 3的情况下，也有可能出现上下首控制
 		if("INSTRUCTION".equals(intent)){

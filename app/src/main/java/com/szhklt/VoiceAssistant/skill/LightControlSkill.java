@@ -5,7 +5,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.Settings;
 
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.beam.intent.Slot;

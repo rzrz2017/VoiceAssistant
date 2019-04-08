@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import com.rich.czlylibary.bean.MusicInfo;
 import com.rich.czlylibary.bean.MusicinfoResult;
 import com.rich.czlylibary.sdk.ResultCallback;
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.beam.Result;

@@ -14,7 +14,7 @@ import com.rich.czlylibary.bean.SearchLyricNewResult;
 import com.rich.czlylibary.bean.SingerNew;
 import com.rich.czlylibary.bean.SongNew;
 import com.rich.czlylibary.sdk.ResultCallback;
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.RzMusicPkg.RzMusicLab;

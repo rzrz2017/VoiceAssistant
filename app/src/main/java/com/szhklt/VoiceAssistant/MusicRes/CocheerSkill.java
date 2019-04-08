@@ -1,12 +1,12 @@
-package com.szhklt.VoiceAssistant.skill;
+package com.szhklt.VoiceAssistant.MusicRes;
 
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.szhklt.CocheerCallBack;
+import com.szhklt.VoiceAssistant.impl.CocheerCallBack;
 import com.szhklt.VoiceAssistant.Cocheer;
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.beam.CocheerAlbum;
@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.szhklt.VoiceAssistant.beam.intent.Slot;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.skill.Skill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
-public class CocheerSkill extends Skill{
+public class CocheerSkill extends Skill {
     private static final String TAG = "CocheerSkill";
     private Cocheer cocheer;
 

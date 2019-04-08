@@ -2,7 +2,7 @@ package com.szhklt.VoiceAssistant;
 
 import android.util.Base64;
 
-import com.szhklt.CocheerCallBack;
+import com.szhklt.VoiceAssistant.impl.CocheerCallBack;
 import com.szhklt.VoiceAssistant.Common.CaseConverter;
 import com.szhklt.VoiceAssistant.Common.HMAC_SHA1;
 import com.szhklt.VoiceAssistant.Common.MD5Utils;

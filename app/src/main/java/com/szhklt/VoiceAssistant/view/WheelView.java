@@ -1,7 +1,7 @@
 package com.szhklt.VoiceAssistant.view;
 
-import com.szhklt.VoiceAssistant.OnWheelChangedListener;
-import com.szhklt.VoiceAssistant.OnWheelScrollListener;
+import com.szhklt.VoiceAssistant.impl.OnWheelChangedListener;
+import com.szhklt.VoiceAssistant.impl.OnWheelScrollListener;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.adapter.WheelAdapter;
 import android.content.Context;
@@ -17,7 +17,6 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;

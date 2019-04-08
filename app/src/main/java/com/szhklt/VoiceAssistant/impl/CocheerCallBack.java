@@ -1,4 +1,4 @@
-package com.szhklt;
+package com.szhklt.VoiceAssistant.impl;
 
 public interface CocheerCallBack {
     void searchSuccess(String msg);

@@ -2,7 +2,7 @@ package com.szhklt.VoiceAssistant.skill;
 
 import android.content.Intent;
 
-import com.szhklt.VoiceAssistant.DoSomethingAfterTts;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
@@ -16,6 +16,8 @@ public class Skill {
 	protected MySynthesizer mTts;
 	protected FloatWindowManager mFWM;//悬浮窗UI管理
 	protected intent mintent;
+	protected int rc;
+	protected String service;
 	protected String question;
 	protected intent.Answer answer;
 	protected String answerText;
@@ -28,6 +30,8 @@ public class Skill {
 	}
 
 	protected void extractVaildInformation(){
+		rc = mintent.getRc();
+		service = mintent.getService();
 		question = mintent.getText();
 		LogUtil.e("now",question+LogUtil.getLineInfo());
 		answer = mintent.getAnswer();

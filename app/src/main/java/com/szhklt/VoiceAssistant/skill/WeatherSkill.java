@@ -34,6 +34,9 @@ public class WeatherSkill extends Skill {
 		WeatherData[] weatherdataarray;
 		weatherdataarray = WeatherXUnderstander(weatherJson);
 		SharedPreferences pref = context.getSharedPreferences("location",context.MODE_PRIVATE);
+		if(weatherdataarray[0] == null){
+			return;
+		}
 		if(pref.getString("location","~").contains(weatherdataarray[0].getcity())){
 			mweatherDBHandler.deleteAllWeatherMsg();
 			mweatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
