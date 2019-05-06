@@ -1,13 +1,11 @@
 package com.szhklt.VoiceAssistant;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.rich.czlylibary.sdk.MiguCzlySDK;
@@ -16,6 +14,9 @@ import com.rich.player.sdk.PlayMusicClient;
 import com.szhklt.VoiceAssistant.beam.VersionInfo;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class MainApplication extends Application{
 	private final static String TAG = "MainApplication";
@@ -66,6 +67,7 @@ public class MainApplication extends Application{
 
 	public static String firmwareVersion=null;//固件版本号
 
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -76,7 +78,8 @@ public class MainApplication extends Application{
 			CrashHandler catchHandler = crashHandler.getInstance();
 			catchHandler.init(getApplicationContext());
 		}
-		{//初始化appid
+		{
+			//初始化appid初始化讯飞语音
 			StringBuffer param = new StringBuffer();
 			param.append("appid="+getString(R.string.app_id));
 			param.append(",");

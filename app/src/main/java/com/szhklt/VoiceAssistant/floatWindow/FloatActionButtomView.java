@@ -12,14 +12,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.activity.ADCandJetActivity;
 import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
-import com.szhklt.VoiceAssistant.activity.BlueToothActivity;
 import com.szhklt.VoiceAssistant.activity.BlueToothActivity2;
 import com.szhklt.VoiceAssistant.activity.RebootSetActivity;
+import com.szhklt.VoiceAssistant.activity.WeiXinPairActivity;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity;
 import com.szhklt.VoiceAssistant.service.checkAPKUpdataService;
@@ -90,7 +91,7 @@ public class FloatActionButtomView extends LinearLayout{
 	private float yInView;
 
 	public FloatingActionsMenu thisMenu;
-	private FloatingActionButton update,alarmlist,wakeup,reboot,hidebutton;
+	private FloatingActionButton update,alarmlist,wakeup,reboot,hidebutton,wexinpair;
 	public static FloatingActionButton auxin,bletooth;
 	public FloatActionButtomView(Context context, FloatingActionsMenu.FabLayoutRanger ranger) {
 		super(context);
@@ -112,6 +113,8 @@ public class FloatActionButtomView extends LinearLayout{
 		wakeup = (FloatingActionButton)view.findViewById(R.id.floatswitch_wake);
 		wakeup.setTitle(getSwicthState()==true?"关闭唤醒":"开启唤醒");
 		reboot = (FloatingActionButton)view.findViewById(R.id.floatreboot);
+        wexinpair= view.findViewById(R.id.wexinpair);
+        wexinpair.setOnClickListener(listener);
 		update.setOnClickListener(listener);
 		alarmlist.setOnClickListener(listener);
 		wakeup.setOnClickListener(listener);
@@ -186,6 +189,13 @@ public class FloatActionButtomView extends LinearLayout{
 				LogUtil.e("auxin",auxinStatus+LogUtil.getLineInfo());
 				disposeAuxin();
 				break;
+			case R.id.wexinpair:
+				Intent intent2 = new Intent(context, WeiXinPairActivity.class);
+				intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent2);
+				break;
+
+
 			case R.id.hidebutton:
 				thisMenu.collapse();
 				FloatWindowManager.getInstance().removeFloatButton(getContext());

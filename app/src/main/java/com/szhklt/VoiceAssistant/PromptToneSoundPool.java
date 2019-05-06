@@ -70,7 +70,10 @@ public class PromptToneSoundPool {
                     listener.onCompletion();
                 }
             }
+
         }).start();
+
+
     }
 
     /**

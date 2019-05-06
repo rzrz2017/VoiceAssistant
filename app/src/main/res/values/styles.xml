@@ -115,4 +115,14 @@
         <item name="btnStrokeWidth">2px</item>
     </style>
 
+
+
+
+
+    <style name="SetupWidget.BottomButton.Back" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:src">@drawable/ic_previous_white_32dp</item>
+    </style>
 </resources>

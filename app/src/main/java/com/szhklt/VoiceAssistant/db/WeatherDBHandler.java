@@ -1,15 +1,17 @@
 package com.szhklt.VoiceAssistant.db;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.szhklt.VoiceAssistant.beam.WeatherData;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class WeatherDBHandler {
 	public SQLiteDatabase weatherDB;
@@ -39,7 +41,7 @@ public class WeatherDBHandler {
 	    LogUtil.e("date","mstrdate:"+mstrdate+ LogUtil.getLineInfo());
 	}
 	
-	//C
+	//
 	public void insertALineOfWeatherMsg(WeatherData weatherData){
 		ContentValues values = new ContentValues();
 		

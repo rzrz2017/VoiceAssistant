@@ -1,8 +1,5 @@
 package com.szhklt.VoiceAssistant.skill;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -12,6 +9,10 @@ import com.szhklt.VoiceAssistant.beam.WeatherData;
 import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.db.WeatherDBHandler;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 
 public class WeatherSkill extends Skill {
@@ -32,6 +33,7 @@ public class WeatherSkill extends Skill {
 		// TODO Auto-generated method stub
 		super.extractVaildInformation();
 		WeatherData[] weatherdataarray;
+
 		weatherdataarray = WeatherXUnderstander(weatherJson);
 		SharedPreferences pref = context.getSharedPreferences("location",context.MODE_PRIVATE);
 		if(weatherdataarray[0] == null){

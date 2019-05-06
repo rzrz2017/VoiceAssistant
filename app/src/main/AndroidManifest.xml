@@ -23,6 +23,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
 
     <application
         android:name=".MainApplication"
@@ -45,7 +47,6 @@
             android:theme="@style/hk_notitle_noblake">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,6 +60,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".activity.AddAlarmActivty2"
             android:screenOrientation="landscape"
@@ -101,6 +104,15 @@
             android:screenOrientation="landscape"
             android:theme="@style/hk_notitle_noblake" />
         <activity
+            android:name=".activity.WeiXinPairActivity"
+            android:screenOrientation="landscape"
+            />
+        <activity
+            android:name=".activity.MqttListActivity"
+            android:screenOrientation="landscape"
+            />
+
+        <activity
             android:name=".activity.RZMediaPlayActivity2"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
@@ -130,6 +142,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.MqttActivity"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
+            android:exported="true">
+        </activity>
+
+        <service android:name=".service.MqttService"
+            android:enabled="true"
+            android:exported="true"
+            >
+
+        </service>
         <service
             android:name=".service.MainService"
             android:enabled="true"

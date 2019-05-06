@@ -25,8 +25,8 @@ public class WeatherDBHelper extends SQLiteOpenHelper{
 			+ "wind text, "
 			+ "windLevel integer, "
 			+ "answer text)";
-	
-	
+
+//	weatherinfo.db
 	public WeatherDBHelper(Context context, String name,
 			CursorFactory factory) {
 		super(context, name, factory, VERSION);

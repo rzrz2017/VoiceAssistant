@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/start_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.053" />
+    <android.support.constraint.Guideline
+        android:id="@+id/top_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.037" />
+    <android.support.constraint.Guideline
+        android:id="@+id/bottom_bar_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.88" />
+    <android.support.constraint.Guideline
+        android:id="@+id/retry_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.813" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/failed_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.26" />
+
+   <!--说明-->
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:text="@string/bind_account"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".06"
+        app:layout_constraintStart_toStartOf="@+id/start_margin"
+        app:layout_constraintTop_toTopOf="@id/top_margin" />
+
+
+
+<!--二维码图片-->
+    <ImageView
+        android:id="@+id/code"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".347"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/failed_top"
+        />
+
+
+    <!--失败-->
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginBottom="52dp"
+        android:text="@string/pairing_tips"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="@id/retry_bottom"
+        app:layout_constraintDimensionRatio="64:30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+    <!--重试-->
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/retry"
+        android:layout_width="74dp"
+        android:layout_height="44dp"
+        android:shadowColor="@color/blue"
+        android:text="重试"
+        android:textColor="@color/blue"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="@id/retry_bottom"
+        app:layout_constraintDimensionRatio="64:30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+    <!--返回-->
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintHeight_percent="0.053"
+        app:layout_constraintStart_toStartOf="@id/start_margin"
+        app:layout_constraintTop_toBottomOf="@id/bottom_bar_top"
+        android:layout_height="10dp" />
+
+
+</android.support.constraint.ConstraintLayout>

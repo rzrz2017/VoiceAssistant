@@ -88,6 +88,16 @@
             fab:fab_colorNormal="@color/default_color_1"
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="打开Auxin" />
+        <com.szhklt.VoiceAssistant.view.FloatingActionButton
+            android:id="@+id/wexinpair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_auxin"
+            app:fab_size="mini"
+            fab:fab_colorNormal="@color/default_color_1"
+            fab:fab_colorPressed="@color/gold"
+            fab:fab_title="配对小程序" />
+
     </com.szhklt.VoiceAssistant.view.FloatingActionsMenu>
 
 </RelativeLayout>

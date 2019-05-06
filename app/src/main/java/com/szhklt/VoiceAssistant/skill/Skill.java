@@ -29,6 +29,9 @@ public class Skill {
 		mTts = MySynthesizer.getInstance(MainApplication.getContext());
 	}
 
+
+
+
 	protected void extractVaildInformation(){
 		rc = mintent.getRc();
 		service = mintent.getService();
@@ -41,6 +44,7 @@ public class Skill {
 			answerText = mintent.getText();
 		}
 	};
+
 
 	public void execute() {
 		extractVaildInformation();
@@ -66,4 +70,7 @@ public class Skill {
 			MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.OTHER_ACTION").putExtra("playeraction","pause"));
 		}
 	}
+
+
+
 }

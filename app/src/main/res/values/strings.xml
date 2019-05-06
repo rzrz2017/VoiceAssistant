@@ -247,4 +247,9 @@
     <string name="default_time">88:88:88</string>
     <string name="_2017">2017</string>
 
+
+    <!--MQTT Config -->
+    <string name="bind_account">小程序链接设备</string>
+    <string name="pairing_tips">请在手机上打开微信小程序，扫码添加设备</string>
+
 </resources>

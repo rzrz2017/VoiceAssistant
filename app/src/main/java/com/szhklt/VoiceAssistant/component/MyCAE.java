@@ -1,8 +1,8 @@
 package com.szhklt.VoiceAssistant.component;
 
-import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.iflytek.alsa.AlsaRecorder;
@@ -14,7 +14,6 @@ import com.iflytek.cae.util.res.ResourceUtil;
 import com.iflytek.cae.util.res.ResourceUtil.RESOURCE_TYPE;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.impl.NetworkStateInterface;
 import com.szhklt.VoiceAssistant.PromptToneSoundPool;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
@@ -22,11 +21,14 @@ import com.szhklt.VoiceAssistant.activity.ChatActivity;
 import com.szhklt.VoiceAssistant.activity.DialogWIFI;
 import com.szhklt.VoiceAssistant.activity.SleepActivity;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
+import com.szhklt.VoiceAssistant.impl.NetworkStateInterface;
 import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.skill.AlarmSkill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.NetworkUtil;
 import com.szhklt.VoiceAssistant.util.ScreenManager;
+
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -51,13 +53,15 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 
 		initCAEAlgorithm();
 		//初始化AIUI
-		
+		//
+
 		//初始化sp
 		toneSP = new PromptToneSoundPool();
 		toneSP.setCompleteListener(new PromptToneSoundPool.OnSoundPoolCompletionListener() {//提示音播放完成监听
 			@Override
 			public void onCompletion() {
 				// TODO Auto-generated method stub
+				Log.e(TAG,"..........................");
 				mAIUI.sendAudioDataToAIUI(true);//使AIUI进入工作状态
 				if(!ChatActivity.ISCHATMODE){//不在聊天模式
 					mFW.flushQandAWindow(
@@ -78,7 +82,8 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 		// TODO Auto-generated method stub
 		LogUtil.e(TAG,"onWakeup---麦克风阵列被唤醒"+LogUtil.getLineInfo());
 		isWakeUped = true;
-		MyAIUI.WRITEAUDIOEABLE = false;LogUtil.e("now","----------------------"+LogUtil.getLineInfo());
+		MyAIUI.WRITEAUDIOEABLE = false;
+		LogUtil.e("now","----------------------"+LogUtil.getLineInfo());
 		MySynthesizer.getInstance(MainApplication.getContext()).stopTts();//立即停止tts播放
 		MainService.volume_value = 0;//一唤醒音量应该是0
 		savePlayerStatusBeforeWakeup();//保存播放器唤醒前的状态
@@ -132,9 +137,10 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 
 	@Override
 	public void onAudio(byte[] audioData, int dataLen, int param1,int param2) {// 将录到的音频写入
-		// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 		if(MyAIUI.WRITEAUDIOEABLE == true) {
 			try {
+				LogUtil.e("test","onAudio");
 				mAIUI.writeAudioData(audioData);
 			} catch (Exception e) {
 				LogUtil.e(TAG, "向AIUI写入数据有异常" + LogUtil.getLineInfo());
@@ -179,13 +185,15 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 	 * 开始录音
 	 */
 	public int startRecording(){
-		return mRecorder.startRecording(mPcmListener);
+		Log.e(TAG,"开始录音");
+	    return mRecorder.startRecording(mPcmListener);
 	}
 	
 	/**
 	 * 停止录音
 	 */
 	public void stopRecording(){
+		Log.e(TAG,"停止录音");
 		if(mRecorder != null){
 			mRecorder.stopRecording();
 		}

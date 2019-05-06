@@ -48,17 +48,19 @@ public class MainService extends Service {
     private static final String ACTION_TOUCHEVENT = "com.szhklt.ACTION_TOUCHEVENT";
     private static final String ACTION_TTS = "com.szhklt.ACTION_TTS";
 
+    //绑定
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
+    //取消绑定
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
     }
 
+    //创建
     @Override
     public void onCreate() {
         super.onCreate();

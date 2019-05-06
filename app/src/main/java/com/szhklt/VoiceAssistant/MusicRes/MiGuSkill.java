@@ -43,12 +43,14 @@ public class MiGuSkill extends Skill {
 
     public MiGuSkill(intent intent) {
         super(intent);
+        Log.e("測試","MiGuSkill()'constrctor");
         LogUtil.e(TAG,"MiGuSkill()"+LogUtil.getLineInfo());
         mintent = intent;
     }
 
     @Override
     protected void extractVaildInformation() {
+        Log.e("測試","MiGuSkill()'extractVaildInformation");
         super.extractVaildInformation();
         final ArrayList<intent.Slot> slots = mintent.getSemantic().get(0).getSlots();
         intent = mintent.getSemantic().get(0).getIntent();
@@ -94,6 +96,7 @@ public class MiGuSkill extends Skill {
 
     @Override
     public void execute() {
+        Log.e("測試","MiGuSkill()'execute");
         extractVaildInformation();
 
         //随机播放
@@ -197,6 +200,7 @@ public class MiGuSkill extends Skill {
      * @param exc
      */
     private void RecommendedSong(boolean exc){
+        Log.e("測試","MiGuSkill()'RecommendedSong");
         String[] kwanswer = MainApplication.getContext().getResources().getStringArray(R.array.kwanswer);
         mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
             @Override
@@ -215,6 +219,7 @@ public class MiGuSkill extends Skill {
      * @param songNews
      */
     private void searchSongPlay(SongNew[] songNews,String index) {
+        Log.e("測試","MiGuSkill()'searchSongPlay");
         try {
             List<MusicInfo> musicInfoList = new ArrayList<>();
             disposeSongData(musicInfoList,songNews);
@@ -235,6 +240,7 @@ public class MiGuSkill extends Skill {
     }
 
     private static List<MiGuMusicInfo> toListMusicInfo(List<com.rich.czlylibary.bean.MusicInfo> list) {
+        Log.e("測試","MiGuSkill()'toListMusicInfo");
         if (list == null || list.isEmpty()) {
             return null;
         }
@@ -246,6 +252,7 @@ public class MiGuSkill extends Skill {
     }
 
     private static MiGuMusicInfo toMusicInfo(com.rich.czlylibary.bean.MusicInfo info) {
+        Log.e("測試","MiGuSkill()'toMusicInfo");
         MiGuMusicInfo musicInfo = new MiGuMusicInfo();
         musicInfo.setMusicId(info.getMusicId());
         musicInfo.setMusicName(info.getMusicName());
@@ -265,6 +272,7 @@ public class MiGuSkill extends Skill {
      * @return
      */
     private void addData(MusicInfo data){
+        Log.e("測試","MiGuSkill()'addData");
         String gjson = "{\"name\":"+"\""+data.getMusicName()+"\""+"," +
                 "\"author\":"+"\""+data.getSingerName()+"\""+"," +
                 "\"id\":"+"\""+data.getMusicId()+"\""+"," +
@@ -284,6 +292,7 @@ public class MiGuSkill extends Skill {
      * @param data
      */
     private void actionStart(Bundle data){
+        Log.e("測試","MiGuSkill()'actionStart");
         Intent sintent = new Intent(MainApplication.getContext(), RZMediaPlayActivity2.class);
         sintent.putExtras(data);
         sintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -294,6 +303,7 @@ public class MiGuSkill extends Skill {
      * 处理数据
      */
     private void disposeSongData(List<MusicInfo> musicInfoList,SongNew[] songNews){
+        Log.e("測試","MiGuSkill()'disposeSongData");
         for (SongNew songNew : songNews) {
             MusicInfo musicInfo = new MusicInfo();
             if (songNew.getFullSongs() != null && songNew.getFullSongs().length > 0) {
