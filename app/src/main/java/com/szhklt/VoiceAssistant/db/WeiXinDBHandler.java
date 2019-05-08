@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.szhklt.VoiceAssistant.beam.Topic;
 
@@ -12,13 +13,15 @@ import java.util.List;
 
 public class WeiXinDBHandler {
 
+    private String TAG ="WeiXinDBHandler";
     public SQLiteDatabase weixinDB;
 
     private Context mcontext;
 
     private WeixinDBHelper weixinDBHelper;
 
-
+    public WeiXinDBHandler() {
+    }
 
     public WeiXinDBHandler(Context context) {
         this.mcontext = context;
@@ -37,8 +40,9 @@ public class WeiXinDBHandler {
 
     }
     //删除一条topic
-    public void deleteTopoicMsg(Integer id ){
-        weixinDB.execSQL("DELETE FROM wxdevice where id ="+id);
+    public void deleteTopoicMsg(String topic ){
+        Log.e(TAG,"执行删除");
+        weixinDB.execSQL("DELETE FROM wxdevice where suTopic ='"+topic+"'");
     }
 
     //查询所有topic
@@ -58,9 +62,10 @@ public class WeiXinDBHandler {
        return  topicList;
     }
 
+
     //查询指定topic的状态
     public Integer queryTopicMsgState(String topic){
-         Cursor cursor= weixinDB.rawQuery("SELECT * FROM wxdevice where suTopic ="+topic,null);
+         Cursor cursor= weixinDB.rawQuery("SELECT * FROM wxdevice where suTopic = '"+topic +"'",null);
         while (cursor.moveToNext()){
             Integer state = cursor.getInt(cursor.getColumnIndex("state"));
             return  state;
@@ -73,9 +78,14 @@ public class WeiXinDBHandler {
 
             ContentValues value = new ContentValues();
             value.put("state",state);
-            weixinDB.update("wxdevice", value, "_topic=?", new String[] {topic});
+            weixinDB.update("wxdevice", value, "suTopic='"+topic+"'", new String[] {});
         }
 
-
+    //修改指定topic之外的其他topic的状态
+    public  void updateOtherTopicState(String topic, Integer state){
+        ContentValues value = new ContentValues();
+        value.put("state",state);
+        weixinDB.update("wxdevice", value, "suTopic !='"+topic+"'", new String[] {});
+    }
 
 }

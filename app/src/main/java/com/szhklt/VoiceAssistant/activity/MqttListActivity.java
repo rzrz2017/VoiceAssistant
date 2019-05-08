@@ -2,9 +2,13 @@ package com.szhklt.VoiceAssistant.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,7 +26,13 @@ import android.widget.Toast;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.Topic;
 import com.szhklt.VoiceAssistant.db.WeiXinDBHandler;
+import com.szhklt.VoiceAssistant.service.MqttService;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +40,10 @@ public class MqttListActivity extends Activity {
     private static final String TAG = "MqttListActivity";
     private WeiXinDBHandler weiXinDBHandler;
     private List<Topic> topicList = new ArrayList<Topic>();//用来存放数据的数组
-    private String clientId = "2644c2e4360b41f482238c1925559991";
+    private  MqttAndroidClient client;
+
+
+
 
 
     @Override
@@ -40,11 +53,33 @@ public class MqttListActivity extends Activity {
         setContentView(R.layout.activity_mqttlist);
         weiXinDBHandler = new WeiXinDBHandler(MqttListActivity.this);
         ListView listView = findViewById(R.id.mqttlist);
+
+
+
         init();
         WeiXinPairAdapter adapter = new WeiXinPairAdapter(MqttListActivity.this, R.layout.activity_list, topicList);
         Log.e(TAG, adapter.toString());
         listView.setAdapter(adapter);
+        Intent myServiceIntent = new Intent(MqttListActivity.this, MqttService.class);
+        bindService(myServiceIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
+        
     }
+
+
+
+    ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MqttService myService = ((MqttService.MyBinder) service).getMqttService();
+             client = myService.getClient();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+    };
+
 
     private void init() {//初始化数据
         topicList = weiXinDBHandler.queryTopicMsg();
@@ -70,63 +105,129 @@ public class MqttListActivity extends Activity {
             LinearLayout linearLayout = view.findViewById(R.id.list);
             TextView headText = view.findViewById(R.id.connectname);
             Button connectbutton = view.findViewById(R.id.connect);
-            Button unConnectbuton = view.findViewById(R.id.unconnect);
+            Button bindButton = view.findViewById(R.id.unbind);
+            if(topic.getState() == 1){
+                connectbutton.setText("取消连接");
+            }
             headText.setText(topic.getSuTopic());
+
+
+            /**
+             * 连接按钮点击时间
+             */
             connectbutton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Log.e(TAG, "点击了连接");
                     String number = headText.getText().toString();
                     Log.e(TAG, number);
+                    if("连接".equals(connectbutton.getText()) ) {
 
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+                        alertDialog.setMessage("是否连接" + number);
+                        alertDialog.setPositiveButton("否",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
 
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-                    alertDialog.setMessage("是否连接"+number);
-                    alertDialog.setPositiveButton("否",
-                            new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    dialog.dismiss();
-                                }
-                            });
+                        alertDialog.setNegativeButton("是",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            client.subscribe(number, 0);
+                                            Toast.makeText(getApplicationContext(), "你链接了" + number + "",
+                                                    Toast.LENGTH_SHORT).show();
+                                            weiXinDBHandler.queryTopicMsgState(number);
+                                            refresh();
+                                        } catch (MqttException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), "出错了,请重试",
+                                                    Toast.LENGTH_SHORT).show();
+                                            refresh();
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                });
 
-                    alertDialog.setNegativeButton("是",
-                            new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    Toast.makeText(getApplicationContext(), "点击了连接",
-                                            Toast.LENGTH_SHORT).show();
+                        ad = alertDialog.create();
 
-                                    dialog.dismiss();
-                                }
-                            });
+                        ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                        ad.setCanceledOnTouchOutside(false);//点击外面区域不会让dialog消失
+                        ad.show();
 
-                    ad = alertDialog.create();
+                    }
 
-                    ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                    ad.setCanceledOnTouchOutside(false);//点击外面区域不会让dialog消失
-                    ad.show();
+                    if("取消连接".equals(connectbutton.getText())){
 
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+                        alertDialog.setMessage("是否取消连接" + number);
+                        alertDialog.setPositiveButton("否",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
 
+                        alertDialog.setNegativeButton("是",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            Log.e(TAG,"取消连接number:"+number);
+                                            client.unsubscribe(number);
+                                            Toast.makeText(getApplicationContext(), "你取消对" + number + "的链接",
+                                                    Toast.LENGTH_SHORT).show();
+                                            weiXinDBHandler.updateTopicMsg(number,0);
+                                            MqttMessage mqttMessage = new MqttMessage();
+                                            mqttMessage.setQos(1);
+                                            mqttMessage.setRetained(false);
+                                            String msg = "设备端取消了对"+number+"的连接";
+                                            mqttMessage.setPayload(msg.getBytes("utf-8"));
+                                            client.publish(number, mqttMessage);
+                                            refresh();
+                                        } catch (MqttException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(getApplicationContext(), "出错了,请重试",
+                                                    Toast.LENGTH_SHORT).show();
+                                            refresh();
+                                        } catch (UnsupportedEncodingException e) {
+                                            e.printStackTrace();
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        ad = alertDialog.create();
+
+                        ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                        ad.setCanceledOnTouchOutside(false);//点击外面区域不会让dialog消失
+                        ad.show();
+
+                    }
 
                 }
 
             });
-            unConnectbuton.setOnClickListener(new View.OnClickListener() {
+
+
+            /**
+             * 绑定按钮点击时间
+             */
+            bindButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Log.e(TAG, "点击了取消连接");
+                    Log.e(TAG, "点击了取消绑定");
                     String number = headText.getText().toString();
                     Log.e(TAG, number);
-
-
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-                    alertDialog.setMessage("是否连接"+number);
+                    alertDialog.setMessage("是否取消绑定"+number);
                     alertDialog.setPositiveButton("否",
                             new DialogInterface.OnClickListener()
                             {
                                 public void onClick(DialogInterface dialog, int which)
                                 {
+                                    Toast.makeText(getApplicationContext(), "你未取消对"+number+"的绑定",
+                                        Toast.LENGTH_SHORT).show();
+                                    refresh();
                                     dialog.dismiss();
                                 }
                             });
@@ -136,8 +237,19 @@ public class MqttListActivity extends Activity {
                             {
                                 public void onClick(DialogInterface dialog, int which)
                                 {
-                                    Toast.makeText(getApplicationContext(), "点击了取消连接",
-                                            Toast.LENGTH_SHORT).show();
+
+                                    try {
+                                        weiXinDBHandler.deleteTopoicMsg(number);
+                                        Toast.makeText(getApplicationContext(), "你取消了对"+number+"的绑定",
+                                                Toast.LENGTH_SHORT).show();
+                                        refresh();
+                                    } catch ( Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), "出错了,请重试",
+                                                Toast.LENGTH_SHORT).show();
+                                        refresh();
+                                    }
+
                                     dialog.dismiss();
 
                                 }
@@ -152,10 +264,22 @@ public class MqttListActivity extends Activity {
                 }
 
             });
+
 
             return view;
         }
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mServiceConnection);
+    }
+
+
+    public void refresh() {
+        onCreate(null);
+        Log.e(TAG,"刷新了");
 
     }
 }

@@ -7,11 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -31,6 +33,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class MqttService extends Service {
@@ -42,7 +45,7 @@ public class MqttService extends Service {
     private String userName = "4yrgvkn/device03";
     private String passWord = "BctJVU9qb9q88AEk";
     private static String topic;
-    private String clientId = "2644c2e4360b41f482238c1925559991";
+    private String clientId = UUID.randomUUID().toString();
     private static MyAIUI myAIUI;
     private static String receInfo;     //接收到的订阅信息
     private static String wxCode= null;    //微信openid
@@ -52,6 +55,9 @@ public class MqttService extends Service {
     private static AlertDialog ad;
     private static WeiXinDBHandler weiXinDBHandler;
 
+
+    public MqttService() {
+    }
 
     @Override
     public void onCreate() {
@@ -98,6 +104,7 @@ public class MqttService extends Service {
         mqttMessage.setRetained(false);
 
         try {
+            Log.e(TAG,"发布信息topic:"+topic);
             Log.e("setPayload", String.valueOf(msg.getBytes("utf-8")));
             mqttMessage.setPayload(msg.getBytes("utf-8"));
             client.publish(topic, mqttMessage);
@@ -134,7 +141,7 @@ public class MqttService extends Service {
         boolean doConnect = true;
         String message = "Offline:machine|"+sn;
         Log.e("掉线发送的信息",message);
-        String topic = "offline";
+        String topic = sn;
         Integer qos = 2;
         Boolean retained = false;
         if ((!message.equals("")) || (!topic.equals(""))) {
@@ -194,7 +201,6 @@ public class MqttService extends Service {
                 // 订阅sn话题
                 Log.e(TAG,"链接成功订阅sn:"+sn);
                 client.subscribe("/"+sn, 0);
-                client.subscribe("offline",1);
             } catch (MqttException e) {
                 e.printStackTrace();
             }
@@ -252,43 +258,80 @@ public class MqttService extends Service {
                 if(str.startsWith("Bind")){
                     Log.e(TAG,"bind");
                     mqttActivity.finish();
-                    //弹出确认对话框
-                    AlertDialog.Builder alertDialog=new AlertDialog.Builder(MqttService.this);
-                    alertDialog.setMessage("确认配对吗?");
-                    alertDialog.setPositiveButton("确认", new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.e(TAG,"确认");
-                            Topic subTopic = new Topic(receInfo,0) ;
-                            weiXinDBHandler.insertALineOfTopic(subTopic);
-                            topic = str.substring(str.indexOf("/")+1,str.lastIndexOf("/"));
-                            if (isOnline){
+                    Integer row = weiXinDBHandler.queryTopicMsgState(receInfo);
 
-                                publish("Bound:"+receInfo,1);
+                    if(null != row){
+                        Log.e(TAG,"确认配对过了:"+topic);
+                        AlertDialog dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("绑定")
+                                .setMessage("此设备已经配对过了")
+                                .setCancelable(false)
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                })
+                                .create();
+                        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                        dialog.show();
+
+                    }else{
+                        Topic subTopic = new Topic(receInfo,1) ;
+                        topic = str.substring(str.indexOf("/")+1,str.lastIndexOf("/"));
+                        Log.e(TAG,"确认配对:"+topic);
+                        client.subscribe(receInfo,0);
+                        weiXinDBHandler.insertALineOfTopic(subTopic);
+                        weiXinDBHandler.updateOtherTopicState(receInfo,0);
+                        Log.e(TAG,"确认配对后订阅:"+receInfo);
+                        Toast.makeText(getApplicationContext(), "配对成功",
+                                Toast.LENGTH_SHORT).show();
+                        client.subscribe(topic,1);
+                        if (isOnline) {
+                            publish("Bound:" + receInfo, 1);
+                        }
+                        wxCode = topic;
+                    }
+
+
+                        /*{
+
+                        //弹出确认对话框
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MqttService.this);
+                        alertDialog.setMessage("确认配对吗?");
+                        alertDialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e(TAG, "确认");
+                                Topic subTopic = new Topic(receInfo, 1);
+                                weiXinDBHandler.insertALineOfTopic(subTopic);
+                                weiXinDBHandler.updateOtherTopicState(receInfo,0);
+                                topic = str.substring(str.indexOf("/") + 1, str.lastIndexOf("/"));
+                                wxCode = topic;
+                                if (isOnline) {
+                                    publish("Bound:" + receInfo, 1);
+                                }
+
+
                             }
 
+                        });
+                        alertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
-                        }
-
-                    });
-                    alertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener(){
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.e(TAG,"取消");
-                            if (isOnline){
-                                publish("对方取消了配对",1);
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e(TAG, "取消");
+                                if (isOnline) {
+                                    publish("对方取消了配对", 1);
+                                }
                             }
-                        }
 
-                    });
+                        });
 
-                     ad = alertDialog.create();
+                        ad = alertDialog.create();
 
-                    ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                    ad.setCanceledOnTouchOutside(false);//点击外面区域不会让dialog消失
-                    ad.show();;
-                    return;
+                        ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                        ad.setCanceledOnTouchOutside(false);//点击外面区域不会让dialog消失
+                        ad.show();
+                    }*/
+                        return;
 
                 }
 
@@ -388,7 +431,7 @@ public class MqttService extends Service {
 
 
                 //手机端掉线了
-               else if(str.equals("Phone|"+wxCode)){
+               else if(str.startsWith("Phone|"+wxCode)){
                    Log.e(TAG,"offline手机端掉线了");
                     isOnline = false;
                 }
@@ -423,6 +466,7 @@ public class MqttService extends Service {
             } catch (Exception e) {
                 Log.e(TAG, "出错了");
                 e.printStackTrace();
+
             }
         }
 
@@ -462,10 +506,6 @@ public class MqttService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
 
     /**
@@ -513,6 +553,29 @@ public class MqttService extends Service {
             }
         }
         return  null;
+    }
+
+
+    /**
+     * 与MqttlistActivity进行数据传递client对象
+     * @param intent
+     * @return
+     */
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return new MyBinder();
+    }
+
+
+    public class MyBinder extends Binder {
+        public MqttService getMqttService(){
+            return  MqttService.this;
+        }
+    }
+
+    public MqttAndroidClient getClient(){
+        return client;
     }
 
 
