@@ -24,28 +24,18 @@ public class WeiXinPairActivity  extends Activity {
         weiXincode = findViewById(R.id.weixincode);
         weiXinList = findViewById(R.id.weixinlist);
         weiXincode.setOnClickListener(new View.OnClickListener(){
-
             public void onClick(View v){
-
                 Intent intent = new Intent(WeiXinPairActivity.this,MqttActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
-        }
-
+            }
         });
         weiXinList.setOnClickListener(new View.OnClickListener(){
-
             public void onClick(View v){
-
                 Intent intent2 = new Intent(WeiXinPairActivity.this,MqttListActivity.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent2);
 
             }
-
         });
-
     }
-
 }

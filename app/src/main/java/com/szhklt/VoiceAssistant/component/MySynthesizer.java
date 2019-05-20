@@ -3,6 +3,7 @@ package com.szhklt.VoiceAssistant.component;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.iflytek.cloud.ErrorCode;
@@ -273,6 +274,9 @@ public class MySynthesizer implements SynthesizerListener {
         mTts.startSpeaking(answer, this);
         answer = answer.replace("肠", "长");
         LogUtil.e(TAG, "answer:" + answer + LogUtil.getLineInfo());
+        if(question != null || answer != null){
+            mFWM.bigWindow.setVisibility(View.VISIBLE);
+        }
         if (question != null) {
             if (ChatActivity.ISCHATMODE == true) {
                 sendQuestionMsgToChatActivity(question);

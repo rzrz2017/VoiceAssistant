@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
+
 import com.szhklt.VoiceAssistant.AlarmClockOperation;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
@@ -24,13 +25,15 @@ import com.szhklt.VoiceAssistant.timeTask.SleepTimeout;
 import com.szhklt.VoiceAssistant.timeTask.SpeekTimeout;
 import com.szhklt.VoiceAssistant.util.FileManager;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.kuwo.autosdk.api.OnPlayerStatusListener;
 import cn.kuwo.autosdk.api.PlayerStatus;
 import cn.kuwo.base.bean.Music;
 
-public class MainService extends Service {
+public class MainService extends Service{
     private static final String TAG = "MainService";
     private NetBroadCastReceiver netBroadCastReceiver;
     private String mscPath = Environment.getExternalStorageDirectory().getPath()+"msc";
@@ -64,6 +67,8 @@ public class MainService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        //test
+
         //网络监听器
         LogUtil.e(TAG,"主服务启动");
         if (FileManager.fileIsExists(mscPath)) {
@@ -71,6 +76,8 @@ public class MainService extends Service {
         }
         //启动流量统计服务
         //启动UDP服务
+        //启动MQTT服务
+        startService(new Intent(this,MqttService.class));
 //      startService(new Intent(this,UDPService2.class));
         receiver = new MyReceiver();//注册广播接收者
         IntentFilter filter = new IntentFilter();
@@ -165,6 +172,7 @@ public class MainService extends Service {
     public void onDestroy() {
         mCae.destoryCAEandRecorder();
         unregisterReceiver(netBroadCastReceiver);
+        stopService(new Intent(this,MqttService.class));
         super.onDestroy();
     }
 
@@ -238,6 +246,7 @@ public class MainService extends Service {
         editor.putString("reboottime",string);
         editor.commit();
     }
+
 
     /**
      * 定时清理

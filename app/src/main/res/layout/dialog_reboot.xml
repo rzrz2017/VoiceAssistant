@@ -28,7 +28,7 @@
 		    <Button
 		        android:id="@+id/sure"
 		        android:layout_width="wrap_content"
-		        android:background="@drawable/shape_dialog_bt_green_red"
+		        android:background="@drawable/shape_dialog_bt_green"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="1"
 		        android:textColor="#fff"
@@ -36,7 +36,7 @@
 		    <Button
 		        android:id="@+id/no"
 		        android:layout_weight="1"
-		        android:background="@drawable/shape_dialog_bt_green_red"
+		        android:background="@drawable/shape_dialog_bt_green"
 		        android:layout_marginLeft="50dip"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"

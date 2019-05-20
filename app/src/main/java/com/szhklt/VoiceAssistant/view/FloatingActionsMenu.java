@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -25,6 +26,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.szhklt.VoiceAssistant.R;
+import com.szhklt.VoiceAssistant.activity.ToolsActivity;
 
 
 public class FloatingActionsMenu extends ViewGroup {
@@ -191,7 +193,10 @@ public class FloatingActionsMenu extends ViewGroup {
     mAddButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        toggle();
+//        toggle();
+        Intent startToolsAct = new Intent(context, ToolsActivity.class);
+        startToolsAct.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        context.startActivity(startToolsAct);
       }
     });
 

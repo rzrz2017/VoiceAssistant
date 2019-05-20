@@ -1,28 +1,33 @@
 package com.szhklt.VoiceAssistant.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.service.MqttService;
+import com.szhklt.VoiceAssistant.activity.dialog.PhoneListDiaAct;
 import com.szhklt.VoiceAssistant.util.AESUtil;
+import com.szhklt.VoiceAssistant.util.CommonUtils;
 import com.szhklt.VoiceAssistant.util.QRCodeUtil;
 
 
+/**
+ * 小程序配对二维码界面
+ */
 public class MqttActivity extends Activity {
     private static final String TAG = "MqttActivity";
     private String sn;
     private static final String KEY = "hklthklthklthklt";
     private ImageView code;
     private TextView error;
-    private TextView retry;
-    private MqttService mqttService;
+    private Button phonesBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +36,15 @@ public class MqttActivity extends Activity {
         setContentView(R.layout.activity_mqtt);
         code = findViewById(R.id.code);
         error = findViewById(R.id.error);
-        retry = findViewById(R.id.retry);
-        sn = getDeviceSN();
+        phonesBt = (Button) findViewById(R.id.phones);
+        sn = CommonUtils.getSerialNumber();
 
-        MqttService.startservice(MqttActivity.this,sn);
+        phonesBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MqttActivity.this, PhoneListDiaAct.class));
+            }
+        });
 
         //给返回键绑定点击事件
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
@@ -43,35 +53,6 @@ public class MqttActivity extends Activity {
                 finish();
             }
         });
-
-
-        //给重试键绑定点击事件
-        findViewById(R.id.retry)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        pair();
-                    }
-                });
-
-
-    }
-
-
-    //获取设备SN号
-    public static String getDeviceSN() {
-
-        String serialNumber = android.os.Build.SERIAL;
-        Log.e(TAG, "serialNumber:" + serialNumber);
-        return serialNumber;
-    }
-
-    //响应auth提供者
-    private void requestAuthorize() {
-        Log.e(TAG, "响应");
-        MqttService.startservice(MqttActivity.this);
-
-
     }
 
     @Override
@@ -86,45 +67,6 @@ public class MqttActivity extends Activity {
         //activity.cancelAuthorize();
     }
 
-    //在客户端生成二维码
-    private void pair() {
-
-        if (sn == null || "".equals(sn)) {
-            return;
-        }
-        try {
-            String AESsn = AESUtil.getEnc(sn, KEY);
-            Log.e(TAG, "加密sn:" + AESsn);
-          /*  String DESsn = AESUtil.getDec("ss",KEY);
-            Log.e("解密sn",DESsn);*/
-
-
-            String codeinfo = AESsn + ":" + sn;
-            Log.e(TAG,"codeinfo"+codeinfo);
-            Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(codeinfo, 500, 500);
-            code.setImageBitmap(bitmap);
-            retry.setVisibility(View.INVISIBLE);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("二维码生成失败");
-        }
-        requestAuthorize();
-    }
-
-   /* public void second(){
-        Log.e(TAG,"second执行了");
-    }*/
-
-
-    private void showError(String message) {
-        Log.e(TAG, "showerror");
-        error.setText(message);
-        code.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.codeerror));
-        retry.setVisibility(View.VISIBLE);
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -132,5 +74,27 @@ public class MqttActivity extends Activity {
     }
 
 
+    //在客户端生成二维码
+    private void pair() {
+        if (sn == null || "".equals(sn)) {
+            return;
+        }
+        try {
+            String AESsn = AESUtil.getEnc(sn, KEY);
+            Log.e(TAG, "加密sn:" + AESsn);
+            String codeinfo = AESsn + ":" + sn;
+            Log.e(TAG,"codeinfo"+codeinfo);
+            Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(codeinfo, 500, 500);
+            code.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("二维码生成失败");
+        }
+    }
 
+    private void showError(String message) {
+        Log.e(TAG, "showerror");
+        error.setText(message);
+        code.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.codeerror));
+    }
 }

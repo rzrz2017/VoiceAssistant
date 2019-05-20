@@ -11,19 +11,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.activity.ADCandJetActivity;
-import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
 import com.szhklt.VoiceAssistant.activity.BlueToothActivity2;
-import com.szhklt.VoiceAssistant.activity.RebootSetActivity;
-import com.szhklt.VoiceAssistant.activity.WeiXinPairActivity;
-import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
-import com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity;
-import com.szhklt.VoiceAssistant.service.checkAPKUpdataService;
 import com.szhklt.VoiceAssistant.util.LineInControler;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.FloatingActionButton;
@@ -101,13 +93,14 @@ public class FloatActionButtomView extends LinearLayout{
 		LayoutInflater.from(context).inflate(R.layout.float_window_small_1, this);
 		View view = findViewById(R.id.small_window_layout);
 		thisMenu = (FloatingActionsMenu)view.findViewById(R.id.right_labels);
+		/*
 		thisMenu.setfabRanger(ranger);
 		viewWidth = view.getLayoutParams().width;
 		viewHeight = view.getLayoutParams().height;
-		//		percentView.setText(MyWindowManager.getUsedPercentValue(context));
+		//percentView.setText(MyWindowManager.getUsedPercentValue(context));
 		//添加按键
-		//	    FloatingActionButton addedOnce = new FloatingActionButton(context);
-		//	    percentView.addButton(addedOnce);
+		//FloatingActionButton addedOnce = new FloatingActionButton(context);
+		//percentView.addButton(addedOnce);
 		update = (FloatingActionButton)view.findViewById(R.id.floatupdate);
 		alarmlist = (FloatingActionButton)view.findViewById(R.id.floatalarmlist);
 		wakeup = (FloatingActionButton)view.findViewById(R.id.floatswitch_wake);
@@ -125,6 +118,7 @@ public class FloatActionButtomView extends LinearLayout{
 		auxin.setOnClickListener(listener);
 		hidebutton = (FloatingActionButton)view.findViewById(R.id.hidebutton);
 		hidebutton.setOnClickListener(listener);
+		*/
 	}
 
 	private View.OnClickListener listener = new OnClickListener() {
@@ -132,6 +126,8 @@ public class FloatActionButtomView extends LinearLayout{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
+
+			/*
 			switch (v.getId()) {
 			case R.id.floatupdate:
 				context.startService(new Intent(MainApplication.getContext(), checkAPKUpdataService.class));//启动apk更新检查服务
@@ -190,7 +186,7 @@ public class FloatActionButtomView extends LinearLayout{
 				disposeAuxin();
 				break;
 			case R.id.wexinpair:
-				Intent intent2 = new Intent(context, WeiXinPairActivity.class);
+				Intent intent2 = new Intent(context, MqttActivity.class);
 				intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent2);
 				break;
@@ -203,6 +199,7 @@ public class FloatActionButtomView extends LinearLayout{
 			}
 			thisMenu.collapse();
 			FloatWindowManager.getInstance().updateViewLayout(72,72);
+			*/
 		}
 	};
 	
@@ -299,7 +296,7 @@ public class FloatActionButtomView extends LinearLayout{
 			MainApplication.getContext().sendBroadcast(new Intent("android.rzmediaplayact.action.FINISH"));
 			auxinStatus = true;
 			LogUtil.e("auxinStatus","switchLineIn()"+LogUtil.getLineInfo());
-			LineInControler.getInstance().switchLineIn();
+			LineInControler.getInstance().switchAux();
 		}
 	}
 	
@@ -361,8 +358,7 @@ public class FloatActionButtomView extends LinearLayout{
 	
 	private static boolean getSwicthState(String key){
 		SharedPreferences pref = MainApplication.getContext().getSharedPreferences("keystatus",Context.MODE_PRIVATE);
-		String state = pref.getString("blestate","on");
-		LogUtil.e("bluepush", state+LogUtil.getLineInfo());
+		String state = pref.getString(key,"on");
 		if(state.equals("on")){
 			return true;
 		}else{

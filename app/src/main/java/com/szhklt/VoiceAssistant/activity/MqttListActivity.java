@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.Topic;
-import com.szhklt.VoiceAssistant.db.WeiXinDBHandler;
 import com.szhklt.VoiceAssistant.service.MqttService;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -38,12 +37,8 @@ import java.util.List;
 
 public class MqttListActivity extends Activity {
     private static final String TAG = "MqttListActivity";
-    private WeiXinDBHandler weiXinDBHandler;
     private List<Topic> topicList = new ArrayList<Topic>();//用来存放数据的数组
     private  MqttAndroidClient client;
-
-
-
 
 
     @Override
@@ -51,7 +46,6 @@ public class MqttListActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.e(TAG, "MqttListActivity的oncreate方法启动了");
         setContentView(R.layout.activity_mqttlist);
-        weiXinDBHandler = new WeiXinDBHandler(MqttListActivity.this);
         ListView listView = findViewById(R.id.mqttlist);
 
 
@@ -70,7 +64,7 @@ public class MqttListActivity extends Activity {
     ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MqttService myService = ((MqttService.MyBinder) service).getMqttService();
+            MqttService myService = ((MqttService.MqttBinder) service).getMqttService();
              client = myService.getClient();
         }
 
@@ -82,7 +76,7 @@ public class MqttListActivity extends Activity {
 
 
     private void init() {//初始化数据
-        topicList = weiXinDBHandler.queryTopicMsg();
+//        topicList = weiXinDBHandler.queryTopicMsg();
     }
 
     public class WeiXinPairAdapter extends ArrayAdapter {
@@ -138,7 +132,7 @@ public class MqttListActivity extends Activity {
                                             client.subscribe(number, 0);
                                             Toast.makeText(getApplicationContext(), "你链接了" + number + "",
                                                     Toast.LENGTH_SHORT).show();
-                                            weiXinDBHandler.queryTopicMsgState(number);
+//                                            weiXinDBHandler.queryTopicMsgState(number);
                                             refresh();
                                         } catch (MqttException e) {
                                             e.printStackTrace();
@@ -177,7 +171,7 @@ public class MqttListActivity extends Activity {
                                             client.unsubscribe(number);
                                             Toast.makeText(getApplicationContext(), "你取消对" + number + "的链接",
                                                     Toast.LENGTH_SHORT).show();
-                                            weiXinDBHandler.updateTopicMsg(number,0);
+//                                            weiXinDBHandler.updateTopicMsg(number,0);
                                             MqttMessage mqttMessage = new MqttMessage();
                                             mqttMessage.setQos(1);
                                             mqttMessage.setRetained(false);
@@ -239,7 +233,7 @@ public class MqttListActivity extends Activity {
                                 {
 
                                     try {
-                                        weiXinDBHandler.deleteTopoicMsg(number);
+//                                        weiXinDBHandler.deleteTopoicMsg(number);
                                         Toast.makeText(getApplicationContext(), "你取消了对"+number+"的绑定",
                                                 Toast.LENGTH_SHORT).show();
                                         refresh();

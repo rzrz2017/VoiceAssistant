@@ -30,9 +30,6 @@ public abstract class SuperAdapter<T> extends BaseAdapter {
 		return selectItem;
 	}
 
-	public SuperAdapter() {
-    }
-
     public SuperAdapter(ArrayList<T> mData, int mLayoutRes) {
         this.mData = mData;
         this.mLayoutRes = mLayoutRes;
@@ -58,13 +55,18 @@ public abstract class SuperAdapter<T> extends BaseAdapter {
         ViewHolder holder = ViewHolder.bind(parent.getContext(), convertView, parent, mLayoutRes
                 , position);
         bindView(holder, getItem(position));
-        
-        if(position == selectItem){
-        	holder.setVisibility(R.id.iv_media_isplaying, View.VISIBLE);
-        }else{
-        	holder.setVisibility(R.id.iv_media_isplaying, View.INVISIBLE);
+
+        //为了显示当前选中的item
+        try{
+            if(position == selectItem){
+                holder.setVisibility(R.id.iv_media_isplaying, View.VISIBLE);
+            }else{
+                holder.setVisibility(R.id.iv_media_isplaying, View.INVISIBLE);
+            }
+        }catch (Exception e){
+
         }
-        
+
         return holder.getItemView();
     }
 
@@ -173,6 +175,20 @@ public abstract class SuperAdapter<T> extends BaseAdapter {
          */
         public int getItemPosition() {
             return position;
+        }
+
+
+        /**
+         * 获取文字
+         * @param id
+         * @return
+         */
+        public String getText(int id){
+            View view = getView(id);
+            if(view instanceof TextView){
+                return ((TextView)view).getText().toString();
+            }
+            return null;
         }
 
         /**

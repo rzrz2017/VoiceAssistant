@@ -5,29 +5,20 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-
+    android:background="@drawable/yorkbj"
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/weixincode"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:layout_marginLeft="80dp"
         android:text="进行微信配对" />
 
     <Button
         android:id="@+id/weixinlist"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="查看配对列表"
-        android:layout_marginRight="80dp"/>
-
-
+        android:text="查看配对列表" />
 
 </LinearLayout>
 

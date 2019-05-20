@@ -19,6 +19,7 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="right" >
 
+        <!--
         <com.szhklt.VoiceAssistant.view.FloatingActionButton
             android:id="@+id/hidebutton"
             android:layout_width="wrap_content"
@@ -97,7 +98,6 @@
             fab:fab_colorNormal="@color/default_color_1"
             fab:fab_colorPressed="@color/gold"
             fab:fab_title="配对小程序" />
-
+        -->
     </com.szhklt.VoiceAssistant.view.FloatingActionsMenu>
-
 </RelativeLayout>

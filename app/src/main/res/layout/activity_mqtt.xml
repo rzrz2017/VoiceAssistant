@@ -5,10 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/yorkbj"
     android:orientation="vertical">
-
-
-
 
     <android.support.constraint.Guideline
         android:id="@+id/start_margin"
@@ -42,20 +40,9 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.26" />
 
-   <!--说明-->
-    <android.support.v7.widget.AppCompatTextView
-        android:layout_width="300dp"
-        android:layout_height="32dp"
-        android:text="@string/bind_account"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".06"
-        app:layout_constraintStart_toStartOf="@+id/start_margin"
-        app:layout_constraintTop_toTopOf="@id/top_margin" />
 
 
-
-<!--二维码图片-->
+    <!--二维码图片-->
     <ImageView
         android:id="@+id/code"
         android:layout_width="0dp"
@@ -74,8 +61,10 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginBottom="52dp"
+        android:textColor="#fff"
         android:text="@string/pairing_tips"
-        app:autoSizeMinTextSize="6sp"
+        android:textSize="20sp"
+        app:autoSizeMinTextSize="10sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@id/retry_bottom"
         app:layout_constraintDimensionRatio="64:30"
@@ -83,26 +72,6 @@
         app:layout_constraintHeight_percent="0.05"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent" />
-
-
-
-    <!--重试-->
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/retry"
-        android:layout_width="74dp"
-        android:layout_height="44dp"
-        android:shadowColor="@color/blue"
-        android:text="重试"
-        android:textColor="@color/blue"
-        app:autoSizeMinTextSize="6sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="@id/retry_bottom"
-        app:layout_constraintDimensionRatio="64:30"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.05"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
 
 
     <!--返回-->
@@ -115,6 +84,21 @@
         app:layout_constraintStart_toStartOf="@id/start_margin"
         app:layout_constraintTop_toBottomOf="@id/bottom_bar_top"
         android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/phones"
+        android:layout_width="400dip"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_dialog_bt_green"
+        android:text="手机列表"
+        android:textColor="#000"
+        android:textSize="30dip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error" />
 
 
 </android.support.constraint.ConstraintLayout>

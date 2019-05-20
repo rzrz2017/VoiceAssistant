@@ -17,7 +17,7 @@ import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
 import com.iflytek.aiui.AIUIMessage;
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.MusicRes.MiGuSkill;
+import com.szhklt.VoiceAssistant.MusicRes.KwMusicSkill;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.SmartMsgPostMan;
 import com.szhklt.VoiceAssistant.activity.ChatActivity;
@@ -384,12 +384,12 @@ public class MyAIUI implements AIUIListener{
 			skill = new TranslationSkill(mintent);
 			skill.execute();
 		}else if ("musicX".equals(SERVICE)) {// 酷我
-//			skill = new KwMusicSkill(mintent);
-//			skill.execute();
+			skill = new KwMusicSkill(mintent);
+			skill.execute();
 //			skill = new CocheerSkill(mintent);
 //			skill.execute();
-			skill = new MiGuSkill(mintent);
-			skill.execute();
+//			skill = new MiGuSkill(mintent);
+//			skill.execute();
 		}else if("scheduleX".equals(SERVICE)){//闹钟
 			skill = new AlarmSkill(mintent);
 			skill.execute();

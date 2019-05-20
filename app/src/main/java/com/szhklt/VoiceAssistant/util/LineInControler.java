@@ -70,10 +70,9 @@ public class LineInControler {
 	/**
 	 * 切换为linein
 	 */
-	public void switchLineIn(){
+	public void switchAux(){
 		LogUtil.e(TAG,"切换为linein:linein=2");
 		//停止蓝牙界面
-		LogUtil.e("fuuck","蓝牙被关闭"+LogUtil.getLineInfo());
 		mHandler.sendEmptyMessage(FLUSH_AUXIN_FALSE);
 		track.play();
 		mAudioManager.setParameters("linein=2");
@@ -93,7 +92,6 @@ public class LineInControler {
 	public void stopLineIn(){
 		LogUtil.e(TAG,"停止LineIn:linein=0");
 		//停止蓝牙界面
-		LogUtil.e("fuuck","蓝牙被关闭"+LogUtil.getLineInfo());
 		mHandler.sendEmptyMessage(FLUSH_AUXIN_TRUE);
 		mAudioManager.setParameters("linein=0");
 		track.stop();
