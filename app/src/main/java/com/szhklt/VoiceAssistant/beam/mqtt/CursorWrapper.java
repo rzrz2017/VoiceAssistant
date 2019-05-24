@@ -20,8 +20,14 @@ class PhoneCursorWrapper extends CursorWrapper {
         String topic = getString(getColumnIndex("suTopic"));
         int id = getInt(getColumnIndex("id"));
         String name = getString(getColumnIndex("name"));
+        boolean status;
+        if(getString(getColumnIndex("status")).equals("1")){
+            status = true;
+        }else{
+            status = false;
+        }
 
-        Phone phone = new Phone(name,phoneId,topic);
+        Phone phone = new Phone(name,phoneId,topic,status);
         return phone;
     }
 }

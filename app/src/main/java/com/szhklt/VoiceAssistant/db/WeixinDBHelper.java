@@ -16,6 +16,7 @@ public class WeixinDBHelper  extends SQLiteOpenHelper {
             + "id integer primary key autoincrement, "
             + "suTopic varchar(30),"
             + "name text,"
+            + "status text,"
             + "phoneid text)";
 
     public WeixinDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {

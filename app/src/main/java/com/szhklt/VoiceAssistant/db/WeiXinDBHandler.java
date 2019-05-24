@@ -2,14 +2,10 @@ package com.szhklt.VoiceAssistant.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.szhklt.VoiceAssistant.beam.mqtt.Phone;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -44,18 +40,4 @@ public class WeiXinDBHandler {
         weixinDB.execSQL("DELETE FROM wxdevice where suTopic ='"+topic+"'");
     }
 
-    //查询所有topic
-    public List<Phone> queryTopicMsg(){
-        List<Phone> phoneList = new ArrayList<>();
-        Cursor cursor =  weixinDB.rawQuery("SELECT * FROM wxdevice", null);
-        while (cursor.moveToNext()){
-            Integer id = cursor.getInt(cursor.getColumnIndex("id"));
-            String suTopic= cursor.getString(cursor.getColumnIndex("suTopic"));
-            String name = cursor.getString(cursor.getColumnIndex("name"));
-            String phoneid = cursor.getString(cursor.getColumnIndex("phoneid"));
-            Phone phone = new Phone(name,phoneid,suTopic);
-            phoneList.add(phone);
-        }
-       return phoneList;
-    }
 }

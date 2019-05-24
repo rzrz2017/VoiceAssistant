@@ -130,6 +130,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
         public View getView(int position, View convertView, ViewGroup parent) {
             Log.e(TAG,"getView(final int "+position+")");
             Phone phone = getItem(position);
+            LogUtil.e(TAG,"phone:"+phone.toString());
             View view;
             ViewHolder viewHolder;
             if(convertView == null){
@@ -138,6 +139,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
                 viewHolder.clear = (ImageView) view.findViewById(R.id.clear);
                 viewHolder.name = (TextView) view.findViewById(R.id.name);
                 viewHolder.id = (TextView) view.findViewById(R.id.id);
+                viewHolder.status = (ImageView) view.findViewById(R.id.status);
                 viewHolder.saveposition = position;
                 view.setTag(viewHolder);
             }else{
@@ -147,6 +149,9 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
 
             viewHolder.name.setText(phone.getName());
             viewHolder.id.setText(phone.getId());
+            if(phone.getStatus() == false){
+                viewHolder.status.setVisibility(View.GONE);
+            }
             viewHolder.clear.setTag(position);//每次刷新listview都要从新设置位置(很关键)
 
             viewHolder.clear.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +160,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
                     Phone phone = getItem(viewHolder.saveposition);
                     LogUtil.e(TAG,"被点击的项对应的值:"+phone.toString());
                     viewHolder.saveposition = Integer.parseInt(v.getTag().toString());
+
                     mqttService.unbindPhone(phone.getTopic());
                 }
             });
@@ -166,6 +172,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
             ImageView icon;
             int saveposition;
             ImageView clear;
+            ImageView status;
             TextView name;
             TextView id;
         }

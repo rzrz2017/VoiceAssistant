@@ -7,9 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -37,11 +35,12 @@ import java.util.UUID;
 
 
 public class MqttService extends Service {
+    public Class<?> ss;
     public static final String TAG = "MqttService";
     public Context mContext;
+
     private MqttAndroidClient client;
     private MqttConnectOptions conOpt;
-    private String connectingTopic;
     private static final String host = "tcp://4yrgvkn.mqtt.iot.gz.baidubce.com:1883";
     private String userName = "4yrgvkn/device03";
     private String passWord = "BctJVU9qb9q88AEk";
@@ -54,7 +53,7 @@ public class MqttService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG, "onCreate方法");
+        LogUtil.e(TAG, "onCreate方法");
         //test
 
         mContext = this;
@@ -65,7 +64,7 @@ public class MqttService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG,"onStartCommand方法执行了");
+        LogUtil.e(TAG,"onStartCommand方法执行了");
         doClientConnection();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -99,14 +98,14 @@ public class MqttService extends Service {
 
     //发布消息
     private void publish(String topic,String msg,Integer qos,Boolean retained) {
-        Log.e(TAG, "目标:"+topic+"内容:" + msg);
+        LogUtil.e(TAG, "publish---目标:"+topic+"内容:" + msg+"retained:"+retained);
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(qos);
         mqttMessage.setRetained(retained);
 
         try {
-            Log.e(TAG,"发布信息topic:"+topic);
-            Log.e("setPayload", String.valueOf(msg.getBytes("utf-8")));
+            LogUtil.e(TAG,"发布信息topic:"+topic);
+            LogUtil.e("setPayload", String.valueOf(msg.getBytes("utf-8")));
             mqttMessage.setPayload(msg.getBytes("utf-8"));
             client.publish(topic, mqttMessage);
         } catch (Exception e) {
@@ -116,7 +115,7 @@ public class MqttService extends Service {
 
     //初始化mqtt客户端
     private void initMqttClient() {
-        Log.e(TAG, "init执行了");
+        LogUtil.e(TAG, "init执行了");
        // 服务器地址（协议+地址+端口号）
         String uri = host;
         client = new MqttAndroidClient(this, uri, clientId);
@@ -139,7 +138,7 @@ public class MqttService extends Service {
         // last will message
         boolean doConnect = true;
         String message = "Offline:machine|"+sn;
-        Log.e("掉线发送的信息",message);
+        LogUtil.e("掉线发送的信息",message);
         String topic = sn;
         Integer qos = 2;
         Boolean retained = false;
@@ -147,7 +146,7 @@ public class MqttService extends Service {
             try {
                 conOpt.setWill(topic, message.getBytes(), qos.intValue(), retained.booleanValue());
             } catch (Exception e) {
-                Log.e(TAG, "Exception Occured" + e.getMessage());
+                LogUtil.e(TAG, "Exception Occured" + e.getMessage());
                 doConnect = false;
             }
         }
@@ -174,7 +173,7 @@ public class MqttService extends Service {
     private void doClientConnection() {
         if (!client.isConnected() && NetworkUtil.isNetworkConnected(this)) {
             try {
-                Log.e(TAG, "doClientConnection");
+                LogUtil.e(TAG, "doClientConnection");
                 client.connect(conOpt, null, iMqttActionListener);
             } catch (MqttException e) {
                 e.printStackTrace();
@@ -188,28 +187,28 @@ public class MqttService extends Service {
     private IMqttActionListener iMqttActionListener = new IMqttActionListener() {
         @Override
         public void onSuccess(IMqttToken arg0) {
-            Log.e(TAG, "MQTT客户端连接成功");
+            LogUtil.e(TAG, "MQTT客户端连接成功");
             // 订阅sn话题
-            Log.e(TAG,"链接成功订阅sn:"+sn);
+            LogUtil.e(TAG,"链接成功订阅sn:"+sn);
             subscribe(sn,0);
         }
 
         @Override
         public void onFailure(IMqttToken arg0, Throwable arg1) {
-            Log.e(TAG, "MQTT客户端连接失败:"+arg1.toString());
+            LogUtil.e(TAG, "MQTT客户端连接失败:"+arg1.toString());
             arg1.printStackTrace();
             // 连接失败，重连
-            AlertDialog dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("客户端链接失败")
+            AlertDialog diaLogUtil = new AlertDialog.Builder(getApplicationContext()).setTitle("客户端链接失败")
                     .setMessage("mqtt客户端连接不成功,请退出重试,或检查网络是否连接")
                     .setCancelable(false)
                     .setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
+                        public void onClick(DialogInterface diaLogUtil, int id) {
+                            diaLogUtil.dismiss();
                         }
                     })
                     .create();
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            dialog.show();
+            diaLogUtil.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            diaLogUtil.show();
 
             doClientConnection();
         }
@@ -220,11 +219,12 @@ public class MqttService extends Service {
      */
     private MqttCallback mqttCallback = new MqttCallback() {
         String receInfo;     //接收到的订阅信息//成员变量有会有初始值
+        List<Phone> ps;
         @Override
         public void messageArrived(String top, MqttMessage message) throws Exception {
             //推送消息到达
             String str = new String(message.getPayload(), "utf-8");
-            Log.e(TAG, "推送消息到达message:" + str);
+            LogUtil.e(TAG, "推送消息到达message:" + str);
 
             //获取内容
             if(str.contains(":")){
@@ -232,117 +232,171 @@ public class MqttService extends Service {
                 LogUtil.e(TAG,"receInfo:"+receInfo);
             }
 
-            //绑定动作
-            if(top.equals(sn)){
-                //配对设备,将设备ID和sn存入数据库
-                if(str.startsWith("Bind")){
-                    LogUtil.e(TAG,"有手机端发起绑定");
-                    //解析
-                    String arr[];
-                    arr = receInfo.split("/");
-                    String id = arr[1];
-                    String sn = arr[2];
-                    LogUtil.e(TAG,"id:"+id);
-                    LogUtil.e(TAG,"sn:"+sn);
+            //Accept
 
-                    if(isBound(receInfo)){
-                        LogUtil.e(TAG,"已经绑定过了");
-                        Toast.makeText(mContext,"已经绑定过了",Toast.LENGTH_LONG).show();
-                        popDiaListAct();
-                    }else{
-                        //判断是否还有存储空间
-                        if(isFull()){
-                            popDiaListAct();
+            //coonect动作
+            if(top.equals(sn)){
+                if(str.startsWith("Connect")){
+                    String[] arr = receInfo.split("\\|");
+                    String name = arr[0];
+                    LogUtil.e(TAG, "name:" +name+ LogUtil.getLineInfo());
+                    String topic = arr[1];
+                    LogUtil.e(TAG, "topic:" +topic+ LogUtil.getLineInfo());
+                    String id = topic.split("/")[1];//获取手机id
+                    LogUtil.e(TAG, "id:" +id+ LogUtil.getLineInfo());
+
+                    if(!isBound(topic)){//没有绑定过
+                        LogUtil.e(TAG,"新手机连接");
+                        popDiaAct("新手机连接?",true,true,10000L, new PhoneDiaActivity.ClickCallBack() {
+                            @Override
+                            public void onOKClick() {
+
+                                //判断之前有没有手机连接
+                                if(PhonesLab.get(mContext).getCurPhone() != null){
+                                    publish(PhonesLab.get(mContext).getCurPhone().getTopic(),
+                                            "Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),
+                                            1,
+                                            false);
+                                }
+
+                                publish(id,"Accept:"+topic,1,true);
+                                subscribe(topic,1);
+                                //刷新之前的状态
+                                Phone tmp = PhonesLab.get(mContext).getCurPhone();
+                                if(tmp != null){
+                                    tmp.setStatus(false);
+                                    PhonesLab.get(mContext).updatePhone(tmp);
+                                }
+
+
+                                Phone tmp2 = new Phone(name,id,topic,true);
+                                if(tmp2 != null) {
+                                    PhonesLab.get(mContext).addPhone(tmp2);
+                                }
+                                mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
+
+                            }
+
+                            @Override
+                            public void onNoClick() {
+
+                            }
+                        });
+
+                    }else{//有绑定过
+                        LogUtil.e(TAG,"手机有绑定过");
+
+                        //当前没有在线的手机
+                        if(PhonesLab.get(mContext).getCurPhone() == null){
+                            LogUtil.e(TAG,"有手机登录");
+                            popDiaAct("有手机登录?",true,true,10000L, new PhoneDiaActivity.ClickCallBack() {
+                                @Override
+                                public void onOKClick() {
+                                    //1 UI
+                                    Phone tmp2 = PhonesLab.get(mContext).getPhone(topic);
+                                    if(tmp2 != null) {
+                                        tmp2.setStatus(true);
+                                        PhonesLab.get(mContext).updatePhone(tmp2);
+                                    }
+                                    //2 Accept
+                                    publish(id,"Accept:"+topic,1,true);
+                                }
+
+                                @Override
+                                public void onNoClick() {
+
+                                }
+                            });
+                            return;
+                        }
+
+                        if(!PhonesLab.get(mContext).getCurPhone().getTopic().equals(topic)){
+                            LogUtil.e(TAG,"切换连接");
+                            popDiaAct("切换连接?",true,true,10000L, new PhoneDiaActivity.ClickCallBack() {
+                                @Override
+                                public void onOKClick() {
+                                    //有手机连接保存数据库
+                                    Phone cur = PhonesLab.get(mContext).getCurPhone();
+                                    //使得之前连接的手机断开
+                                    publish(cur.getTopic(),"Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),1,false);
+                                    unsubscribe(PhonesLab.get(mContext).getCurPhone().getTopic());
+                                    publish(id,"Accept:"+topic,1,true);
+                                    subscribe(topic,1);
+                                    //刷新之前的状态
+                                    Phone tmp = PhonesLab.get(mContext).getCurPhone();
+                                    if(tmp != null) {
+                                        tmp.setStatus(false);
+                                        PhonesLab.get(mContext).updatePhone(tmp);
+                                    }
+                                    Phone tmp2 = PhonesLab.get(mContext).getPhone(topic);
+                                    if(tmp2 != null) {
+                                        tmp2.setStatus(true);
+                                        PhonesLab.get(mContext).updatePhone(tmp2);
+                                    }
+                                    //刷新列表
+                                    mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
+                                }
+
+                                @Override
+                                public void onNoClick() {
+
+                                }
+                            });
                         }else{
-                            PhonesLab.get(mContext).addPhone(new Phone("rz",id,receInfo));
-                            sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));//同步列表
-                            publish(id,"Bound:"+receInfo,0,false);
-                            subscribe(receInfo,0);
+                            LogUtil.e(TAG,"前来连接的手机和当前连接着的的一样");
+                            publish(id,"Accept:"+topic,1,true);
+                            subscribe(topic,1);
                         }
                     }
-                    return;
-                }
-            }
-
-            //发送链接,订阅/ID/SN,并设置手机在线
-            if(str.startsWith("Connect")){
-                Log.e(TAG,"connect");
-                if(connectingTopic != null){
-                    unsubscribe(connectingTopic);
-                    publish(connectingTopic,"Disconnect:"+receInfo,1,false);
 
                 }
-
-                popDiaAct("有手机请求连接?",true,true,10000L, new PhoneDiaActivity.ClickCallBack() {
-                    @Override
-                    public void onOKClick() {
-                        publish(receInfo,"Accept:"+receInfo,0,false);
-                        connectingTopic = receInfo;
-                    }
-
-                    @Override
-                    public void onNoClick() {
-
-                    }
-                });
                 return;
             }
 
-            //解除配对,退订/ID/SN
-            if(str.startsWith("Unbind")){
-                Phone phone = PhonesLab.get(mContext).getPhone(receInfo);
-                if(phone != null){
-                    LogUtil.e(TAG,"收到解绑信息后,查询数据库,的确有数据:"+phone.toString());
-                    PhonesLab.get(mContext).deletePhone(phone);
-                    //同步列表
-                    mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
-                }
-                if(connectingTopic != null && connectingTopic.equals(receInfo)){
-                    connectingTopic = null;
-                }
-                unsubscribe(receInfo);
-                publish(receInfo,"Unbind:"+receInfo,0,false);
-                return;
-            }
 
             //手机端掉线了
-            if(str.startsWith("Offline")){
-               Log.e(TAG,"offline手机端掉线了");
+            if(str.startsWith("Disconnect")){
+               LogUtil.e("Disconnect","Disconnect手机端掉线了 receInfo:"+receInfo);
                String type;
+               String topic;
                String id;
 
                type = receInfo.split("|")[0];
+               topic = receInfo;
                id = receInfo.split("|")[1];
-               //判断是否是当前连接着的手机掉线了
-//               if(connectingTopic.split("/")[1].equals(id)){
-//                   connectingTopic = null;
-//               }
 
+               LogUtil.e("Disconnect","当前在线的topic:"+PhonesLab.get(mContext).getCurPhone().getTopic()+LogUtil.getLineInfo());
+               LogUtil.e("Disconnect","解除连接的topic:"+topic+LogUtil.getLineInfo());
+               if(PhonesLab.get(mContext).getCurPhone().getTopic().equals(topic)){
+                   //清除当前在线的设备并刷新UI
+                   Phone tmp = PhonesLab.get(mContext).getCurPhone();
+                   if(tmp != null) {
+                       tmp.setStatus(false);
+                       PhonesLab.get(mContext).updatePhone(tmp);
+                   }
+                   mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
+               }
                return;
             }
 
-            //收到信息
-            if (str.startsWith("Directive")&& str.contains("data")) {
-                //如果答案的top不等于当前主题,表示当前手机并没有和其该主机连接,立即返回
-                if(!connectingTopic.equals(top)){
+            LogUtil.e(TAG,"----------------------------------");
+            LogUtil.e(TAG,PhonesLab.get(mContext).getCurPhone().getTopic()+LogUtil.getLineInfo());
+            LogUtil.e(TAG,str+LogUtil.getLineInfo());
+
+            //收到指令
+            if(PhonesLab.get(mContext).getCurPhone().getTopic().equals(top)){
+                if (str.startsWith("Directive")&& str.contains("data")) {
+                    LogUtil.e(TAG,"---------Directive---------"+ LogUtil.getLineInfo());
+                    String topic = top;
+
+                    //截取json内容
+                    String intent = getIntentPart(receInfo);
+                    //调用AIUI处理intent
+                    if(intent!= null){
+                        myAIUI.handle(intent);
+                    }
+                    publish(topic,"Respond:收到信息",0,false);
                     return;
-                }
-
-                //截取json内容
-                String intent = getIntentPart(receInfo);
-                //调用AIUI处理intent
-                if(intent!= null){
-                    myAIUI.handle(intent);
-                }
-                publish(connectingTopic,"Respond:收到信息",0,false);
-                return;
-            }
-
-            if(str.startsWith("Disconnect")){
-                Log.e(TAG,"断开连接Disconnect:"+LogUtil.getLineInfo());
-                String topic = receInfo;
-                if(connectingTopic.equals(topic)){
-                    connectingTopic = null;
                 }
                 return;
             }
@@ -350,13 +404,13 @@ public class MqttService extends Service {
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken arg0) {
-            Log.e(TAG, "deliveryComplete");
+            LogUtil.e(TAG, "deliveryComplete");
         }
 
         @Override
         public void connectionLost(Throwable arg0) {
             // 失去连接，重连
-            Log.e(TAG, "连接失败 ");
+            LogUtil.e(TAG, "连接失败 ");
             //重新链接
             doClientConnection();
         }
@@ -367,7 +421,7 @@ public class MqttService extends Service {
      * @param topic
      */
     public synchronized void unbindPhone(String topic){
-        Log.e(TAG,"unbind");
+        LogUtil.e(TAG,"unbindPhone");
         popDiaAct("解除绑定", true, true, 0L,
                 new PhoneDiaActivity.ClickCallBack() {
                     @Override
@@ -375,17 +429,23 @@ public class MqttService extends Service {
                         Phone phone = PhonesLab.get(mContext).getPhone(topic);
                         if(phone != null){
                             LogUtil.e(TAG,"收到解绑信息后,查询数据库,的确有数据:"+phone.toString());
+                            //判断是不是当前正在连接着的设备
+                            if(PhonesLab.get(mContext).getCurPhone() != null &&
+                                    phone.equals(PhonesLab.get(mContext).getCurPhone())){
+                                LogUtil.e(TAG,"删除的设备是当前正在连接着的设备:"+phone.toString());
+                                unsubscribe(topic);
+                                publish(topic,"Disconnect:"+topic,1,false);
+                                publish(PhonesLab.get(mContext).getCurPhone().getId(),"",1,true);
+                            }
                             PhonesLab.get(mContext).deletePhone(phone);
+
+                            unsubscribe(topic);
                             //同步列表
                             mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
                         }
-                        if(connectingTopic != null && connectingTopic.equals(topic)){
-                            connectingTopic = null;
-                        }
-                        unsubscribe(topic);
-                        publish(topic,"Unbind:"+topic,0,false);
-                    }
 
+                        unsubscribe(topic);
+                    }
                     @Override
                     public void onNoClick() {
 
@@ -432,17 +492,17 @@ public class MqttService extends Service {
         for (Object obj : mapTypes.keySet()){
             if(obj.toString() == "data"){
                 String data = mapTypes.get(obj).toString();
-                Log.e("data",data);
+                LogUtil.e("data",data);
                 List<Map<String,Object>> mapListJson = (List) JSONArray.parseArray(data);
                 for (int i = 0; i < mapListJson.size(); i++) {
                     Map<String,Object> dataMap=mapListJson.get(i);
                     for(Map.Entry<String,Object> entry : dataMap.entrySet()){
                         String strkey1 = entry.getKey();
                         Object strval1 = entry.getValue();
-                        Log.e("key",strkey1);
+                        LogUtil.e("key",strkey1);
                         if ("intent".equals(strkey1)&&strval1 != null&& strval1.toString().length()>2 ){
                             intent = strval1.toString();
-                            Log.e("value",intent);
+                            LogUtil.e("value",intent);
                             return  intent;
                         }
                     }

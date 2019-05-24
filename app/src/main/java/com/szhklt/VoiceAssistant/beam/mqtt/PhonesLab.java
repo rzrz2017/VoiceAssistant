@@ -17,6 +17,7 @@ public class PhonesLab {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
+
     public static PhonesLab get(Context context){
         if(sphoneLab == null){
             sphoneLab = new PhonesLab(context);
@@ -70,6 +71,8 @@ public class PhonesLab {
         values.put("suTopic",phone.getTopic());
         values.put("name",phone.getName());
         values.put("phoneid",phone.getId());
+        values.put("status",phone.getStatus());
+
         return values;
     }
 
@@ -89,9 +92,8 @@ public class PhonesLab {
     }
 
     public void updatePhone(Phone phone){
-        String topic = phone.getTopic();
         ContentValues values = getContentValues(phone);
-        mDatabase.update("wxdevice",values,"suTopic = ?",new String[]{topic});
+        mDatabase.update("wxdevice",values,"suTopic = ?",new String[]{phone.getTopic()});
     }
 
     private PhoneCursorWrapper queryPhone(String whereClause, String[] whereArgs){
@@ -107,5 +109,43 @@ public class PhonesLab {
         return new PhoneCursorWrapper(cursor);
     }
 
+    /**
+     * 获取当前连接这的手机信息
+     * @return
+     */
+    public Phone getCurPhone(){
+        PhoneCursorWrapper cursor = queryPhone("status = ?",new String[]{String.valueOf(1)});
+//        PhoneCursorWrapper cursor = new PhoneCursorWrapper(mDatabase.rawQuery("select * from wxdevice where status = ?",new String[]{String.valueOf(1)}));
+        try{
+            LogUtil.e(TAG,"cursor.getCount():"+cursor.getCount());
+            if(cursor.getCount() == 0){
+
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getPhone();
+        }finally {
+            cursor.close();
+        }
+    }
+
+
+    /**
+     * 保存当前的连接着的数据
+     *
+     */
+//    public static void saveCurTop(String topic){
+//        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext()).edit();
+//        editor.putString("connect_topic",topic);
+//        editor.commit();
+//    }
+
+    /**
+     * 获取topic
+     */
+//    public static String getCurTop(){
+//        SharedPreferences share = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
+//        return share.getString("connect_topic",null);
+//    }
 
 }
