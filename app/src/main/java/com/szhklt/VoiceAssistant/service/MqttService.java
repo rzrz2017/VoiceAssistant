@@ -35,7 +35,6 @@ import java.util.UUID;
 
 
 public class MqttService extends Service {
-    public Class<?> ss;
     public static final String TAG = "MqttService";
     public Context mContext;
 
@@ -59,6 +58,7 @@ public class MqttService extends Service {
         mContext = this;
         sn = CommonUtils.getSerialNumber();
         myAIUI = MyAIUI.getInstance();
+        //连接MQTT(MQTT初始化)
         initMqttClient();
     }
 
@@ -134,7 +134,7 @@ public class MqttService extends Service {
         conOpt.setUserName(userName);
         // 密码
         conOpt.setPassword(passWord.toCharArray());
-
+        //设置临终遗嘱
         // last will message
         boolean doConnect = true;
         String message = "Offline:machine|"+sn;
@@ -150,7 +150,6 @@ public class MqttService extends Service {
                 doConnect = false;
             }
         }
-
         if (doConnect) {
             doClientConnection();
         }
