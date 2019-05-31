@@ -36,6 +36,7 @@ import java.util.UUID;
 
 public class MqttService extends Service {
     public static final String TAG = "MqttService";
+    private static final int MAX_SIZE = 10;//限制最大
     public Context mContext;
 
     private MqttAndroidClient client;
@@ -138,10 +139,9 @@ public class MqttService extends Service {
         // last will message
         boolean doConnect = true;
         String message = "Offline:machine|"+sn;
-        LogUtil.e("掉线发送的信息",message);
         String topic = sn;
         Integer qos = 2;
-        Boolean retained = false;
+        Boolean retained = true;
         if ((!message.equals("")) || (!topic.equals(""))) {
             try {
                 conOpt.setWill(topic, message.getBytes(), qos.intValue(), retained.booleanValue());
@@ -190,6 +190,8 @@ public class MqttService extends Service {
             // 订阅sn话题
             LogUtil.e(TAG,"链接成功订阅sn:"+sn);
             subscribe(sn,0);
+            //清除自身retained
+            publish(sn,"",1,true);
         }
 
         @Override
@@ -218,7 +220,6 @@ public class MqttService extends Service {
      */
     private MqttCallback mqttCallback = new MqttCallback() {
         String receInfo;     //接收到的订阅信息//成员变量有会有初始值
-        List<Phone> ps;
         @Override
         public void messageArrived(String top, MqttMessage message) throws Exception {
             //推送消息到达
@@ -231,20 +232,48 @@ public class MqttService extends Service {
                 LogUtil.e(TAG,"receInfo:"+receInfo);
             }
 
-            //Accept
+            //手机端掉线
+            if(str.startsWith("Offline")){
+                String[] arr = receInfo.split("\\|");
+                String type = arr[0];
+                String id = null;
+                if(type.equals("Phone")){
+                    id = arr[1];
+                }
+                LogUtil.e(TAG,"手机掉线");
+                Phone cp = PhonesLab.get(mContext).getCurPhone();
+                if(cp != null){
+                    String cId = cp.getId();
+                    if(cId.equals(id)){
+                        LogUtil.e(TAG,"当前连接着的手机掉线了");
+                        unsubscribe(cp.getTopic());
+                        //灭灯
+                        cp.setStatus(false);
+                        PhonesLab.get(mContext).updatePhone(cp);
+                        //刷新列表
+                        mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
+                    }
+                }
+                return;
+            }
 
             //coonect动作
             if(top.equals(sn)){
                 if(str.startsWith("Connect")){
                     String[] arr = receInfo.split("\\|");
                     String name = arr[0];
-                    LogUtil.e(TAG, "name:" +name+ LogUtil.getLineInfo());
+                    LogUtil.e(TAG, "前来连接的手机的名字 name:" +name+ LogUtil.getLineInfo());
                     String topic = arr[1];
-                    LogUtil.e(TAG, "topic:" +topic+ LogUtil.getLineInfo());
+                    LogUtil.e(TAG, "通信的 topic:" +topic+ LogUtil.getLineInfo());
                     String id = topic.split("/")[1];//获取手机id
                     LogUtil.e(TAG, "id:" +id+ LogUtil.getLineInfo());
 
+
                     if(!isBound(topic)){//没有绑定过
+                        if(PhonesLab.get(mContext).getPhones().size() >= MAX_SIZE){
+                            LogUtil.e(TAG,"已经最大了");
+                            return;
+                        }
                         LogUtil.e(TAG,"新手机连接");
                         popDiaAct("新手机连接?",true,true,10000L, new PhoneDiaActivity.ClickCallBack() {
                             @Override
@@ -256,24 +285,23 @@ public class MqttService extends Service {
                                             "Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),
                                             1,
                                             false);
+                                    //刷新之前的状态
+                                    Phone tmp = PhonesLab.get(mContext).getCurPhone();
+                                    if(tmp != null){
+                                        tmp.setStatus(false);
+                                        PhonesLab.get(mContext).updatePhone(tmp);
+                                    }
                                 }
+
+                                //做一些收到连接的操作
 
                                 publish(id,"Accept:"+topic,1,true);
                                 subscribe(topic,1);
-                                //刷新之前的状态
-                                Phone tmp = PhonesLab.get(mContext).getCurPhone();
-                                if(tmp != null){
-                                    tmp.setStatus(false);
-                                    PhonesLab.get(mContext).updatePhone(tmp);
-                                }
-
-
-                                Phone tmp2 = new Phone(name,id,topic,true);
-                                if(tmp2 != null) {
-                                    PhonesLab.get(mContext).addPhone(tmp2);
+                                subscribe(id,1);//监听手机掉线
+                                if(PhonesLab.get(mContext).getPhones().size() < MAX_SIZE) {
+                                    PhonesLab.get(mContext).addPhone(new Phone(name, id, topic, true));
                                 }
                                 mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
-
                             }
 
                             @Override
@@ -299,6 +327,8 @@ public class MqttService extends Service {
                                     }
                                     //2 Accept
                                     publish(id,"Accept:"+topic,1,true);
+                                    subscribe(topic,1);
+                                    mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
                                 }
 
                                 @Override
@@ -319,6 +349,7 @@ public class MqttService extends Service {
                                     //使得之前连接的手机断开
                                     publish(cur.getTopic(),"Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),1,false);
                                     unsubscribe(PhonesLab.get(mContext).getCurPhone().getTopic());
+
                                     publish(id,"Accept:"+topic,1,true);
                                     subscribe(topic,1);
                                     //刷新之前的状态
@@ -432,13 +463,11 @@ public class MqttService extends Service {
                             if(PhonesLab.get(mContext).getCurPhone() != null &&
                                     phone.equals(PhonesLab.get(mContext).getCurPhone())){
                                 LogUtil.e(TAG,"删除的设备是当前正在连接着的设备:"+phone.toString());
-                                unsubscribe(topic);
-                                publish(topic,"Disconnect:"+topic,1,false);
-                                publish(PhonesLab.get(mContext).getCurPhone().getId(),"",1,true);
+                                publish(phone.getTopic(),"Disconnect:"+phone.getTopic(),1,false);
                             }
+                            unsubscribe(phone.getTopic());
+                            unsubscribe(phone.getId());
                             PhonesLab.get(mContext).deletePhone(phone);
-
-                            unsubscribe(topic);
                             //同步列表
                             mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
                         }

@@ -123,6 +123,7 @@ public class PhonesLab {
                 return null;
             }
             cursor.moveToFirst();
+            LogUtil.e(TAG,"当前在线的设备:"+cursor.getPhone());
             return cursor.getPhone();
         }finally {
             cursor.close();

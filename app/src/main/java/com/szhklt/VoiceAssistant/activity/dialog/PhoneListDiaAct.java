@@ -94,6 +94,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
 
     @Override
     protected void onDestroy() {
+        unbindService(connection);
         super.onDestroy();
     }
 
@@ -111,6 +112,7 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
                 getPhoneList();
                 adapter = new PhoneAdapter(PhoneListDiaAct.this,R.layout.item_phone,phoneList);
                 listView.setAdapter(adapter);
+//                adapter.notifyDataSetChanged();
             }
         }
     }
@@ -164,7 +166,6 @@ public class PhoneListDiaAct extends Activity implements onPhoneClearListener {
                     mqttService.unbindPhone(phone.getTopic());
                 }
             });
-
             return view;
         }
 
