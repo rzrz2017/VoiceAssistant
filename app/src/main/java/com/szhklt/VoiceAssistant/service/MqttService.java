@@ -190,8 +190,15 @@ public class MqttService extends Service {
             // 订阅sn话题
             LogUtil.e(TAG,"链接成功订阅sn:"+sn);
             subscribe(sn,0);
+            Phone cp = PhonesLab.get(mContext).getCurPhone();
+            if(cp != null){
+                LogUtil.e(TAG,"从新订阅当前主题设备:"+cp.getTopic()+LogUtil.getLineInfo());
+                subscribe(cp.getTopic(),1);
+            }
+
             //清除自身retained
             publish(sn,"",1,true);
+
         }
 
         @Override
@@ -386,7 +393,8 @@ public class MqttService extends Service {
 
             //手机端掉线了
             if(str.startsWith("Disconnect")){
-               LogUtil.e("Disconnect","Disconnect手机端掉线了 receInfo:"+receInfo);
+               publish(top,"",1,true); //清除Disconnect掉线的预留
+               LogUtil.e("Disconnect","Disconnect手机端解绑了 receInfo:"+receInfo);
                String type;
                String topic;
                String id;
@@ -406,6 +414,7 @@ public class MqttService extends Service {
                    }
                    mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
                }
+               //灭灯
                return;
             }
 
@@ -463,7 +472,7 @@ public class MqttService extends Service {
                             if(PhonesLab.get(mContext).getCurPhone() != null &&
                                     phone.equals(PhonesLab.get(mContext).getCurPhone())){
                                 LogUtil.e(TAG,"删除的设备是当前正在连接着的设备:"+phone.toString());
-                                publish(phone.getTopic(),"Disconnect:"+phone.getTopic(),1,false);
+                                publish(phone.getTopic(),"Disconnect:"+phone.getTopic(),1,true);
                             }
                             unsubscribe(phone.getTopic());
                             unsubscribe(phone.getId());
