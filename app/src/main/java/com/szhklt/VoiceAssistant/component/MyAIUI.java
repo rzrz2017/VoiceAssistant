@@ -79,7 +79,9 @@ public class MyAIUI implements AIUIListener{
 		mFWM.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public   void onClick(View v) {
+				LogUtil.e(TAG,"大海豚被点击!!!"+ LogUtil.getLineInfo());
 				stopSemanticInteraction();
+				mFWM.removeAll();
 			}
 		});
 	}
@@ -213,11 +215,7 @@ public class MyAIUI implements AIUIListener{
 					MySynthesizer.setIsTtsed(false);
 				}
 
-				try {
-                    mFWM.removeAll();
-                }catch (Exception e){
-				    e.printStackTrace();
-                }
+				mFWM.removeAll();
 				if(MainApplication.longWakeUp == true){
 				}
 
@@ -663,7 +661,7 @@ public class MyAIUI implements AIUIListener{
 
 
 
-//解析结果
+    //解析结果
 	public void handle(String string){
 
 		//智能家居

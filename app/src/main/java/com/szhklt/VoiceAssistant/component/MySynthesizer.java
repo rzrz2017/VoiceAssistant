@@ -274,7 +274,7 @@ public class MySynthesizer implements SynthesizerListener {
         mTts.startSpeaking(answer, this);
         answer = answer.replace("肠", "长");
         LogUtil.e(TAG, "answer:" + answer + LogUtil.getLineInfo());
-        if(question != null || answer != null){
+        if(mFWM.bigWindow != null){
             mFWM.bigWindow.setVisibility(View.VISIBLE);
         }
         if (question != null) {

@@ -1,6 +1,5 @@
 package com.szhklt.VoiceAssistant.floatWindow;
 
-import java.util.Random;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.service.MainService;
@@ -18,6 +18,8 @@ import com.szhklt.VoiceAssistant.view.FloatPromptView;
 import com.szhklt.VoiceAssistant.view.FloatQuestionView;
 import com.szhklt.VoiceAssistant.view.FloatYellowView;
 import com.szhklt.VoiceAssistant.view.FloatingActionsMenu.FabLayoutRanger;
+
+import java.util.Random;
 
 /**
  * 现在圆球窗口和海豚窗口统一在该类里面处理
@@ -231,7 +233,7 @@ public class FloatWindowManager {
 	 * @param context 
 	 *            必须为应用程序的Context. 
 	 */  
-	public void removeBigWindow(final Context context) {  
+	private void removeBigWindow(final Context context) {
 		LogUtil.e(TAG, "removeBigWindow删除海豚");
 		handler.post(new Runnable() {
 			@Override
@@ -330,6 +332,7 @@ public class FloatWindowManager {
 		});
 
 	}
+
 	/** 
 	 * 将聊天悬浮窗从屏幕上移除。 
 	 *  
@@ -378,7 +381,6 @@ public class FloatWindowManager {
 		return mWindowManager;  
 	}  
 
-	/*******************************高级封装************************************/
 	/**
 	 * 播放海豚说话动画
 	 */

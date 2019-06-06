@@ -42,8 +42,8 @@ public class MqttService extends Service {
     private MqttAndroidClient client;
     private MqttConnectOptions conOpt;
     private static final String host = "tcp://4yrgvkn.mqtt.iot.gz.baidubce.com:1883";
-    private String userName = "4yrgvkn/device03";
-    private String passWord = "BctJVU9qb9q88AEk";
+    private static final String userName = "4yrgvkn/device03";
+    private static final String passWord = "BctJVU9qb9q88AEk";
 
     private String clientId = UUID.randomUUID().toString();
     private static MyAIUI myAIUI;
@@ -233,6 +233,11 @@ public class MqttService extends Service {
             String str = new String(message.getPayload(), "utf-8");
             LogUtil.e(TAG, "推送消息到达message:" + str);
 
+            //自己接收到自己发送Accept 需要过滤
+            if(str.startsWith("Accept")){
+                return;
+            }
+
             //获取内容
             if(str.contains(":")){
                 receInfo = str.substring(str.indexOf(":")+1);
@@ -288,10 +293,12 @@ public class MqttService extends Service {
 
                                 //判断之前有没有手机连接
                                 if(PhonesLab.get(mContext).getCurPhone() != null){
+                                    LogUtil.e(TAG,PhonesLab.get(mContext).getCurPhone().getTopic()+LogUtil.getLineInfo());
                                     publish(PhonesLab.get(mContext).getCurPhone().getTopic(),
                                             "Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),
                                             1,
                                             false);
+                                    LogUtil.e(TAG,"---Discnnect--- "+PhonesLab.get(mContext).getCurPhone() + LogUtil.getLineInfo());
                                     //刷新之前的状态
                                     Phone tmp = PhonesLab.get(mContext).getCurPhone();
                                     if(tmp != null){
@@ -355,6 +362,8 @@ public class MqttService extends Service {
                                     Phone cur = PhonesLab.get(mContext).getCurPhone();
                                     //使得之前连接的手机断开
                                     publish(cur.getTopic(),"Disconnect:"+PhonesLab.get(mContext).getCurPhone().getTopic(),1,false);
+                                    LogUtil.e(TAG,"---Discnnect--- "+PhonesLab.get(mContext).getCurPhone() + LogUtil.getLineInfo());
+
                                     unsubscribe(PhonesLab.get(mContext).getCurPhone().getTopic());
 
                                     publish(id,"Accept:"+topic,1,true);
@@ -393,7 +402,6 @@ public class MqttService extends Service {
 
             //手机端掉线了
             if(str.startsWith("Disconnect")){
-               publish(top,"",1,true); //清除Disconnect掉线的预留
                LogUtil.e("Disconnect","Disconnect手机端解绑了 receInfo:"+receInfo);
                String type;
                String topic;
@@ -404,7 +412,7 @@ public class MqttService extends Service {
                id = receInfo.split("|")[1];
 
                LogUtil.e("Disconnect","当前在线的topic:"+PhonesLab.get(mContext).getCurPhone().getTopic()+LogUtil.getLineInfo());
-               LogUtil.e("Disconnect","解除连接的topic:"+topic+LogUtil.getLineInfo());
+                   LogUtil.e("Disconnect","解除连接的topic:"+topic+LogUtil.getLineInfo());
                if(PhonesLab.get(mContext).getCurPhone().getTopic().equals(topic)){
                    //清除当前在线的设备并刷新UI
                    Phone tmp = PhonesLab.get(mContext).getCurPhone();
@@ -414,7 +422,8 @@ public class MqttService extends Service {
                    }
                    mContext.sendBroadcast(new Intent(PhoneListDiaAct.SYNC_LIST));
                }
-               //灭灯
+               //清除Disconnect的预留
+               publish(topic,"",1,true);
                return;
             }
 
@@ -473,6 +482,8 @@ public class MqttService extends Service {
                                     phone.equals(PhonesLab.get(mContext).getCurPhone())){
                                 LogUtil.e(TAG,"删除的设备是当前正在连接着的设备:"+phone.toString());
                                 publish(phone.getTopic(),"Disconnect:"+phone.getTopic(),1,true);
+                                LogUtil.e(TAG,"---Discnnect--- "+PhonesLab.get(mContext).getCurPhone() + LogUtil.getLineInfo());
+
                             }
                             unsubscribe(phone.getTopic());
                             unsubscribe(phone.getId());

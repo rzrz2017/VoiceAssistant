@@ -53,7 +53,6 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 
 		initCAEAlgorithm();
 		//初始化AIUI
-		//
 
 		//初始化sp
 		toneSP = new PromptToneSoundPool();
@@ -87,7 +86,8 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 		MySynthesizer.getInstance(MainApplication.getContext()).stopTts();//立即停止tts播放
 		MainService.volume_value = 0;//一唤醒音量应该是0
 		savePlayerStatusBeforeWakeup();//保存播放器唤醒前的状态
-		screenManager.screenOn();
+
+		screenManager.screenOn();//解锁屏幕
 		toneSP.setVolumeValue();//设置音量
 		if(!NetworkUtil.isNetworkConnected(MainApplication.getContext())){
 			checkNetWork();//也会播放提示音//每次唤醒前检查wifi是否连通

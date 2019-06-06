@@ -1,16 +1,5 @@
 package com.szhklt.VoiceAssistant.activity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,21 +23,33 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.rich.czlylibary.bean.MusicInfo;
-import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.adapter.SuperAdapter.ViewHolder;
-import com.szhklt.VoiceAssistant.beam.intent;
-import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
-import com.szhklt.VoiceAssistant.RzMusicPkg.RzMediaDownloader.RzMediaDownloadListener;
 import com.szhklt.VoiceAssistant.KwSdk;
+import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
+import com.szhklt.VoiceAssistant.RzMusicPkg.MediaPlayerWrapper;
 import com.szhklt.VoiceAssistant.RzMusicPkg.RzMediaDownloader;
+import com.szhklt.VoiceAssistant.RzMusicPkg.RzMediaDownloader.RzMediaDownloadListener;
 import com.szhklt.VoiceAssistant.RzMusicPkg.RzMusicLab;
 import com.szhklt.VoiceAssistant.adapter.SuperAdapter;
+import com.szhklt.VoiceAssistant.adapter.SuperAdapter.ViewHolder;
 import com.szhklt.VoiceAssistant.beam.Result;
-import com.szhklt.VoiceAssistant.multithreadeddownloader.MyDownloadManager;
+import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.CircleProgress;
 import com.szhklt.VoiceAssistant.view.SlipTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import me.wcy.lrcview.LrcView;
 
@@ -90,8 +91,7 @@ public class RZMediaPlayActivity2 extends Activity implements OnClickListener{
 	private RzMediaDownloader<Result> mRzMediaDownloader;
 	private Handler responseHandler;
 	private MediaPlayReceiver mediaPlayReceiver;
-	private MyDownloadManager downloadManager;
-	public static int raInt; 
+	public static int raInt;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
