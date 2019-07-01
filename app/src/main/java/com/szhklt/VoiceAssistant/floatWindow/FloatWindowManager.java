@@ -12,7 +12,6 @@ import android.view.WindowManager.LayoutParams;
 
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.service.MainService;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.FloatPromptView;
 import com.szhklt.VoiceAssistant.view.FloatQuestionView;
@@ -385,10 +384,6 @@ public class FloatWindowManager {
 	 * 播放海豚说话动画
 	 */
 	public void startTtsAnimation(){
-		if(MainService.isLauncherAcyivity == true){
-			return;
-		}
-
 		this.removesmallWindow(context);
 		startAnimation();//开始播放动画
 	}
@@ -456,10 +451,6 @@ public class FloatWindowManager {
 	 * 开始播放思考动画
 	 */
 	public void startThinkAnimation(){
-		if(MainService.isLauncherAcyivity == true){
-			return;
-		}
-
 		if (null != this.bigWindow&& null != this.bigWindow.animationIV) {
 			this.bigWindow.animationIV.setImageResource(R.drawable.think);
 			this.volumeview.setVisibility(View.VISIBLE);

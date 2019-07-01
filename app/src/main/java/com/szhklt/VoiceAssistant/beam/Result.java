@@ -284,7 +284,173 @@ public class Result implements Serializable{
 	public String getLrcUrl(){
 		return lrcUrl;
 	}
-	
+
+	//天气信息
+	public int airData;
+	public String airQuality;
+	public String date;
+	public String dateLong;
+	public String date_for_voice;
+	public String lastUpdateTime;
+	public String tempHigh;
+	public String tempLow;
+	public String tempRange;
+	public String weather;
+	public String weatherDescription;
+	public int weatherType;
+	public String week;
+	public String wind;
+	public int windLevel;
+
+	//当前才有的信息
+	public String humidity;
+	public String pm25;
+	public int temp;
+
+	public int getTemp() {
+		return temp;
+	}
+
+	public void setTemp(int temp) {
+		this.temp = temp;
+	}
+
+	public String getPm25() {
+		return pm25;
+	}
+
+	public void setPm25(String pm25) {
+		this.pm25 = pm25;
+	}
+
+	public String getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(String humidity) {
+		this.humidity = humidity;
+	}
+
+	public int getAirData() {
+		return airData;
+	}
+
+	public void setAirData(int airData) {
+		this.airData = airData;
+	}
+
+	public String getAirQuality() {
+		return airQuality;
+	}
+
+	public void setAirQuality(String airQuality) {
+		this.airQuality = airQuality;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getDateLong() {
+		return dateLong;
+	}
+
+	public void setDateLong(String dateLong) {
+		this.dateLong = dateLong;
+	}
+
+	public String getDate_for_voice() {
+		return date_for_voice;
+	}
+
+	public void setDate_for_voice(String date_for_voice) {
+		this.date_for_voice = date_for_voice;
+	}
+
+	public String getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(String lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public String getTempHigh() {
+		return tempHigh;
+	}
+
+	public void setTempHigh(String tempHigh) {
+		this.tempHigh = tempHigh;
+	}
+
+	public String getTempLow() {
+		return tempLow;
+	}
+
+	public void setTempLow(String tempLow) {
+		this.tempLow = tempLow;
+	}
+
+	public String getTempRange() {
+		return tempRange;
+	}
+
+	public void setTempRange(String tempRange) {
+		this.tempRange = tempRange;
+	}
+
+	public String getWeather() {
+		return weather;
+	}
+
+	public void setWeather(String weather) {
+		this.weather = weather;
+	}
+
+	public String getWeatherDescription() {
+		return weatherDescription;
+	}
+
+	public void setWeatherDescription(String weatherDescription) {
+		this.weatherDescription = weatherDescription;
+	}
+
+	public int getWeatherType() {
+		return weatherType;
+	}
+
+	public void setWeatherType(int weatherType) {
+		this.weatherType = weatherType;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+
+	public String getWind() {
+		return wind;
+	}
+
+	public void setWind(String wind) {
+		this.wind = wind;
+	}
+
+	public int getWindLevel() {
+		return windLevel;
+	}
+
+	public void setWindLevel(int windLevel) {
+		this.windLevel = windLevel;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

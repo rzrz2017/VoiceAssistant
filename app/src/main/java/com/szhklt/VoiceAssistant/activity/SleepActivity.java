@@ -26,6 +26,9 @@ import com.szhklt.VoiceAssistant.timeTask.Weather;
 import com.szhklt.VoiceAssistant.util.JsonParse;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SleepActivity extends Activity implements OnClickListener {
 	private String TAG="SleepActivity";
 	private TextClock mTextClock;
@@ -149,7 +152,7 @@ public class SleepActivity extends Activity implements OnClickListener {
 				finish();
 				return;
 			}
-			WeatherData[] weatherdataarray = new WeatherData[7];
+			List<WeatherData> weatherdataarray = new ArrayList<>();
 			if(intent.getAction().equals(UPDATA_RETURNWEATHERINFO)){//刷新天气数据
 				String json = intent.getStringExtra("weatherjson");
 				LogUtil.e(TAG,"weatherjson:"+json+LogUtil.getLineInfo());

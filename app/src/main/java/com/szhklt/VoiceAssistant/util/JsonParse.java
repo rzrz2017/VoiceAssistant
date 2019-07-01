@@ -1,11 +1,16 @@
 package com.szhklt.VoiceAssistant.util;
 
+import android.content.Context;
+
+import com.szhklt.VoiceAssistant.beam.TimeUtil;
+import com.szhklt.VoiceAssistant.beam.WeatherData;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import com.szhklt.VoiceAssistant.beam.TimeUtil;
-import com.szhklt.VoiceAssistant.beam.WeatherData;
-import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class JsonParse {
@@ -16,10 +21,10 @@ public class JsonParse {
 		this.context = context;
 	}
 	
-	public WeatherData[] WeatherXUnderstander(String json){
+	public List<WeatherData> WeatherXUnderstander(String json){
 		TimeUtil mtimeutil = new TimeUtil(context);
 		mtimeutil.Date_Func_Array();
-		WeatherData[] weatherlistarray = new WeatherData[7];
+		List<WeatherData> weatherlistarray = new ArrayList<>();
 		 try {
 			 JSONTokener tokener = new JSONTokener(json);
 		     JSONObject jsonObject = new JSONObject(tokener);
@@ -47,7 +52,7 @@ public class JsonParse {
 		        			weatherdata.setwind(dataObject.optString("wind"));
 		        			weatherdata.setwindLevel(dataObject.getInt("windLevel"));
 		        			weatherdata.setWriteInTime(mtimeutil.getTodaysDate());
-		        			weatherlistarray[i] = weatherdata;
+		        			weatherlistarray.add(weatherdata);
 		        		}	        		
 		        	}
 		        }

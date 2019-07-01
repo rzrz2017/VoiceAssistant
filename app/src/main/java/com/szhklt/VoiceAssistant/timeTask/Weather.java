@@ -2,6 +2,7 @@ package com.szhklt.VoiceAssistant.timeTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.TextUnderstanderListener;
 import com.iflytek.cloud.UnderstanderResult;
@@ -11,6 +12,8 @@ import com.szhklt.VoiceAssistant.component.MyTextUnderstander;
 import com.szhklt.VoiceAssistant.db.WeatherDBHandler;
 import com.szhklt.VoiceAssistant.util.JsonParse;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import java.util.List;
 
 public class Weather {
 	private static final String TAG = "Weather";
@@ -30,7 +33,7 @@ public class Weather {
 				LogUtil.e(TAG,"天气定时查询返回！"+LogUtil.getLineInfo());
 				String json = result.getResultString();
 				JsonParse jp = new JsonParse(MainApplication.getContext());
-				WeatherData[] weatherdataarray = jp.WeatherXUnderstander(json);
+				List<WeatherData> weatherdataarray = jp.WeatherXUnderstander(json);
 				mwWeatherDBHandler.deleteAllWeatherMsg();
 				mwWeatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
 			}

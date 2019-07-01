@@ -15,11 +15,9 @@ import android.widget.Toast;
 
 import com.szhklt.VoiceAssistant.AlarmClockOperation;
 import com.szhklt.VoiceAssistant.KwSdk;
-import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.broadcastReceiver.NetBroadCastReceiver;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MyCAE;
-import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
 import com.szhklt.VoiceAssistant.timeTask.SleepTimeout;
 import com.szhklt.VoiceAssistant.timeTask.SpeekTimeout;
@@ -35,23 +33,21 @@ import cn.kuwo.base.bean.Music;
 
 public class MainService extends Service{
     private static final String TAG = "MainService";
+    private static final String ACTION_TOUCHEVENT = "com.szhklt.ACTION_TOUCHEVENT";
+    public static int volume_value;// 当前说话音量
+
     private NetBroadCastReceiver netBroadCastReceiver;
     private String mscPath = Environment.getExternalStorageDirectory().getPath()+"msc";
     private MyCAE mCae;
     private MyAIUI mAIUI;
     private MyReceiver receiver;
+    private IntentFilter filter;
     private KwSdk mKwSdk;
     private AudioManager mAudioManager;
     private AlarmClockOperation alarmClockOperation = AlarmClockOperation.getInstance();
     private FloatWindowManager mFWM = FloatWindowManager.getInstance();
-    public static final boolean isLauncherAcyivity = false;
-    public static int volume_value;// 当前说话音量
-    public static String xftext;// 迅飞返回的JSON
-    /*********************/
-    private static final String ACTION_TOUCHEVENT = "com.szhklt.ACTION_TOUCHEVENT";
-    private static final String ACTION_TTS = "com.szhklt.ACTION_TTS";
 
-    //绑定
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -80,11 +76,11 @@ public class MainService extends Service{
         startService(new Intent(this,MqttService.class));
 //      startService(new Intent(this,UDPService2.class));
         receiver = new MyReceiver();//注册广播接收者
-        IntentFilter filter = new IntentFilter();
+        filter = new IntentFilter();
         filter.addAction("com.szhklt.FloatWindow.FloatSmallView");
         filter.addAction(ACTION_TOUCHEVENT);
-        filter.addAction(ACTION_TTS);
-        filter.addAction(MyAIUI.RESET_AIUI);
+//        filter.addAction(ACTION_TTS);
+//        filter.addAction(MyAIUI.RESET_AIUI);
         filter.addAction("com.szhklt.getmusicinfo");//获取当前音乐信息
         registerReceiver(receiver, filter);
         saveRebootTime();//保存重启时间数据，用于定时清理
@@ -112,10 +108,6 @@ public class MainService extends Service{
             public void onPlayerStatus(PlayerStatus arg0, Music music) {
                 if(arg0 == PlayerStatus.PLAYING || arg0 == PlayerStatus.INIT){//播放歌曲
                     LogUtil.e("kwsdk","kw: PLAYING & INIT");
-                    /*******************************************/
-//                    FloatActionButtomView.turnOffBluePush();
-//                    FloatActionButtomView.turnOffAuxin();LogUtil.e("auxinStatus","turnOffAuxin()"+LogUtil.getLineInfo());
-
                     mKwSdk.curKwMusicStatus = 1;
                     Intent intent = new Intent();
                     intent.putExtra("count", "[MediaPlayActivity]" + "pause");
@@ -123,8 +115,8 @@ public class MainService extends Service{
                     sendBroadcast(intent);
 
                     //发送到典声手机
-                    sendMsgToDsPhoneStatusFromKW(1);
-                    sendMsgToDsPhoneFromKW(music);
+//                    sendMsgToDsPhoneStatusFromKW(1);
+//                    sendMsgToDsPhoneFromKW(music);
                 }else if(arg0 == PlayerStatus.PAUSE){
                     LogUtil.e("kwsdk","kw: PAUSE");
                     mKwSdk.curKwMusicStatus = 0;
@@ -176,52 +168,6 @@ public class MainService extends Service{
         super.onDestroy();
     }
 
-    /**
-     * 发送酷我当前播放的歌曲的状态给典声
-     * @param state
-     */
-    private void sendMsgToDsPhoneStatusFromKW(int state){
-        if(mKwSdk.isKuwoRunning() == false){
-            return;
-        }
-        AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        JSONObject o = new JSONObject();
-        try {
-            o.put("state",state);
-            o.put("position",mKwSdk.getCurrentPos());
-            o.put("duration",mKwSdk.getCurrentMusicDuration());
-            o.put("volume", mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            LogUtil.e("dsplay","send json:"+o.toString()+LogUtil.getLineInfo());
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        MainApplication.getContext().sendBroadcast(new Intent("com.hklt.play_song").putExtra("type",2).putExtra("data",o.toString()));
-        o = null;
-    }
-
-    /**
-     * 发送酷我当前播放的歌曲给典声
-     * @param music
-     */
-    private void sendMsgToDsPhoneFromKW(Music music){
-        if(mKwSdk.isKuwoRunning() == false){
-            return;
-        }
-        JSONObject o2 = new JSONObject();
-        try {
-            o2.put("singer",music.artist);
-            o2.put("song", music.name);
-            o2.put("img_url",null);
-            o2.put("player", "kw");
-            LogUtil.e("dsplay","send json:"+o2.toString()+LogUtil.getLineInfo());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        sendBroadcast(new Intent("com.hklt.play_song").putExtra("type",1).putExtra("data",o2.toString()));
-        o2 = null;
-    }
-
 
     private boolean getSwicthState(){
         SharedPreferences pref = getSharedPreferences("keystatus", MODE_PRIVATE);
@@ -256,36 +202,10 @@ public class MainService extends Service{
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(MyAIUI.RESET_AIUI)){
-                mAIUI.resetAIUI();
-                return;
-            }
-
             if(action.equals(ACTION_TOUCHEVENT)){
                 LogUtil.e("MainService","接收到触摸屏幕的广播!"+LogUtil.getLineInfo());
                 SleepTimeout.getInstance().restart();
                 return;
-            }
-
-            if(action.equals("com.szhklt.getmusicinfo")){
-                LogUtil.e("MainService", "典声需要歌曲信息!"+LogUtil.getLineInfo());
-                sendMsgToDsPhoneStatusFromKW(mKwSdk.curKwMusicStatus);
-                sendMsgToDsPhoneFromKW(mKwSdk.curMusic);
-                return;
-            }
-
-            //客户tts合成
-            if(action.equals(ACTION_TTS)){
-                String answer = intent.getStringExtra("tts");
-                LogUtil.e("tts", "answer:"+answer);
-                MySynthesizer.getInstance(context).isOnlySpeechSynthesis(answer);
-            }
-
-            //客户tts合成
-            if(action.equals(ACTION_TTS)){
-                String answer = intent.getStringExtra("tts");
-                LogUtil.e("tts", "answer:"+answer);
-                MySynthesizer.getInstance(context).isOnlySpeechSynthesis(answer);
             }
 
             Bundle bundle = intent.getExtras();

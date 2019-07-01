@@ -1,13 +1,5 @@
 package com.szhklt.VoiceAssistant.skill;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -18,16 +10,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
-import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.AlarmListActivity;
 import com.szhklt.VoiceAssistant.beam.intent;
+import com.szhklt.VoiceAssistant.beam.intent.Slot;
 import com.szhklt.VoiceAssistant.db.AlarmClockDBHelper;
 import com.szhklt.VoiceAssistant.db.AlarmDBHandler;
-import com.szhklt.VoiceAssistant.service.MainService;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.util.HkAlarmClock;
 import com.szhklt.VoiceAssistant.util.LogUtil;
-import com.szhklt.VoiceAssistant.beam.intent.Slot;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 public class AlarmSkill extends Skill{	
 	private static Context context= MainApplication.getContext();
@@ -190,12 +191,12 @@ public class AlarmSkill extends Skill{
 			return params;
 		}else if(state.contains("reminderUnfinished0")){//提醒未设置事件
 			String used_state=null;
-			try {
-				JSONObject xftextJson = new JSONObject(MainService.xftext);
-				used_state=xftextJson.getJSONObject("used_state").toString();
-			} catch (JSONException e) {
-			LogUtil.e("alarm", "json解析错误", e);
-			}
+//			try {
+//				JSONObject xftextJson = new JSONObject(MainService.xftext);
+//				used_state=xftextJson.getJSONObject("used_state").toString();
+//			} catch (JSONException e) {
+//			LogUtil.e("alarm", "json解析错误", e);
+//			}
 			LogUtil.e("alarm","used_state:"+used_state+LogUtil.getLineInfo());
 			//used_state字段中有datetime.INTERVAL表示reminderUnfinished0并且进入多轮对话
 			if(used_state.contains("datetime.INTERVAL")){//提醒未设置事件和精确时间

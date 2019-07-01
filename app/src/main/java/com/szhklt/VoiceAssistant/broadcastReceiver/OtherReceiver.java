@@ -1,17 +1,17 @@
 package com.szhklt.VoiceAssistant.broadcastReceiver;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.timeTask.ResultTimeout;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public  class OtherReceiver extends BroadcastReceiver { 
 	private static final String TAG = "OtherReceiver";
@@ -31,7 +31,7 @@ public  class OtherReceiver extends BroadcastReceiver {
 					if(result.equals("1")){//代表智能家居控制成功，开始复述用户说的话，直接读取就可以了
 						if(text!=null){
 							LogUtil.e(TAG, "接收到客户的广播："+text+LogUtil.getLineInfo());
-							mTts.doSomethingAfterTts(null,text, MyAIUI.SMARTQUESTION);
+//							mTts.doSomethingAfterTts(null,text, MyAIUI.SMARTQUESTION);
 						}else{
 							LogUtil.e(TAG, "客户已经做过处理，但text字段为空"+LogUtil.getLineInfo());
 //							mTts.doSomethingAfterTts(null,"抱歉,我没有听懂,或许换个说法我就听明白了", MyAIUI.SMARTQUESTION);
@@ -57,7 +57,6 @@ public  class OtherReceiver extends BroadcastReceiver {
 			//			mTts.speechSynthesis(null, null);
 //			mFWM.flushQandAWindow("抱歉,我没有听懂,或许换个说法我就听明白了",MyAIUI.SMARTQUESTION);
 		}
-		MyAIUI.SMARTQUESTION = null;
 	}
 
 }

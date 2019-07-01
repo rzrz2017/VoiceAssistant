@@ -19,7 +19,6 @@ import com.iflytek.aiui.AIUIMessage;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.MusicRes.KwMusicSkill;
 import com.szhklt.VoiceAssistant.R;
-import com.szhklt.VoiceAssistant.SmartMsgPostMan;
 import com.szhklt.VoiceAssistant.activity.ChatActivity;
 import com.szhklt.VoiceAssistant.beam.SemanticUnderstandResultData;
 import com.szhklt.VoiceAssistant.beam.intent;
@@ -59,21 +58,14 @@ public class MyAIUI implements AIUIListener{
 	public static final String TAG = "MyAIUI";
 	private volatile static MyAIUI instance;
 	public static boolean WRITEAUDIOEABLE = false;// 是否写入音频到语义
-	public static final String RESET_AIUI = "android.MyAIUI.intent.RESET_AIUI";//resetAIUI
 	private AIUIAgent mAIUIAgent;
 	private int mAIUIState = AIUIConstant.STATE_IDLE;//AIUI当前状态
 	private MySynthesizer mTts;
 	private FloatWindowManager mFWM;
-	private SmartMsgPostMan postman;
-	private String xftext;
-	public static String SMARTQUESTION;
-	public static String SERVICE;
-	private final String SPEECHCOMPLETE="android.intent.msg.SPEECHCOMPLETE";//发给典声的
 	private Skill skill;//技能引用
 
 	private MyAIUI(){
 		createAgent();
-		postman = SmartMsgPostMan.getInstance();
 		mTts = MySynthesizer.getInstance(MainApplication.getContext());//初始化tts
 		mFWM = FloatWindowManager.getInstance();
 		mFWM.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +130,7 @@ public class MyAIUI implements AIUIListener{
 				MySynthesizer.FLAG = false;
 				MySynthesizer.recoveyFlag();
 				Log.e(TAG+".......", String.valueOf(event));
-				xftext = preproccessResultData(event);//预处理数据
+				String xftext = preproccessResultData(event);//预处理数据
 				
 				if(xftext == null){
 					break;
@@ -146,7 +138,6 @@ public class MyAIUI implements AIUIListener{
 				LogUtil.e("xftext","xftext:"+xftext+LogUtil.getLineInfo());
 
 				handle(xftext);
-
 			case AIUIConstant.EVENT_ERROR:
 				LogUtil.e(TAG, "AIUI引擎错误: " + event.arg1 + "\n" + event.info);
 				if(!ChatActivity.ISCHATMODE){
@@ -171,12 +162,7 @@ public class MyAIUI implements AIUIListener{
 						MyCAE.isWakeUped = false;
 					}
 					MainApplication.getContext().sendBroadcast(new Intent(TrafficStatisticsService.TRAFFIC_STATISTICS_STARTSTATISTICS));
-//              TRANSITIONALPERIOD = true;LogUtil.e("TRANSITIONALPERIOD",TRANSITIONALPERIOD.toString()+LogUtil.getLineInfo());
-					if(ChatActivity.ISCHATMODE == false){
-						//说话太长超时
-//                  SpeekTimeout.getInstance().restart();
-					}
-//              mTts.stopTts();
+
 					if(!ChatActivity.ISCHATMODE){
 						mFWM.startComprehendAnimation();//拿话筒动作
 					}
@@ -188,9 +174,7 @@ public class MyAIUI implements AIUIListener{
 							LogUtil.e("now","----------------"+LogUtil.getLineInfo());
 							WRITEAUDIOEABLE = false;//禁止长唤醒
 						}
-//                  stopWritingToAIUI();
 					}
-//              TRANSITIONALPERIOD = true;
 					LogUtil.e("iat", "后节点");
 					MainApplication.getContext().sendBroadcast(new Intent(TrafficStatisticsService.TRAFFIC_STATISTICS_ENDSTATISTICS));
 
@@ -216,8 +200,6 @@ public class MyAIUI implements AIUIListener{
 				}
 
 				mFWM.removeAll();
-				if(MainApplication.longWakeUp == true){
-				}
 
 				if(ChatActivity.ISCHATMODE == true){
 					Intent sintent = new Intent("com.szhklt.msg.closeActivity.ChatActivity");
@@ -365,69 +347,67 @@ public class MyAIUI implements AIUIListener{
 	 * 处理理解完成后RC等于0的情况(操作成功)
 	 */
 	private void disposeAfterComprehendedRC0(final intent mintent) {
-
 		LogUtil.e("dispose","disposeAfterComprehendedRC0()"+LogUtil.getLineInfo());
+
 		if(mintent == null){
 			return;
 		}
-		SERVICE = mintent.getService();
-		LogUtil.e("musicstate", "service:"+SERVICE+LogUtil.getLineInfo());
-		if("weather".equals(SERVICE)){
-			skill = new WeatherSkill(mintent,xftext);
+        String service = mintent.getService();
+		LogUtil.e("musicstate", "service:"+service+LogUtil.getLineInfo());
+		if("weather".equals(service)){
+			skill = new WeatherSkill(mintent);
 			skill.execute();
-		}else if("cookbook".equals(SERVICE)){
+		}else if("cookbook".equals(service)){
 			skill = new CookBookSkill(mintent);
 			skill.execute();
-		}else if("translation".equals(SERVICE)){
+		}else if("translation".equals(service)){
 			skill = new TranslationSkill(mintent);
 			skill.execute();
-		}else if ("musicX".equals(SERVICE)) {// 酷我
+		}else if ("musicX".equals(service)) {// 酷我
 			skill = new KwMusicSkill(mintent);
 			skill.execute();
 //			skill = new CocheerSkill(mintent);
 //			skill.execute();
 //			skill = new MiGuSkill(mintent);
 //			skill.execute();
-		}else if("scheduleX".equals(SERVICE)){//闹钟
+		}else if("scheduleX".equals(service)){//闹钟
 			skill = new AlarmSkill(mintent);
 			skill.execute();
-		}else if("HKLT.music_ctr".equals(SERVICE)){//上下曲,暂停控制
+		}else if("HKLT.music_ctr".equals(service)){//上下曲,暂停控制
 			skill = new MusicControlSkill(mintent);
 			skill.execute();
-		}else if("HKLT.light_up_down".equals(SERVICE)){//亮度控制
+		}else if("HKLT.light_up_down".equals(service)){//亮度控制
 			skill = new LightControlSkill(mintent);
 			skill.execute();
-		}else if("HKLT.volume_up_down".equals(SERVICE)){//音量控制
+		}else if("HKLT.volume_up_down".equals(service)){//音量控制
 			skill = new VolumeControlSkill(mintent);
 			skill.execute();
-		}else if("HKLT.keyevent".equals(SERVICE)){
+		}else if("HKLT.keyevent".equals(service)){
 			skill = new KeyeventControlSkill(mintent);
 			skill.execute();
-		} else if (SERVICE.equals("news")
-				|| SERVICE.equals("radio")
-				|| SERVICE.equals("story")
-				|| SERVICE.equals("drama")
-				|| SERVICE.equals("crossTalk")
-				|| SERVICE.equals("storyTelling")
-				|| SERVICE.equals("health")
-				|| SERVICE.equals("history")) {
+		} else if (service.equals("news")
+				|| service.equals("radio")
+				|| service.equals("story")
+				|| service.equals("drama")
+				|| service.equals("crossTalk")
+				|| service.equals("storyTelling")
+				|| service.equals("health")
+				|| service.equals("history")) {
 			skill = new MediaPlaySkill(mintent);
 			skill.execute();
-		}else if("baike".equals(SERVICE)){
+		}else if("baike".equals(service)){
 			skill = new WebSearchSkill(mintent);
 			skill.execute();
-		}else if("openQA".equals(SERVICE)){
+		}else if("openQA".equals(service)){
 			skill = new OpenQASkill(mintent);
 			skill.execute();
-		}else if("HKLT.intoaiui".equals(SERVICE)){
+		}else if("HKLT.intoaiui".equals(service)){
 			skill = new IntoChatSkill(mintent);
 			skill.execute();
 		}else{
 			skill = new Skill(mintent);
 			skill.execute();
 		}
-		SERVICE = null;
-
 	}
 
 	/**
@@ -436,7 +416,6 @@ public class MyAIUI implements AIUIListener{
 	private void disposeAfterComprehendedRC1(final intent responseMsg){
        ;
 		LogUtil.e("dispose","disposeAfterComprehendedRC1()"+LogUtil.getLineInfo());
-//      mTts.doSomethingAfterTts(null, "抱歉,我没有听懂,或许换个说法我就听明白了", null);
 	}
 	/**
 	 * 处理理解完成后RC等于2的情况(系统内部异常)
@@ -444,7 +423,6 @@ public class MyAIUI implements AIUIListener{
 	private void disposeAfterComprehendedRC2(final intent responseMsg){
 
 		LogUtil.e("dispose","disposeAfterComprehendedRC2()"+LogUtil.getLineInfo());
-//      mTts.doSomethingAfterTts(null, "抱歉,我没有听懂,或许换个说法我就听明白了", null);
 	}
 
 	/**
@@ -460,11 +438,11 @@ public class MyAIUI implements AIUIListener{
 		Log.e("stop","sendAudioDataToAIUI(false)被执行!"+LogUtil.getLineInfo());
 
 		//上下首切换时可能会有RC == 3的情况
-//		if("musicX".equals(mintent.getService())){
-//			skill = new KwMusicSkill(mintent);
-//			skill.execute();
-//			return;
-//		}
+		if("musicX".equals(mintent.getService())){
+			skill = new KwMusicSkill(mintent);
+			skill.execute();
+			return;
+		}
 
 		if (mintent.getService().indexOf("story") != -1) {
 			if (data.awr.getAnsw() == null) {
@@ -496,7 +474,6 @@ public class MyAIUI implements AIUIListener{
 				|| mintent.getService().equals("history")) {
 			mTts.speechSynthesis(mintent.getAnswer().getText(),null);
 		}else{
-			postman.sendMsg2Client(xftext);LogUtil.e("postman","sendMsg2Client()"+LogUtil.getLineInfo());
 			ResultTimeout.getInstance().restart();
 		}
 	}
@@ -507,7 +484,6 @@ public class MyAIUI implements AIUIListener{
 	private void disposeAfterComprehendedRC4(final intent mintent){
 		LogUtil.e("dispose","disposeAfterComprehendedRC4()"+LogUtil.getLineInfo());
 		if(MainApplication.longWakeUp == true){
-			postman.sendMsg2Client(xftext);LogUtil.e("postman","sendMsg2Client()"+LogUtil.getLineInfo());
 			return;
 		}
 
@@ -660,40 +636,24 @@ public class MyAIUI implements AIUIListener{
 	}
 
 
-
     //解析结果
 	public void handle(String string){
-
 		//智能家居
 		try {
 			JSONObject obj = new JSONObject(string);
-			MyAIUI.SMARTQUESTION = obj.getString("text");
+//			MyAIUI.SMARTQUESTION = obj.getString("text");
 			String service = obj.optString("service","");
-			//*************************************************
-			//智捷通家居控制，上线注释掉
-//				  if("curtain_smartHome".equals(service)||"light_smartHome".equals(service)){
-//					  LogUtil.e("rzs","---------------------------"+LogUtil.getLineInfo());
-//					  ZJTSmartHomeSkill ZJTSmartHomeSkill=new ZJTSmartHomeSkill(xftext);
-//					  ZJTSmartHomeSkill.smartHomeControl();
-//					  break;
-//				  }
-			//*************************************************
-			if(postman.isExist(service) == false){//如果不存在于白名单中就会发给客户
-				postman.sendMsg2Client(string);
-				LogUtil.e("postman","sendMsg2Client()"+LogUtil.getLineInfo());
-				ResultTimeout.getInstance().restart();
-				return;
-			}
+			LogUtil.e(TAG,"service:"+service+LogUtil.getLineInfo());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+
 		intent mintent = new intent();
 		Gson mgson = new GsonBuilder().serializeNulls().create();
 		mintent = mgson.fromJson(string,intent.class);
-		Log.e(TAG,"mintent----"+mintent.toString());
 		if(mintent == null){
 			FloatWindowManager.getInstance().removeAll();
-			MainApplication.getContext().sendBroadcast(new Intent(SPEECHCOMPLETE));//发给典声,告诉典声语义理解结束
 			return;
 		}else{
 			switch (mintent.getRc()) {

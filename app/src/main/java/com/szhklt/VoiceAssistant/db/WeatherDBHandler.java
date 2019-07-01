@@ -12,14 +12,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class WeatherDBHandler {
 	public SQLiteDatabase weatherDB;
-	
 	private Context mcontext;
-	
 	private WeatherDBHelper weatherdbHelper;
-	
 	private Calendar mcalendar;
 	private long mtime;
 	private SimpleDateFormat mformat;
@@ -41,10 +39,9 @@ public class WeatherDBHandler {
 	    LogUtil.e("date","mstrdate:"+mstrdate+ LogUtil.getLineInfo());
 	}
 	
-	//
+
 	public void insertALineOfWeatherMsg(WeatherData weatherData){
 		ContentValues values = new ContentValues();
-		
 		values.put("AnswerText",weatherData.getAnswerText());
 		values.put("WriteInTime", weatherData.getWriteInTime());
 		values.put("airData", weatherData.getairData());
@@ -63,25 +60,26 @@ public class WeatherDBHandler {
 		weatherDB.insert("WEATHERINFO", null, values);
 	}
 	
-	public void insertAWeekOfWeatherMsg(WeatherData[] weatherDataArray){
+	public void insertAWeekOfWeatherMsg(List<WeatherData> weatherDataArray){
 		for(int i = 0;i < 7;i++){
 			ContentValues values = new ContentValues();
-			LogUtil.e("AnswerText","weatherDataArray[i].getAnswerText()"+weatherDataArray[i].getAnswerText()+LogUtil.getLineInfo());
-			values.put("answer",weatherDataArray[i].getAnswerText());
-			values.put("WriteInTime", weatherDataArray[i].getWriteInTime());
-			values.put("airData", weatherDataArray[i].getairData());
-			values.put("airQuality", weatherDataArray[i].getairQuality());
-			values.put("city", weatherDataArray[i].getcity());
-			values.put("data", weatherDataArray[i].getdata());
-			values.put("humidity", weatherDataArray[i].gethumidity());
-			values.put("lastUpdateTime",weatherDataArray[i].getlastUpdateTime());
-			values.put("pm25", weatherDataArray[i].getpm25());
-			values.put("temp", weatherDataArray[i].gettemp());
-			values.put("tempRange", weatherDataArray[i].gettempRange());
-			values.put("weather", weatherDataArray[i].getweather());
-			values.put("weatherType", weatherDataArray[i].getweatherType());
-			values.put("wind", weatherDataArray[i].getwind());
-			values.put("windLevel", weatherDataArray[i].getwindLevel());
+			if(i == 0){
+				values.put("answer",weatherDataArray.get(i).getAnswerText());
+				values.put("airData", weatherDataArray.get(i).getairData());
+				values.put("airQuality", weatherDataArray.get(i).getairQuality());
+				values.put("pm25", weatherDataArray.get(i).getpm25());
+				values.put("humidity", weatherDataArray.get(i).gethumidity());
+				values.put("temp", weatherDataArray.get(i).gettemp());
+			}
+			values.put("WriteInTime", weatherDataArray.get(i).getWriteInTime());
+			values.put("city", weatherDataArray.get(i).getcity());
+			values.put("data", weatherDataArray.get(i).getdata());
+			values.put("lastUpdateTime",weatherDataArray.get(i).getlastUpdateTime());
+			values.put("tempRange", weatherDataArray.get(i).gettempRange());
+			values.put("weather", weatherDataArray.get(i).getweather());
+			values.put("weatherType", weatherDataArray.get(i).getweatherType());
+			values.put("wind", weatherDataArray.get(i).getwind());
+			values.put("windLevel", weatherDataArray.get(i).getwindLevel());
 			weatherDB.insert("WEATHERINFO", null, values);
 		}
 	}
@@ -181,9 +179,6 @@ public class WeatherDBHandler {
 					weatherData.setwind(wind);
 					weatherData.setwindLevel(windLevel);
 					return weatherData;
-				}else {
-					weatherData = new WeatherData();
-					weatherData = null;
 				}
 
 			} while (cursor.moveToNext());

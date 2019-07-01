@@ -188,6 +188,7 @@
         <item>电视机</item>
         <item>微波炉</item>
     </string-array>
+
     <string-array name="kwanswer">
         <item>正在进入播放哦</item>
         <item>歌曲任你听</item>

@@ -1,7 +1,5 @@
 package com.szhklt.VoiceAssistant.RzMusicPkg;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -17,11 +15,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+
 import com.google.gson.Gson;
 import com.rich.czlylibary.bean.MusicInfo;
 import com.rich.czlylibary.bean.MusicinfoResult;
 import com.rich.czlylibary.sdk.ResultCallback;
-import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.activity.RZMediaPlayActivity2;
 import com.szhklt.VoiceAssistant.beam.Result;
@@ -29,9 +27,13 @@ import com.szhklt.VoiceAssistant.beam.Song;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.MiGuSearcher;
 import com.szhklt.VoiceAssistant.util.OKHttpDownLoadUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 

@@ -1,24 +1,25 @@
 package com.szhklt.VoiceAssistant.MusicRes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import android.content.Intent;
 import android.util.Log;
 
-import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.intent;
+import com.szhklt.VoiceAssistant.beam.intent.Slot;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.skill.Skill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import cn.kuwo.autosdk.api.OnSearchListener;
 import cn.kuwo.autosdk.api.SearchStatus;
 import cn.kuwo.base.bean.Music;
-import com.szhklt.VoiceAssistant.beam.intent.Slot;
 
 public class KwMusicSkill extends Skill {
 	private static final String TAG = "KwMusicSkill";
@@ -45,6 +46,7 @@ public class KwMusicSkill extends Skill {
 			return;
 		}
 		intent = mintent.getSemantic().get(0).getIntent();
+		LogUtil.e(TAG,"intent:"+intent+LogUtil.getLineInfo());
 		final ArrayList<Slot> slots = mintent.getSemantic().get(0).getSlots();
 		for(Slot slot:slots){
 			if("tags".equals(slot.getName())){
@@ -205,7 +207,7 @@ public class KwMusicSkill extends Skill {
 			});
 		}else{
 			//实在什么都没有
-			RecommendedSong(true);
+			RecommendedSong(false);
 		}
 	}
 

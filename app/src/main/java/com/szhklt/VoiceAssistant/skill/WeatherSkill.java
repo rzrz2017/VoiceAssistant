@@ -10,36 +10,32 @@ import com.szhklt.VoiceAssistant.beam.intent;
 import com.szhklt.VoiceAssistant.db.WeatherDBHandler;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WeatherSkill extends Skill {
 	private static final String TAG = WeatherSkill.class.getSimpleName(); 
-	private String weatherJson;
 	private WeatherDBHandler mweatherDBHandler;
+	private List<WeatherData> weatherdataarray;
 	private Context context;
-	public WeatherSkill(intent intent, String json){
+	public WeatherSkill(intent intent){
 		super(intent);
-		LogUtil.e(TAG,"json:"+json);
 		context = MainApplication.getContext();
 		mintent = intent;
-		weatherJson = json;
 		mweatherDBHandler = new WeatherDBHandler(MainApplication.getContext());
 	}
 	@Override
 	protected void extractVaildInformation() {
 		// TODO Auto-generated method stub
 		super.extractVaildInformation();
-		WeatherData[] weatherdataarray;
 
-		weatherdataarray = WeatherXUnderstander(weatherJson);
+		weatherdataarray = WeatherXUnderstander(mintent);
 		SharedPreferences pref = context.getSharedPreferences("location",context.MODE_PRIVATE);
-		if(weatherdataarray[0] == null){
+		if(weatherdataarray.size() == 0){
 			return;
 		}
-		if(pref.getString("location","~").contains(weatherdataarray[0].getcity())){
+		if(pref.getString("location","~").contains(weatherdataarray.get(0).getcity())){
 			mweatherDBHandler.deleteAllWeatherMsg();
 			mweatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
 		}
@@ -52,46 +48,36 @@ public class WeatherSkill extends Skill {
 		super.execute();
 	}
 	
-	public WeatherData[] WeatherXUnderstander(String json){
+	public List<WeatherData> WeatherXUnderstander(intent intent){
 		TimeUtil mtimeutil = new TimeUtil(MainApplication.getContext());
 		mtimeutil.Date_Func_Array();
-		WeatherData[] weatherlistarray = new WeatherData[7];
-		 try {
-			 JSONTokener tokener = new JSONTokener(json);
-		     JSONObject jsonObject = new JSONObject(tokener);
-		     JSONObject jsonData = jsonObject.optJSONObject("data");
-		        if(null !=jsonData){
-		        	JSONArray jsonArray = jsonData.getJSONArray("result");
-		        	if(jsonObject.getString("service").indexOf("weather")!=-1){
-		        		for (int i = 0; i <jsonArray.length(); i++) {
-		        			JSONObject dataObject = (JSONObject) jsonArray.get(i);	        			
-		        			WeatherData weatherdata =new WeatherData();
-		        			if(i == 0){
-		        				LogUtil.e("AnswerText",jsonObject.optJSONObject("answer").optString("text"));
-		        				weatherdata.setAnswerText(jsonObject.optJSONObject("answer").optString("text"));
-			        			weatherdata.setairData(dataObject.optInt("airData"));
-			        			weatherdata.setairQuality(dataObject.optString("airQuality"));
-			        			weatherdata.sethumidity(dataObject.optString("humidity"));
-			        			weatherdata.setpm25(dataObject.optString("pm25"));
-			        			weatherdata.settemp(dataObject.optInt("temp"));
-		        			}
-		        			weatherdata.setcity(dataObject.optString("city"));
-		        			weatherdata.setdata(dataObject.optString("date"));
-		        			weatherdata.setlastUpdateTime(dataObject.optString("lastUpdateTime"));
-		        			weatherdata.setpm25(dataObject.optString("pm25"));
-		        			weatherdata.settempRange(dataObject.optString("tempRange"));
-		        			weatherdata.setweather(dataObject.optString("weather"));
-		        			weatherdata.setweatherType(dataObject.optInt("weatherType"));
-		        			weatherdata.setwind(dataObject.optString("wind"));
-		        			weatherdata.setwindLevel(dataObject.getInt("windLevel"));
-		        			weatherdata.setWriteInTime(mtimeutil.getTodaysDate());
-		        			weatherlistarray[i] = weatherdata;
-		        			LogUtil.e(TAG,weatherdata.toString()+LogUtil.getLineInfo());
-		        		}	        		
-		        	}
-		        }
-		} catch (Exception e) {
-		}       	
-		return weatherlistarray;	
+		List<WeatherData> weatherlistarray = new ArrayList<>(7);
+		for(int i = 0;i < 7;i++){
+			WeatherData weatherdata =new WeatherData();
+			if(i == 0){
+				weatherdata.setairData(intent.getData().getResult().get(i).getAirData());
+				weatherdata.setairQuality(intent.getData().getResult().get(i).getAirQuality());
+				weatherdata.sethumidity(intent.getData().getResult().get(i).getHumidity());
+				weatherdata.setpm25(intent.getData().getResult().get(i).getPm25());
+				weatherdata.settemp(intent.getData().getResult().get(i).getTemp());
+			}
+			LogUtil.e("AnswerText",intent.getAnswer().getText());
+			weatherdata.setAnswerText(intent.getAnswer().getText());
+			weatherdata.setcity(intent.getData().getResult().get(i).getCity());
+			weatherdata.setdata(intent.getData().getResult().get(i).getDate());
+			weatherdata.setlastUpdateTime(intent.getData().getResult().get(i).getLastUpdateTime());
+			weatherdata.setpm25(intent.getData().getResult().get(i).getTempHigh());
+			weatherdata.settempRange(intent.getData().getResult().get(i).getTempRange());
+			weatherdata.setweather(intent.getData().getResult().get(i).getWeather());
+			weatherdata.setweatherType(intent.getData().getResult().get(i).getWeatherType());
+			weatherdata.setwind(intent.getData().getResult().get(i).getWind());
+			weatherdata.setwindLevel(intent.getData().getResult().get(i).getWindLevel());
+			weatherdata.setWriteInTime(mtimeutil.getTodaysDate());
+			weatherlistarray.add(weatherdata);
+			LogUtil.e(TAG,weatherdata.toString()+LogUtil.getLineInfo());
+		}
+
+
+		return weatherlistarray;
 	}
 }

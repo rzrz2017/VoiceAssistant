@@ -11,11 +11,14 @@ import android.view.WindowManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.szhklt.VoiceAssistant.activity.dialog.PhoneDiaActivity;
 import com.szhklt.VoiceAssistant.activity.dialog.PhoneListDiaAct;
 import com.szhklt.VoiceAssistant.beam.mqtt.Phone;
 import com.szhklt.VoiceAssistant.beam.mqtt.PhonesLab;
 import com.szhklt.VoiceAssistant.component.MyAIUI;
+import com.szhklt.VoiceAssistant.component.MyCAE;
 import com.szhklt.VoiceAssistant.util.CommonUtils;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.NetworkUtil;
@@ -45,8 +48,9 @@ public class MqttService extends Service {
     private static final String userName = "4yrgvkn/device03";
     private static final String passWord = "BctJVU9qb9q88AEk";
 
+    private Gson gson;
+
     private String clientId = UUID.randomUUID().toString();
-    private static MyAIUI myAIUI;
 
     private static String sn;
 
@@ -56,9 +60,9 @@ public class MqttService extends Service {
         LogUtil.e(TAG, "onCreate方法");
         //test
 
+        gson = new GsonBuilder().serializeNulls().create();
         mContext = this;
         sn = CommonUtils.getSerialNumber();
-        myAIUI = MyAIUI.getInstance();
         //连接MQTT(MQTT初始化)
         initMqttClient();
     }
@@ -399,7 +403,6 @@ public class MqttService extends Service {
                 return;
             }
 
-
             //手机端掉线了
             if(str.startsWith("Disconnect")){
                LogUtil.e("Disconnect","Disconnect手机端解绑了 receInfo:"+receInfo);
@@ -438,11 +441,17 @@ public class MqttService extends Service {
                     String topic = top;
 
                     //截取json内容
-                    String intent = getIntentPart(receInfo);
+                    String ip = getIntentPart(receInfo);
                     //调用AIUI处理intent
-                    if(intent!= null){
-                        myAIUI.handle(intent);
+                    if(ip!= null){
+//                        intent intent = new intent();
+//                        intent = gson.fromJson(ip, intent.class);
+                        MyCAE.savePlayerStatusBeforeWakeup();
+                        MyAIUI.getInstance().handle(ip);
+
                     }
+
+
                     publish(topic,"Respond:收到信息",0,false);
                     return;
                 }
@@ -536,14 +545,14 @@ public class MqttService extends Service {
     private String getIntentPart(String msg) {
         String intent = null;
         //提取msg中的itent部分
-        Map mapTypes = JSON.parseObject(msg);
-        for (Object obj : mapTypes.keySet()){
-            if(obj.toString() == "data"){
-                String data = mapTypes.get(obj).toString();
-                LogUtil.e("data",data);
-                List<Map<String,Object>> mapListJson = (List) JSONArray.parseArray(data);
-                for (int i = 0; i < mapListJson.size(); i++) {
-                    Map<String,Object> dataMap=mapListJson.get(i);
+        Map<String,Object> mapTypes = JSON.parseObject(msg);
+        for (String obj : mapTypes.keySet()){
+            if(obj == "data"){
+                List<Map<String,Object>> data = (List)JSONArray.parseArray(mapTypes.get(obj).toString());
+//                LogUtil.e("data",data);
+//                List<Map<String,Object>> mapListJson = (List) JSONArray.parseArray(data);
+                for (int i = 0; i < data.size(); i++) {
+                    Map<String,Object> dataMap=data.get(i);
                     for(Map.Entry<String,Object> entry : dataMap.entrySet()){
                         String strkey1 = entry.getKey();
                         Object strval1 = entry.getValue();

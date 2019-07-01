@@ -1,11 +1,9 @@
 package com.szhklt.VoiceAssistant.timeTask;
 
-import java.util.TimerTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.TextUnderstanderListener;
 import com.iflytek.cloud.UnderstanderResult;
@@ -22,6 +20,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import java.util.List;
+import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WeatherTimeTask {
 	private static final String TAG = "weatherTimeTask";
@@ -54,7 +57,7 @@ public class WeatherTimeTask {
 						LogUtil.e(TAG,"天气定时查询返回！"+LogUtil.getLineInfo());
 						String json = result.getResultString();
 						JsonParse jp = new JsonParse(context);
-						WeatherData[] weatherdataarray = jp.WeatherXUnderstander(json);
+						List<WeatherData> weatherdataarray = jp.WeatherXUnderstander(json);
 						mwWeatherDBHandler.deleteAllWeatherMsg();
 						mwWeatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
 					}
@@ -146,7 +149,7 @@ public class WeatherTimeTask {
 					LogUtil.e(TAG,"天气定时查询返回！"+LogUtil.getLineInfo());
 					String json = result.getResultString();
 					JsonParse jp = new JsonParse(context);
-					WeatherData[] weatherdataarray = jp.WeatherXUnderstander(json);
+					List<WeatherData> weatherdataarray = jp.WeatherXUnderstander(json);
 					mwWeatherDBHandler.deleteAllWeatherMsg();
 					mwWeatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
 				}

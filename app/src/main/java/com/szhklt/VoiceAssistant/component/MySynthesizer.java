@@ -162,7 +162,6 @@ public class MySynthesizer implements SynthesizerListener {
     public static void recoveyFlag() {
         MusicControlSkill.KFLAG = null;
         IntoChatSkill.chatIntent = null;
-        MyAIUI.SERVICE = null;
         KeyeventControlSkill.skillIntent = null;
     }
 

@@ -1,15 +1,14 @@
 package com.szhklt.VoiceAssistant.timeTask;
 
-import java.util.TimerTask;
 import android.content.Context;
-import android.content.Intent;
 
-import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.component.MySynthesizer;
 import com.szhklt.VoiceAssistant.floatWindow.FloatWindowManager;
+import com.szhklt.VoiceAssistant.impl.DoSomethingAfterTts;
 import com.szhklt.VoiceAssistant.util.LogUtil;
+
+import java.util.TimerTask;
 
 /**
  * 说话过长倒计时
@@ -23,7 +22,6 @@ public class SpeekTimeout {
 	private TimerUtil timerUtil;
 	private static SpeekTimeout speekTimerTaskUtil;
 	private MySynthesizer mTts= MySynthesizer.getInstance(MainApplication.getContext());
-	private MyAIUI mAIUI;
 	public static SpeekTimeout getInstance(){
 		if(speekTimerTaskUtil==null){
 			speekTimerTaskUtil= new SpeekTimeout();
@@ -40,7 +38,7 @@ public class SpeekTimeout {
 				LogUtil.e(TAG,"说话时间太长");
 				
 				//resetAIUI
-				MainApplication.getContext().sendBroadcast(new Intent(MyAIUI.RESET_AIUI));
+//				MainApplication.getContext().sendBroadcast(new Intent(MyAIUI.RESET_AIUI));
 				
 				mTts.doSomethingAfterTts(new DoSomethingAfterTts(){
 
