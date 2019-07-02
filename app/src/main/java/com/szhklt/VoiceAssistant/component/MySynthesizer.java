@@ -3,15 +3,10 @@ package com.szhklt.VoiceAssistant.component;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.iflytek.cloud.ErrorCode;
-import com.iflytek.cloud.InitListener;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechSynthesizer;
-import com.iflytek.cloud.SynthesizerListener;
+import com.iflytek.aiui.AIUIConstant;
 import com.szhklt.VoiceAssistant.KwSdk;
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
@@ -25,12 +20,14 @@ import com.szhklt.VoiceAssistant.skill.MusicControlSkill;
 import com.szhklt.VoiceAssistant.timeTask.SleepTimeout;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
-public class MySynthesizer implements SynthesizerListener {
+import java.io.UnsupportedEncodingException;
+
+public class MySynthesizer  {
     private String TAG = "MySynthesizer";
     private static MySynthesizer mMySynthesizer;
     private Context context;
     private String voicerCloud = "xiaoqi";// 默认云端发音人
-    private SpeechSynthesizer mTts;// 语音合成对象
+//    private SpeechSynthesizer mTts;// 语音合成对象
     private FloatWindowManager mFWM;//悬浮窗UI管理
     private DoSomethingAfterTts md;
 
@@ -54,7 +51,7 @@ public class MySynthesizer implements SynthesizerListener {
 
     private MySynthesizer(Context context) {
         this.context = context;
-        mTts = SpeechSynthesizer.createSynthesizer(context, mTtsInitListener);//初始化tts
+//        mTts = SpeechSynthesizer.createSynthesizer(context, mTtsInitListener);//初始化tts
         mFWM = FloatWindowManager.getInstance();
         synthetisesetParam();
     }
@@ -67,7 +64,7 @@ public class MySynthesizer implements SynthesizerListener {
         return mMySynthesizer;
     }
 
-    @Override
+    /****接口****/
     public void onSpeakBegin() {
         LogUtil.i(TAG, "TTS开始播报");
         isTtsed = true;
@@ -84,36 +81,37 @@ public class MySynthesizer implements SynthesizerListener {
         SleepTimeout.getInstance().stop();
     }
 
-    @Override
+
+
     public void onSpeakPaused() {
         LogUtil.i(TAG, "TTS暂停播放");
-//		mFWM.stopAnimation();
+		mFWM.stopAnimation();
     }
 
-    @Override
+
     public void onSpeakResumed() {
         LogUtil.i(TAG, "TTS继续播放");
-//		mFWM.startTtsAnimation();
+		mFWM.startTtsAnimation();
     }
 
-    @Override
+
     public void onBufferProgress(int percent, int beginPos, int endPos, String info) {
     }
 
-    @Override
+
     public void onSpeakProgress(int percent, int beginPos, int endPos) {
     }
 
-    @Override
-    public void onCompleted(SpeechError error) {
+
+    public void onCompleted() {
         // TODO Auto-generated method stub
         LogUtil.i(TAG, "TTS播放完成");
 
         LogUtil.e("prestatus", "tts播放完成" + "酷我播放器前状态：" + KwSdk.getPreKwStatus());
-        if (ChatActivity.ISCHATMODE == false) {
-            MyAIUI.WRITEAUDIOEABLE = false;
-            LogUtil.e("now", "----------------" + LogUtil.getLineInfo());
-        }
+//        if (ChatActivity.ISCHATMODE == false) {
+//            MyAIUI.WRITEAUDIOEABLE = false;
+//            LogUtil.e("now", "----------------" + LogUtil.getLineInfo());
+//        }
 
         if (MainApplication.longWakeUp == true) {
             MyAIUI.WRITEAUDIOEABLE = true;
@@ -136,6 +134,9 @@ public class MySynthesizer implements SynthesizerListener {
         md = null;//重要
     }
 
+    public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
+    }
+    /**************/
     /**
      * 恢复唤醒前的音乐状态
      */
@@ -165,31 +166,29 @@ public class MySynthesizer implements SynthesizerListener {
         KeyeventControlSkill.skillIntent = null;
     }
 
-    @Override
-    public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
-    }
+
     /************************************CAE初始化**************************************/
     /**
      * 初始化监听。
      */
-    private InitListener mTtsInitListener = new InitListener() {
-        @Override
-        public void onInit(int code) {
-            if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(context, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
+//    private InitListener mTtsInitListener = new InitListener() {
+//        @Override
+//        public void onInit(int code) {
+//            if (code != ErrorCode.SUCCESS) {
+//                Toast.makeText(context, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    };
 
     /**
      * 立即停止语义合成
      */
     public void stopTts() {
-        if (null != mTts) {
-            if (!mTts.isSpeaking()) {
-                return;
-            }
-            mTts.stopSpeaking();
+        try {
+            MyAIUI.activeTTS(null, AIUIConstant.PAUSE);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Log.e(TAG,"暂停TTS播放 失败!!!"+LogUtil.getLineInfo());
         }
     }
 
@@ -197,35 +196,37 @@ public class MySynthesizer implements SynthesizerListener {
      * 注销Tts
      */
     public void destoryTts() {
-        if (null != mTts) {
-            mTts.stopSpeaking();
-            mTts.destroy();
+        try {
+            MyAIUI.activeTTS(null, AIUIConstant.CANCEL);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Log.e(TAG,"取消TTS合成 失败!!!"+LogUtil.getLineInfo());
         }
     }
 
     /**
      * 是否正在说话
      */
-    public Boolean isSpeaking() {
-        return mTts.isSpeaking();
-    }
+//    public Boolean isSpeaking() {
+//        return mTts.isSpeaking();
+//    }
 
     /**
      * 合成参数设置
      */
     private void synthetisesetParam() {
-        mTts.setParameter(SpeechConstant.PARAMS, null);
-        // 设置使用云端引擎
-        mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
-        // 设置发音人
-        mTts.setParameter(SpeechConstant.VOICE_NAME, voicerCloud);
-        mTts.setParameter(SpeechConstant.SPEED, "65");//语速
-        mTts.setParameter(SpeechConstant.PITCH, "50");//语调
-        mTts.setParameter(SpeechConstant.VOLUME, "80");//tts音量
-        //设置播放器音频流类型
-        mTts.setParameter(SpeechConstant.STREAM_TYPE, "3");//有用
-        //设置播放合成音频打断音乐播放,默认为true
-        mTts.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
+//        mTts.setParameter(SpeechConstant.PARAMS, null);
+//        // 设置使用云端引擎
+//        mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+//        // 设置发音人
+//        mTts.setParameter(SpeechConstant.VOICE_NAME, voicerCloud);
+//        mTts.setParameter(SpeechConstant.SPEED, "65");//语速
+//        mTts.setParameter(SpeechConstant.PITCH, "50");//语调
+//        mTts.setParameter(SpeechConstant.VOLUME, "80");//tts音量
+//        //设置播放器音频流类型
+//        mTts.setParameter(SpeechConstant.STREAM_TYPE, "3");//有用
+//        //设置播放合成音频打断音乐播放,默认为true
+//        mTts.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
     }
 
     /**
@@ -237,8 +238,14 @@ public class MySynthesizer implements SynthesizerListener {
     public void speechSynthesis(String answer, String question) {
         LogUtil.e("now", "speechSynthesis()" + LogUtil.getLineInfo());
         synthetisesetParam();
-        mTts.stopSpeaking();
-        mTts.startSpeaking(answer, this);
+//        mTts.stopSpeaking();
+//        mTts.startSpeaking(answer, this);
+        try {
+            MyAIUI.activeTTS(answer,AIUIConstant.START);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG,"语音合成失败!!!"+LogUtil.getLineInfo());
+        }
         if (ChatActivity.ISCHATMODE) {
             //发送广播到多伦界面
             LogUtil.e("now", "answer:" + answer + LogUtil.getLineInfo());
@@ -258,10 +265,16 @@ public class MySynthesizer implements SynthesizerListener {
      * @param answer
      */
     public void isOnlySpeechSynthesis(String answer) {
-        LogUtil.e("now", "isOnlySpeechSynthesis()");
+        LogUtil.e(TAG, "isOnlySpeechSynthesis()"+LogUtil.getLineInfo());
         mFWM.removeAll();
-        mTts.stopSpeaking();
-        mTts.startSpeaking(answer, this);
+        try {
+            MyAIUI.activeTTS(answer,AIUIConstant.START);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG,"语音合成失败!!!"+LogUtil.getLineInfo());
+        }
+//        mTts.stopSpeaking();
+//        mTts.startSpeaking(answer, this);
     }
 
 
@@ -269,8 +282,14 @@ public class MySynthesizer implements SynthesizerListener {
      * Tts后做一些事情
      */
     public void doSomethingAfterTts(DoSomethingAfterTts doSomething, String answer, String question) {
-        mTts.stopSpeaking();
-        mTts.startSpeaking(answer, this);
+        try {
+            MyAIUI.activeTTS(answer,AIUIConstant.START);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG,"语音合成失败!!!"+LogUtil.getLineInfo());
+        }
+//        mTts.stopSpeaking();
+//        mTts.startSpeaking(answer, this);
         answer = answer.replace("肠", "长");
         LogUtil.e(TAG, "answer:" + answer + LogUtil.getLineInfo());
         if(mFWM.bigWindow != null){
@@ -298,8 +317,15 @@ public class MySynthesizer implements SynthesizerListener {
 
     //用于闹钟
     public void doSomethingAfterAlarm(DoSomethingAfterTts doSomething, String answer, String question) {
-        mTts.stopSpeaking();
-        mTts.startSpeaking(answer, this);
+        try {
+            MyAIUI.activeTTS(answer,AIUIConstant.START);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG,"语音合成失败!!!"+LogUtil.getLineInfo());
+
+        }
+//        mTts.stopSpeaking();
+//        mTts.startSpeaking(answer, this);
         setCallBack(doSomething);
     }
 

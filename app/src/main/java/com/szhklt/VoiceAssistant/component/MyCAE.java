@@ -140,7 +140,6 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
         // TODO Auto-generated method stub
 		if(MyAIUI.WRITEAUDIOEABLE == true) {
 			try {
-				LogUtil.e("test","onAudio");
 				mAIUI.writeAudioData(audioData);
 			} catch (Exception e) {
 				LogUtil.e(TAG, "向AIUI写入数据有异常" + LogUtil.getLineInfo());

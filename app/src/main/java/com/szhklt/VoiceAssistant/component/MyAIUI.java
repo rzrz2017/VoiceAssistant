@@ -52,14 +52,15 @@ import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 
 public class MyAIUI implements AIUIListener{
 	public static final String TAG = "MyAIUI";
 	private volatile static MyAIUI instance;
 	public static boolean WRITEAUDIOEABLE = false;// 是否写入音频到语义
-	private AIUIAgent mAIUIAgent;
-	private int mAIUIState = AIUIConstant.STATE_IDLE;//AIUI当前状态
+	private static AIUIAgent sAIUIAgent;
+	private static int sAIUIState = AIUIConstant.STATE_IDLE;//AIUI当前状态
 	private MySynthesizer mTts;
 	private FloatWindowManager mFWM;
 	private Skill skill;//技能引用
@@ -92,13 +93,13 @@ public class MyAIUI implements AIUIListener{
 	/**
 	 * 文本语义
 	 */
-	public void understandText(String strContent){
-		Log.e("TAG","text understand");
+	public static void understandText(String strContent){
+		Log.e(TAG,"text understand");
 		sendAudioDataToAIUI(true);
 		byte[] content = strContent.getBytes();
 		String params = "data_type=text";
 		AIUIMessage msg = new AIUIMessage(AIUIConstant.CMD_WRITE,0,0,params,content);
-		mAIUIAgent.sendMessage(msg);
+		sAIUIAgent.sendMessage(msg);
 	}
 
 	/**
@@ -138,12 +139,38 @@ public class MyAIUI implements AIUIListener{
 				LogUtil.e("xftext","xftext:"+xftext+LogUtil.getLineInfo());
 
 				handle(xftext);
+			//TTS回调监听
+			case AIUIConstant.EVENT_TTS:
+				switch (event.arg1){
+					case AIUIConstant.TTS_SPEAK_BEGIN:
+						LogUtil.e(TAG,"开始播放");
+						mTts.onSpeakBegin();
+						break;
+					case AIUIConstant.TTS_SPEAK_PROGRESS:
+						LogUtil.e(TAG,"缓冲进度为...");
+//						mTts.onBufferProgress();
+						break;
+					case AIUIConstant.TTS_SPEAK_PAUSED:
+						LogUtil.e(TAG,"暂停播放");
+						mTts.onSpeakPaused();
+						break;
+					case AIUIConstant.TTS_SPEAK_RESUMED:
+						LogUtil.e(TAG,"恢复播放");
+						mTts.onSpeakResumed();
+						break;
+					case AIUIConstant.TTS_SPEAK_COMPLETED:
+						LogUtil.e(TAG,"播放完成");
+						mTts.onCompleted();
+						break;
+						default:
+							break;
+				}
 			case AIUIConstant.EVENT_ERROR:
 				LogUtil.e(TAG, "AIUI引擎错误: " + event.arg1 + "\n" + event.info);
-				if(!ChatActivity.ISCHATMODE){
-					LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-					WRITEAUDIOEABLE = false;//禁止长唤醒
-				}
+//				if(!ChatActivity.ISCHATMODE){
+//					LogUtil.e("now","----------------"+LogUtil.getLineInfo());
+//					WRITEAUDIOEABLE = false;//禁止长唤醒
+//				}
 				if(event.arg1 == 10120){//网络问题
 					Toast.makeText(MainApplication.getContext(),"网络不稳定",Toast.LENGTH_SHORT).show();
 				}
@@ -252,7 +279,6 @@ public class MyAIUI implements AIUIListener{
 			Log.e("event","event.info:"+event.info+LogUtil.getLineInfo());
 			String sub = params.optString("sub");//得到sub字段，根据此字段判断是iat或者nlp
 			if(content.has("cnt_id")){
-				Log.e(TAG,"处理结果");
 				//判断有无cnt_id
 				String cnt_id = content.getString("cnt_id");
 				Log.e("event","cnt_id:"+cnt_id+LogUtil.getLineInfo());
@@ -332,6 +358,25 @@ public class MyAIUI implements AIUIListener{
 						return null;
 					}
 				}else if ("tts".equals(sub)) {
+					String sid = event.data.getString("sid");
+					byte[] audio = event.data.getByteArray(cnt_id);
+
+					int dts = content.getInt("dts");
+					int frameId = content.getInt("frame_id");
+					int percent = event.data.getInt("percent");//合成进度
+					boolean isCancel = "1".equals(content.getString("cancel"));
+
+					StringBuffer stringBuffer = new StringBuffer();
+					stringBuffer.append("dts:");
+					stringBuffer.append(dts);
+					stringBuffer.append("frameId:");
+					stringBuffer.append(frameId);
+					stringBuffer.append("percent:");
+					stringBuffer.append(percent);
+					stringBuffer.append("isCancel:");
+					stringBuffer.append(isCancel);
+					LogUtil.e(TAG,stringBuffer.toString()+LogUtil.getLineInfo());
+
 					WRITEAUDIOEABLE = true;LogUtil.e("iat", "WRITEAUDIOEABLE = true"+LogUtil.getLineInfo());
 					return null;
 				}
@@ -340,6 +385,33 @@ public class MyAIUI implements AIUIListener{
 			LogUtil.e("exception", "解析语义异常", e);
 		}
 		return null;
+	}
+
+	/**
+	 * 主动语音合成
+	 * @param ttsStr 需要合成的文字
+	 * @param arg1 类型(START CANCEL PAUSE RESUME)
+	 */
+	public static void activeTTS(String ttsStr,int arg1) throws UnsupportedEncodingException {
+		LogUtil.e(TAG,"主动语音合成"+LogUtil.getLineInfo());
+		byte[] ttsData;
+		StringBuffer params;
+
+		if(ttsStr != null) {
+			ttsData = ttsStr.getBytes("utf-8");
+			params = new StringBuffer();
+			params.append("vcn=x_chongchong");
+			params.append(",speed=50");
+			params.append(",pitch=50");
+			params.append(",volume=60");
+		}else{
+			ttsData = "".getBytes("utf-8");
+			params = new StringBuffer();
+		}
+
+		//开始合成
+		AIUIMessage startTts = new AIUIMessage(AIUIConstant.CMD_TTS,arg1,0,params.toString(),ttsData);
+		sAIUIAgent.sendMessage(startTts);
 	}
 
 	/********************************************************************/
@@ -414,14 +486,12 @@ public class MyAIUI implements AIUIListener{
 	 * 处理理解完成后RC等于1的情况(输入异常)
 	 */
 	private void disposeAfterComprehendedRC1(final intent responseMsg){
-       ;
 		LogUtil.e("dispose","disposeAfterComprehendedRC1()"+LogUtil.getLineInfo());
 	}
 	/**
 	 * 处理理解完成后RC等于2的情况(系统内部异常)
 	 */
 	private void disposeAfterComprehendedRC2(final intent responseMsg){
-
 		LogUtil.e("dispose","disposeAfterComprehendedRC2()"+LogUtil.getLineInfo());
 	}
 
@@ -429,7 +499,6 @@ public class MyAIUI implements AIUIListener{
 	 * 处理理解完成后RC等于3的情况(业务操作失败)
 	 */
 	private void disposeAfterComprehendedRC3(final intent mintent){
-
 		LogUtil.e("dispose","disposeAfterComprehendedRC3()"+LogUtil.getLineInfo());
 		final SemanticUnderstandResultData data = new SemanticUnderstandResultData();
 		data.awr.setAnsw(mintent.getText());
@@ -450,8 +519,6 @@ public class MyAIUI implements AIUIListener{
 			} else {
 				if (data.awr.getAnsw().indexOf("学习") != -1) {
 					mTts.doSomethingAfterTts(null, "这个我还在努力签约中哦", null);
-				} else {
-//                  mTts.doSomethingAfterTts(null, "抱歉,我没有听懂,或许换个说法我就听明白了", null);
 				}
 			}
 		} else if (mintent.getService().indexOf("weather") != -1) {// 天气
@@ -528,8 +595,8 @@ public class MyAIUI implements AIUIListener{
      * 调用AIUIAgent.createAgent创建对象之后，服务即为就绪状态。
 	 */
 	private void createAgent(){
-		mAIUIAgent = AIUIAgent.createAgent(MainApplication.getContext(), getAIUIParams(),this);
-		if (null == mAIUIAgent) {
+		sAIUIAgent = AIUIAgent.createAgent(MainApplication.getContext(), getAIUIParams(),this);
+		if (null == sAIUIAgent) {
 			final String strErrorTip = "创建AIUIAgent失败！";
 			LogUtil.i(TAG, strErrorTip);
 		} else {
@@ -564,7 +631,7 @@ public class MyAIUI implements AIUIListener{
 	/**
 	 * @param enable 为true时,进行语义
 	 */
-	public void sendAudioDataToAIUI(boolean enable){
+	public static void sendAudioDataToAIUI(boolean enable){
 		if(enable){
 			Into_STATE_WORKING();
 			WRITEAUDIOEABLE = true;
@@ -579,10 +646,10 @@ public class MyAIUI implements AIUIListener{
 	/**
 	 * AIUI引擎进入工作状态(working)
 	 */
-	public void Into_STATE_WORKING(){
-		if (AIUIConstant.STATE_WORKING != mAIUIState) {
+	public static void Into_STATE_WORKING(){
+		if (AIUIConstant.STATE_WORKING != sAIUIState) {
 			AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_WAKEUP, 0, 0, "", null);
-			mAIUIAgent.sendMessage(wakeupMsg);
+			sAIUIAgent.sendMessage(wakeupMsg);
 		}
 	}
 
@@ -591,9 +658,9 @@ public class MyAIUI implements AIUIListener{
 	 */
 	public void Into_STATE_READY(){
 		WRITEAUDIOEABLE = false;LogUtil.e("now","----------------"+LogUtil.getLineInfo());
-		if(AIUIConstant.STATE_READY != mAIUIState){
+		if(AIUIConstant.STATE_READY != sAIUIState){
 			AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_RESET_WAKEUP, 0, 0, "", null);
-			mAIUIAgent.sendMessage(wakeupMsg);
+			sAIUIAgent.sendMessage(wakeupMsg);
 		}
 	}
 
@@ -602,7 +669,7 @@ public class MyAIUI implements AIUIListener{
 	 */
 	public void resetAIUI(){
 		AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_RESET, 0, 0, "", null);
-		mAIUIAgent.sendMessage(wakeupMsg);
+		sAIUIAgent.sendMessage(wakeupMsg);
 	}
 
 	/**
@@ -612,16 +679,16 @@ public class MyAIUI implements AIUIListener{
 		WRITEAUDIOEABLE = true;
 		String params = "data_type=audio,sample_rate=16000";
 		AIUIMessage msg = new AIUIMessage(AIUIConstant.CMD_WRITE, 0, 0,params, audioData);
-		mAIUIAgent.sendMessage(msg);
+		sAIUIAgent.sendMessage(msg);
 	}
 
 	/**
 	 * 停止向AIUI写入数据
 	 */
 	public void stopWritingToAIUI(){
-		if(AIUIConstant.STATE_WORKING == mAIUIState){
+		if(AIUIConstant.STATE_WORKING == sAIUIState){
 			AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_STOP_WRITE, 0, 0, "", null);
-			mAIUIAgent.sendMessage(wakeupMsg);
+			sAIUIAgent.sendMessage(wakeupMsg);
 		}
 	}
 
@@ -629,9 +696,9 @@ public class MyAIUI implements AIUIListener{
 	 * 发送CMD_START,AIUI会转换为待唤醒状态
 	 */
 	public void startAIUI(){
-		if(mAIUIAgent != null){
+		if(sAIUIAgent != null){
 			AIUIMessage wakeupMsg = new AIUIMessage(AIUIConstant.CMD_START, 0 ,0, "", null);
-			mAIUIAgent.sendMessage(wakeupMsg);
+			sAIUIAgent.sendMessage(wakeupMsg);
 		}
 	}
 
@@ -647,7 +714,6 @@ public class MyAIUI implements AIUIListener{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 
 		intent mintent = new intent();
 		Gson mgson = new GsonBuilder().serializeNulls().create();
@@ -681,6 +747,5 @@ public class MyAIUI implements AIUIListener{
 		}
 		skill = null;
 	}
-
 
 }

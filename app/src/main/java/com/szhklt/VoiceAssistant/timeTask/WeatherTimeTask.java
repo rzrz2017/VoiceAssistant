@@ -4,14 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.TextUnderstanderListener;
-import com.iflytek.cloud.UnderstanderResult;
 import com.szhklt.VoiceAssistant.MainApplication;
-import com.szhklt.VoiceAssistant.beam.WeatherData;
-import com.szhklt.VoiceAssistant.component.MyTextUnderstander;
+import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.db.WeatherDBHandler;
-import com.szhklt.VoiceAssistant.util.JsonParse;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 
 import org.apache.http.HttpEntity;
@@ -21,7 +16,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import java.util.List;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,26 +43,8 @@ public class WeatherTimeTask {
 			public void run() {
 				//查询地理位置
 				getPositionInfo();
-				//默认查询天气
-				new MyTextUnderstander().understandText("今天"+location==null?"深圳":location+"天气",
-						new TextUnderstanderListener(){
-					@Override
-					public void onResult(UnderstanderResult result) {
-						LogUtil.e(TAG,"天气定时查询返回！"+LogUtil.getLineInfo());
-						String json = result.getResultString();
-						JsonParse jp = new JsonParse(context);
-						List<WeatherData> weatherdataarray = jp.WeatherXUnderstander(json);
-						mwWeatherDBHandler.deleteAllWeatherMsg();
-						mwWeatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
-					}
-					
-					@Override
-					public void onError(SpeechError arg0) {
-						LogUtil.e(TAG,"更新天气失败"+LogUtil.getLineInfo() 
-								+"\n"+"错误码："+arg0.getErrorCode()
-								+"\n"+"错误描述："+arg0.getErrorDescription());
-					}
-				});
+				MyAIUI.understandText("今天"+location==null?"深圳":location+"天气");
+
 			}
 		},0);
 		timerUtil.scheduleRepeat(0,2*60*60*1000);//两小时
@@ -80,6 +56,7 @@ public class WeatherTimeTask {
 		}
 		start();
 	}
+
 	public void stop(){
 		if(timerUtil!=null){
 			timerUtil.cancel();
@@ -142,25 +119,7 @@ public class WeatherTimeTask {
 			editor.putString("location",location);
 			editor.apply();
 			LogUtil.e("location","location:"+location);
-			//查询天气
-			new MyTextUnderstander().understandText("今天"+location==null?"深圳":location+"天气",new TextUnderstanderListener(){
-				@Override
-				public void onResult(UnderstanderResult result) {
-					LogUtil.e(TAG,"天气定时查询返回！"+LogUtil.getLineInfo());
-					String json = result.getResultString();
-					JsonParse jp = new JsonParse(context);
-					List<WeatherData> weatherdataarray = jp.WeatherXUnderstander(json);
-					mwWeatherDBHandler.deleteAllWeatherMsg();
-					mwWeatherDBHandler.insertAWeekOfWeatherMsg(weatherdataarray);
-				}
-				
-				@Override
-				public void onError(SpeechError arg0) {
-					LogUtil.e(TAG,"更新天气失败"+LogUtil.getLineInfo() 
-							+"\n"+"错误码："+arg0.getErrorCode()
-							+"\n"+"错误描述："+arg0.getErrorDescription());
-				}
-			});
+			MyAIUI.understandText("今天"+location==null?"深圳":location+"天气");
 		}
 	}
 	

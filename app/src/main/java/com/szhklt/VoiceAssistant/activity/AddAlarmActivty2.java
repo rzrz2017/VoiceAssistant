@@ -1,7 +1,5 @@
 package com.szhklt.VoiceAssistant.activity;
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +14,8 @@ import com.szhklt.VoiceAssistant.component.MyAIUI;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.view.MyRadioGroup;
 import com.szhklt.VoiceAssistant.view.RoundButton;
+
+import java.util.Calendar;
 
 public class AddAlarmActivty2 extends Activity implements OnClickListener{
 	private static final String TAG = "AddAlarmActivty2";
@@ -283,7 +283,6 @@ public class AddAlarmActivty2 extends Activity implements OnClickListener{
 			LogUtil.e(TAG,"understandText:"+understandText);
 			
 			MyAIUI.getInstance().understandText(understandText);
-//			myTextUnderstander.understandText(understandText, textUnderstanderListener);
 			finish();
 			break;
 		default:

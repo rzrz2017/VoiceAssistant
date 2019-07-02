@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.TimeUtil;
 import com.szhklt.VoiceAssistant.beam.WeatherData;
@@ -32,7 +31,6 @@ import java.util.List;
 public class SleepActivity extends Activity implements OnClickListener {
 	private String TAG="SleepActivity";
 	private TextClock mTextClock;
-	private WeatherDBHandler mwWeatherDBHandler = new WeatherDBHandler(MainApplication.getContext());
 //	private AnalogClockView analogClockView;
 	private TimeUtil mtimeutil;
 	private ImageView weathericon;

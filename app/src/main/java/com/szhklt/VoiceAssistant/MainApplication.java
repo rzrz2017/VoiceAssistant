@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
 import com.rich.czlylibary.sdk.MiguCzlySDK;
 import com.rich.player.sdk.InitPlayerServiceCallback;
 import com.rich.player.sdk.PlayMusicClient;
@@ -77,16 +75,6 @@ public class MainApplication extends Application{
 			crashHandler = new CrashHandler();
 			CrashHandler catchHandler = crashHandler.getInstance();
 			catchHandler.init(getApplicationContext());
-		}
-		{
-			//初始化appid初始化讯飞语音
-			StringBuffer param = new StringBuffer();
-			param.append("appid="+getString(R.string.app_id));
-			param.append(",");
-
-			param.append(SpeechConstant.ENGINE_MODE+"="+SpeechConstant.MODE_MSC);
-			param.append("server_url=http://dz-szhklt.xf-yun.com/msp.do");//修改了APPID后需要修改这里
-			SpeechUtility.createUtility(MainApplication.this, param.toString());
 		}
 		//初始化版本信息beams
 		theLastVer = new VersionInfo(getApplicationContext());
