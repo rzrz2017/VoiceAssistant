@@ -533,4 +533,5 @@ public class RzMediaDownloader<T> extends HandlerThread{
 		context.sendBroadcast(new Intent("com.hklt.play_song").putExtra("type",1).putExtra("data",o2.toString()));
 		o2 = null;
 	}
+
 }

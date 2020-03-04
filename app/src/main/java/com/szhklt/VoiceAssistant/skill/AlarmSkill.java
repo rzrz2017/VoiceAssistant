@@ -417,13 +417,17 @@ public class AlarmSkill extends Skill{
 				if(MainApplication.firmwareVersion.contains("pmu_IRQ")){//如果是xiaoba_ac108_v1.8_pmu_IRQ_wakeup 这个版本或者更高，就用setAlarmClock设置闹钟
 					setAlarmClock(id, state, toDate.getTime(), 1000*60*60*24,isrepeat, content1);
 				}else{
+
 					PendingIntent sender = PendingIntent.getBroadcast(context, id,intent, PendingIntent.FLAG_CANCEL_CURRENT);
 					if(repeat == null||repeat.equals("单次")){//设置单次闹钟
 						LogUtil.e("alarm","设置单次闹钟!!!"+LogUtil.getLineInfo());
 						AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 						int interval = (int) intent.getLongExtra("intervalMillis",0);
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-							am.setWindow(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+timeDifference, interval, sender);
+							am.setWindow(AlarmManager.RTC_WAKEUP,
+									System.currentTimeMillis()+timeDifference,
+									interval,
+									sender);
 						}
 					}else if("EVERYDAY".equals(repeat)){//设置重复闹钟
 						LogUtil.e("alarm","设置重复闹钟!!!"+LogUtil.getLineInfo());
@@ -431,7 +435,7 @@ public class AlarmSkill extends Skill{
 						am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+timeDifference,24*60*60*1000,sender);
 					}
 				}
-				
+
 			}
 		}).start();
 	}

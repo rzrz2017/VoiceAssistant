@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.iflytek.alsa.AlsaRecorder;
 import com.iflytek.alsa.AlsaRecorder.PcmListener;
 import com.iflytek.cae.CAEEngine;
@@ -27,11 +26,8 @@ import com.szhklt.VoiceAssistant.skill.AlarmSkill;
 import com.szhklt.VoiceAssistant.util.LogUtil;
 import com.szhklt.VoiceAssistant.util.NetworkUtil;
 import com.szhklt.VoiceAssistant.util.ScreenManager;
-
 import org.json.JSONObject;
-
 import java.util.Random;
-
 import cn.kuwo.autosdk.api.PlayerStatus;
 
 public class MyCAE implements CAEListener, NetworkStateInterface {
@@ -88,6 +84,7 @@ public class MyCAE implements CAEListener, NetworkStateInterface {
 		savePlayerStatusBeforeWakeup();//保存播放器唤醒前的状态
 
 		screenManager.screenOn();//解锁屏幕
+
 		toneSP.setVolumeValue();//设置音量
 		if(!NetworkUtil.isNetworkConnected(MainApplication.getContext())){
 			checkNetWork();//也会播放提示音//每次唤醒前检查wifi是否连通

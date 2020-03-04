@@ -73,7 +73,7 @@ public class MainService extends Service{
         //启动流量统计服务
         //启动UDP服务
         //启动MQTT服务
-        startService(new Intent(this,MqttService.class));
+        //startService(new Intent(this,MqttService.class));
 //      startService(new Intent(this,UDPService2.class));
         receiver = new MyReceiver();//注册广播接收者
         filter = new IntentFilter();

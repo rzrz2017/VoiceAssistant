@@ -1,7 +1,5 @@
 package com.szhklt.VoiceAssistant.service;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -14,15 +12,19 @@ import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.szhklt.VoiceAssistant.MainApplication;
 import com.szhklt.VoiceAssistant.R;
 import com.szhklt.VoiceAssistant.beam.VersionInfo;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.CommomDialog;
+import com.szhklt.VoiceAssistant.multithreadeddownloader.CommomDialog.OnCloseListener;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.DownLoadUtils;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.MyDialog;
 import com.szhklt.VoiceAssistant.multithreadeddownloader.UpdateActivity;
 import com.szhklt.VoiceAssistant.util.LogUtil;
-import com.szhklt.VoiceAssistant.multithreadeddownloader.CommomDialog.OnCloseListener;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class checkAPKUpdataService extends Service{
     public DownloadManager mdownloadmanager;  
@@ -104,7 +106,6 @@ public class checkAPKUpdataService extends Service{
 			}
 		}
 	}
-
     
 	public void startUpdateActivity(){
 		LogUtil.e("ranzhen","startUpdateActivity()");

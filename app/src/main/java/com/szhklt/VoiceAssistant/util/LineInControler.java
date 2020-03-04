@@ -25,6 +25,7 @@ public class LineInControler {
 	//	public static void setPRELINEINSTATUS(LineInSatus pRELINEINSTATUS) {
 	//		PRELINEINSTATUS = pRELINEINSTATUS;
 	//	}
+	//private static LineInControler instance = new LineInControler(MainApplication.getContext());
 	private static LineInControler instance = new LineInControler(MainApplication.getContext());
 	private AudioManager mAudioManager;
 	private AudioTrack track;
